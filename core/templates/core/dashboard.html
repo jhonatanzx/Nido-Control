@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row fade-in">
+    <div class="col-12">
+        <h1 class="h3 mb-2">
+            <i class="bi bi-speedometer2 text-primary"></i> Panel de Control
+        </h1>
+        <p class="text-muted">
+            <i class="bi bi-calendar3"></i> 
+            Bienvenido, <strong>{{ user.username }}</strong>. Hoy es {{ hoy|date:"d/m/Y" }}
+        </p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3 fade-in delay-1">
+        <div class="stat-card primary">
+            <div class="stat-number">{{ total_ninos }}</div>
+            <div class="stat-label"><i class="bi bi-people"></i> Niños Matriculados</div>
+            <i class="stat-icon bi bi-people"></i>
+        </div>
+    </div>
+    <div class="col-md-3 fade-in delay-2">
+        <div class="stat-card success">
+            <div class="stat-number">{{ presentes }}</div>
+            <div class="stat-label"><i class="bi bi-check-circle"></i> Presentes Hoy</div>
+            <i class="stat-icon bi bi-check-circle"></i>
+        </div>
+    </div>
+    <div class="col-md-3 fade-in delay-3">
+        <div class="stat-card danger">
+            <div class="stat-number">{{ ausentes }}</div>
+            <div class="stat-label"><i class="bi bi-x-circle"></i> Ausentes Hoy</div>
+            <i class="stat-icon bi bi-x-circle"></i>
+        </div>
+    </div>
+    <div class="col-md-3 fade-in delay-4">
+        <div class="stat-card warning">
+            <div class="stat-number">{{ incidencias_hoy }}</div>
+            <div class="stat-label"><i class="bi bi-exclamation-triangle"></i> Incidencias Hoy</div>
+            <i class="stat-icon bi bi-exclamation-triangle"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row fade-in">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-info-circle"></i> Información del Sistema
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="text-primary">
+                            <i class="bi bi-house-heart"></i> NidoControl
+                        </h5>
+                        <p class="mb-1">
+                            <strong>Gestión sencilla, cuidado organizado y entrega segura.</strong>
+                        </p>
+                        <p class="text-muted small mb-0">
+                            <i class="bi bi-code-square"></i> Versión MVP - En desarrollo
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle"></i> Sistema Activo
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Detalle del Niño{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header">
+        <i class="bi bi-person"></i> Detalle del Niño
+    </div>
+    <div class="card-body">
+        <p><strong>ID:</strong> {{ nino_id }}</p>
+        <p class="text-muted">Próximamente: Información completa del niño</p>
+        <a href="{% url 'lista_ninos' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
+    </div>
+</div>
+{% endblock %}

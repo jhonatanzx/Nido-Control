@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Estadísticas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-graph-up-arrow text-primary"></i> Estadísticas</h1>
+    <div class="btn-group">
+        <a href="?periodo=dia" class="btn btn-sm {% if periodo == 'dia' %}btn-primary{% else %}btn-outline-primary{% endif %}">Día</a>
+        <a href="?periodo=semana" class="btn btn-sm {% if periodo == 'semana' %}btn-primary{% else %}btn-outline-primary{% endif %}">Semana</a>
+        <a href="?periodo=mes" class="btn btn-sm {% if periodo == 'mes' %}btn-primary{% else %}btn-outline-primary{% endif %}">Mes</a>
+        <a href="?periodo=año" class="btn btn-sm {% if periodo == 'año' %}btn-primary{% else %}btn-outline-primary{% endif %}">Año</a>
+    </div>
+</div>
+
+<p class="text-muted">Desde {{ fecha_inicio|date:"d/m/Y" }} hasta {{ fecha_fin|date:"d/m/Y" }}</p>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3"><div class="stat-card primary"><div class="stat-number">{{ total_ninos }}</div><div class="stat-label"><i class="bi bi-people"></i> Niños</div></div></div>
+    <div class="col-md-3"><div class="stat-card success"><div class="stat-number">{{ total_presentes }}</div><div class="stat-label"><i class="bi bi-check-circle"></i> Presentes</div></div></div>
+    <div class="col-md-3"><div class="stat-card danger"><div class="stat-number">{{ total_ausentes }}</div><div class="stat-label"><i class="bi bi-x-circle"></i> Ausentes</div></div></div>
+    <div class="col-md-3"><div class="stat-card warning"><div class="stat-number">{{ total_tardanzas }}</div><div class="stat-label"><i class="bi bi-clock"></i> Tardanzas</div></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header"><i class="bi bi-pie-chart"></i> Asistencia</div>
+            <div class="card-body"><canvas id="graficoAsistencia" style="max-height: 250px;"></canvas></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header"><i class="bi bi-exclamation-triangle"></i> Incidencias</div>
+            <div class="card-body"><canvas id="graficoIncidencias" style="max-height: 250px;"></canvas></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header"><i class="bi bi-emoji-smile"></i> Estado de Ánimo</div>
+            <div class="card-body"><canvas id="graficoAnimo" style="max-height: 250px;"></canvas></div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header"><i class="bi bi-bar-chart"></i> Últimos 30 días</div>
+    <div class="card-body"><canvas id="graficoDias" style="max-height: 300px;"></canvas></div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    new Chart(document.getElementById('graficoAsistencia'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Presentes', 'Ausentes', 'Tardanzas'],
+            datasets: [{
+                data: [{{ total_presentes }}, {{ total_ausentes }}, {{ total_tardanzas }}],
+                backgroundColor: ['#5B9BD5', '#E8836F', '#F0B775'], borderWidth: 3, borderColor: '#fff'
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    new Chart(document.getElementById('graficoIncidencias'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Accidente', 'Enfermedad', 'Comportamiento', 'Otro'],
+            datasets: [{
+                data: [{{ incidencias_por_tipo.accidente }}, {{ incidencias_por_tipo.enfermedad }}, {{ incidencias_por_tipo.comportamiento }}, {{ incidencias_por_tipo.otro }}],
+                backgroundColor: ['#f5576c', '#fda085', '#4facfe', '#a29bfe'],
+                borderWidth: 3, borderColor: '#fff'
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    new Chart(document.getElementById('graficoAnimo'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Tranquilo', 'Alegre', 'Cansado', 'Irritable', 'Otro'],
+            datasets: [{
+                data: [{{ estados_animo.tranquilo }}, {{ estados_animo.alegre }}, {{ estados_animo.cansado }}, {{ estados_animo.irritable }}, {{ estados_animo.otro }}],
+                backgroundColor: ['#4facfe', '#38ef7d', '#fda085', '#f5576c', '#a29bfe'],
+                borderWidth: 3, borderColor: '#fff'
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    new Chart(document.getElementById('graficoDias'), {
+        type: 'bar',
+        data: {
+            labels: {{ dias_labels|safe }},
+            datasets: [
+                { label: 'Presentes', data: {{ dias_presentes|safe }}, backgroundColor: 'rgba(56, 239, 125, 0.7)' },
+                { label: 'Ausentes', data: {{ dias_ausentes|safe }}, backgroundColor: 'rgba(245, 87, 108, 0.7)' }
+            ]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
+</script>
+{% endblock %}

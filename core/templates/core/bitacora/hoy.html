@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Bitácora Hoy{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-journal text-info"></i> Bitácora del día</h1>
+    <span class="badge bg-primary fs-6">{{ hoy|date:"d/m/Y" }}</span>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header"><i class="bi bi-list-check"></i> Registro de Actividades</div>
+    <div class="card-body">
+        {% if bitacoras %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr><th>Niño</th><th>Alimentación</th><th>Descanso</th><th>Estado Ánimo</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for bitacora in bitacoras %}
+                        <tr>
+                            <td><strong>{{ bitacora.nino.nombre_completo }}</strong></td>
+                            <td>{{ bitacora.alimentacion|default:"--"|truncatechars:30 }}</td>
+                            <td>{{ bitacora.descanso|default:"--"|truncatechars:30 }}</td>
+                            <td>{% if bitacora.estado_animo %}<span class="badge bg-info">{{ bitacora.get_estado_animo_display }}</span>{% else %}<span class="text-muted">--</span>{% endif %}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalBitacora{{ bitacora.id }}">
+                                    <i class="bi bi-pencil"></i> Registrar
+                                </button>
+                            </td>
+                        </tr>
+                        <div class="modal fade" id="modalBitacora{{ bitacora.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <form method="post" action="{% url 'registrar_bitacora' bitacora.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Bitácora - {{ bitacora.nino.nombre_completo }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Alimentación</label>
+                                                    <textarea name="alimentacion" class="form-control" rows="2">{{ bitacora.alimentacion }}</textarea>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Descanso</label>
+                                                    <textarea name="descanso" class="form-control" rows="2">{{ bitacora.descanso }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Actividades</label>
+                                                    <textarea name="actividades" class="form-control" rows="2">{{ bitacora.actividades }}</textarea>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Higiene</label>
+                                                    <textarea name="higiene" class="form-control" rows="2">{{ bitacora.higiene }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Estado de Ánimo</label>
+                                                <select name="estado_animo" class="form-control">
+                                                    <option value="">-- Seleccionar --</option>
+                                                    <option value="tranquilo" {% if bitacora.estado_animo == 'tranquilo' %}selected{% endif %}>Tranquilo</option>
+                                                    <option value="alegre" {% if bitacora.estado_animo == 'alegre' %}selected{% endif %}>Alegre</option>
+                                                    <option value="cansado" {% if bitacora.estado_animo == 'cansado' %}selected{% endif %}>Cansado</option>
+                                                    <option value="irritable" {% if bitacora.estado_animo == 'irritable' %}selected{% endif %}>Irritable</option>
+                                                    <option value="otro" {% if bitacora.estado_animo == 'otro' %}selected{% endif %}>Otro</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Observaciones</label>
+                                                <textarea name="observaciones" class="form-control" rows="2">{{ bitacora.observaciones }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No hay niños registrados</p>
+                <a href="{% url 'registrar_nino' %}" class="btn btn-primary">Registrar primer niño</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

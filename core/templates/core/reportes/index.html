@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Reportes{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-file-pdf text-danger"></i> Generación de Reportes</h1>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-check-circle"></i> Reporte de Asistencia</div>
+            <div class="card-body">
+                <p class="text-muted">Genera reporte de asistencia del día.</p>
+                <a href="{% url 'reporte_asistencia' %}" class="btn btn-primary w-100" target="_blank">
+                    <i class="bi bi-file-pdf"></i> Generar PDF
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-exclamation-triangle"></i> Reporte de Incidencias</div>
+            <div class="card-body">
+                <p class="text-muted">Genera reporte de todas las incidencias.</p>
+                <a href="{% url 'reporte_incidencias' %}" class="btn btn-warning w-100" target="_blank">
+                    <i class="bi bi-file-pdf"></i> Generar PDF
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-journal"></i> Reporte de Bitácora</div>
+            <div class="card-body">
+                <p class="text-muted">Genera reporte de bitácora del día.</p>
+                <a href="{% url 'reporte_bitacora' %}" class="btn btn-info w-100" target="_blank">
+                    <i class="bi bi-file-pdf"></i> Generar PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

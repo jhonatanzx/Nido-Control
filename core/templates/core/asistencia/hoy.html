@@ -1,0 +1,159 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Asistencia Hoy{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-check-circle text-success"></i> Asistencia del día</h1>
+    <span class="badge bg-primary fs-6">{{ hoy|date:"d/m/Y" }}</span>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="stat-card primary"><div class="stat-number">{{ total }}</div><div class="stat-label"><i class="bi bi-people"></i> Total Niños</div></div></div>
+    <div class="col-md-3"><div class="stat-card success"><div class="stat-number">{{ presentes }}</div><div class="stat-label"><i class="bi bi-check-circle"></i> Presentes</div></div></div>
+    <div class="col-md-3"><div class="stat-card danger"><div class="stat-number">{{ ausentes }}</div><div class="stat-label"><i class="bi bi-x-circle"></i> Ausentes</div></div></div>
+    <div class="col-md-3"><div class="stat-card warning"><div class="stat-number">{{ tardanzas }}</div><div class="stat-label"><i class="bi bi-clock"></i> Tardanzas</div></div></div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header"><i class="bi bi-list-check"></i> Registro de Asistencia</div>
+    <div class="card-body">
+        {% if asistencias %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Niño</th>
+                            <th>Estado</th>
+                            <th>Hora Ingreso</th>
+                            <th>Hora Salida</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for asistencia in asistencias %}
+                        <tr>
+                            <td>
+                                <strong>{{ asistencia.nino.nombre_completo }}</strong>
+                                <br><small class="text-muted">{{ asistencia.nino.aula.nombre|default:"Sin aula" }}</small>
+                            </td>
+                            <td>
+                                {% if asistencia.estado == 'presente' %}
+                                    <span class="badge bg-success">Presente</span>
+                                {% elif asistencia.estado == 'ausente' %}
+                                    <span class="badge bg-danger">Ausente</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Tardanza</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if asistencia.hora_ingreso %}
+                                    <span class="badge bg-info">{{ asistencia.hora_ingreso|time:"H:i" }}</span>
+                                {% else %}
+                                    <span class="text-muted">--:--</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if asistencia.hora_salida %}
+                                    <span class="badge bg-secondary">{{ asistencia.hora_salida|time:"H:i" }}</span>
+                                {% else %}
+                                    <span class="text-muted">--:--</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalIngreso{{ asistencia.id }}">
+                                    <i class="bi bi-box-arrow-in-right"></i> Ingreso
+                                </button>
+                                
+                                {% if asistencia.hora_ingreso and not asistencia.hora_salida %}
+                                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalSalida{{ asistencia.id }}">
+                                        <i class="bi bi-box-arrow-right"></i> Salida
+                                    </button>
+                                {% elif asistencia.hora_salida %}
+                                    <button class="btn btn-sm btn-secondary" disabled>
+                                        <i class="bi bi-check-circle"></i> Salida OK
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-sm btn-secondary" disabled>
+                                        <i class="bi bi-box-arrow-right"></i> Salida
+                                    </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <div class="modal fade" id="modalIngreso{{ asistencia.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form method="post" action="{% url 'registrar_asistencia' asistencia.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-header bg-primary text-white">
+                                            <h5 class="modal-title"><i class="bi bi-box-arrow-in-right"></i> Ingreso - {{ asistencia.nino.nombre_completo }}</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">Estado</label>
+                                                <select name="estado" class="form-control" required>
+                                                    <option value="presente" {% if asistencia.estado == 'presente' %}selected{% endif %}>Presente</option>
+                                                    <option value="ausente" {% if asistencia.estado == 'ausente' %}selected{% endif %}>Ausente</option>
+                                                    <option value="tardanza" {% if asistencia.estado == 'tardanza' %}selected{% endif %}>Tardanza</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Hora de Ingreso</label>
+                                                <input type="time" name="hora_ingreso" class="form-control" value="{{ asistencia.hora_ingreso|time:'H:i' }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Motivo (opcional)</label>
+                                                <textarea name="motivo_ausencia" class="form-control" rows="2">{{ asistencia.motivo_ausencia }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Guardar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="modalSalida{{ asistencia.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form method="post" action="{% url 'registrar_salida' asistencia.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-header bg-success text-white">
+                                            <h5 class="modal-title"><i class="bi bi-box-arrow-right"></i> Salida - {{ asistencia.nino.nombre_completo }}</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="alert alert-info">
+                                                <i class="bi bi-info-circle"></i> Ingreso registrado: <strong>{{ asistencia.hora_ingreso|time:"H:i" }}</strong>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Hora de Salida</label>
+                                                <input type="time" name="hora_salida" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Guardar Salida</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No hay niños registrados</p>
+                <a href="{% url 'registrar_nino' %}" class="btn btn-primary">Registrar primer niño</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

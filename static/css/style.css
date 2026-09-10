@@ -1,0 +1,809 @@
+/* ============================================
+   NIDOCONTROL - ESTILOS CORPORATIVOS
+   ============================================ */
+
+:root {
+    /* Colores corporativos sobrios */
+    --primary-color: #2C5282;
+    --primary-dark: #1A365D;
+    --primary-light: #4299E1;
+    
+    /* Colores de acento */
+    --success-color: #2F855A;
+    --warning-color: #C05621;
+    --danger-color: #C53030;
+    --info-color: #2B6CB0;
+    
+    /* Neutros */
+    --gray-50: #F7FAFC;
+    --gray-100: #EDF2F7;
+    --gray-200: #E2E8F0;
+    --gray-600: #718096;
+    --gray-800: #2D3748;
+    --gray-900: #1A202C;
+    
+    /* Sombras sutiles */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    
+    --border-radius: 8px;
+    --transition: all 0.25s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--gray-50);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--gray-800);
+}
+
+/* ============================================
+   NAVBAR - Azul corporativo sobrio
+   ============================================ */
+.navbar {
+    background: #1A365D !important;
+    padding: 0.75rem 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white !important;
+    letter-spacing: 0.3px;
+}
+
+/* LOGO NidoControl - MANTENER COLORIDO Y AMIGABLE */
+.navbar-brand i {
+    font-size: 1.7rem;
+    /* Gradiente colorido para el ícono del logo */
+    background: linear-gradient(135deg, #FFD93D 0%, #FF8C42 50%, #FF5E7E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 6px;
+    transition: var(--transition);
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 0.95rem;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: white !important;
+}
+
+.nav-link i {
+    margin-right: 5px;
+}
+
+/* ============================================
+   TARJETAS DE ESTADÍSTICAS - Colores sobrios
+   ============================================ */
+.stat-card {
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    color: white;
+    min-height: 110px;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card .stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    color: white;
+}
+
+.stat-card .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: 500;
+    color: white;
+}
+
+.stat-card .stat-icon {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.2rem;
+    font-size: 3rem;
+    opacity: 0.15;
+    color: white;
+}
+
+/* Colores sólidos corporativos (sin degradados chillones) */
+.stat-card.primary {
+    background: linear-gradient(135deg, #2C5282 0%, #1A365D 100%);
+}
+
+.stat-card.success {
+    background: linear-gradient(135deg, #2F855A 0%, #276749 100%);
+}
+
+.stat-card.danger {
+    background: linear-gradient(135deg, #C53030 0%, #9B2C2C 100%);
+}
+
+.stat-card.warning {
+    background: linear-gradient(135deg, #C05621 0%, #9C4221 100%);
+}
+
+.stat-card.info {
+    background: linear-gradient(135deg, #2B6CB0 0%, #2C5282 100%);
+}
+
+/* ============================================
+   CARDS GENERALES
+   ============================================ */
+.card {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    overflow: hidden;
+    background: white;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    background: white;
+    color: var(--gray-800);
+    font-weight: 600;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+}
+
+.card-header i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+/* ============================================
+   LOGIN - Fondo corporativo sobrio
+   ============================================ */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1A365D 0%, #2C5282 100%);
+}
+
+.login-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-card .logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* LOGO LOGIN - MANTENER COLORIDO */
+.login-card .logo i {
+    font-size: 4rem;
+    background: linear-gradient(135deg, #FFD93D 0%, #FF8C42 50%, #FF5E7E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.15));
+}
+
+.login-card .logo h2 {
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-top: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.login-card .logo p {
+    color: var(--gray-600);
+    font-size: 0.95rem;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.85rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    background: #2C5282;
+    color: white;
+    font-weight: 600;
+    border: none;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background: #1A365D;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(44, 82, 130, 0.35);
+}
+
+/* ============================================
+   FORMULARIOS
+   ============================================ */
+.form-control {
+    border-radius: 6px;
+    border: 1px solid var(--gray-200);
+    padding: 0.65rem 1rem;
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.12);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   BOTONES - Colores corporativos
+   ============================================ */
+.btn {
+    border-radius: 6px;
+    padding: 0.55rem 1.4rem;
+    font-weight: 500;
+    transition: var(--transition);
+    border: none;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: #2C5282;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1A365D;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(44, 82, 130, 0.3);
+}
+
+.btn-success {
+    background: #2F855A;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #276749;
+    color: white;
+}
+
+.btn-warning {
+    background: #C05621;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #9C4221;
+    color: white;
+}
+
+.btn-info {
+    background: #2B6CB0;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #2C5282;
+    color: white;
+}
+
+.btn-danger {
+    background: #C53030;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #9B2C2C;
+    color: white;
+}
+
+.btn-secondary {
+    background: var(--gray-600);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: var(--gray-800);
+    color: white;
+}
+
+/* ============================================
+   TABLAS
+   ============================================ */
+.table {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.table thead {
+    background: var(--gray-100);
+}
+
+.table thead th {
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    transition: var(--transition);
+}
+
+.table tbody tr:hover {
+    background: var(--gray-50);
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.bg-success {
+    background: #2F855A !important;
+}
+
+.bg-danger {
+    background: #C53030 !important;
+}
+
+.bg-warning {
+    background: #C05621 !important;
+}
+
+.bg-info {
+    background: #2B6CB0 !important;
+}
+
+.bg-primary {
+    background: #2C5282 !important;
+}
+
+.bg-secondary {
+    background: var(--gray-600) !important;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+    margin-top: auto;
+    background: white;
+    padding: 1.25rem 0;
+    box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
+    text-align: center;
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.footer i {
+    /* Mantener el ícono colorido también en el footer */
+    background: linear-gradient(135deg, #FFD93D 0%, #FF8C42 50%, #FF5E7E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ============================================
+   ALERTAS
+   ============================================ */
+.alert {
+    border: none;
+    border-radius: 6px;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.95rem;
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.1s; }
+.delay-3 { animation-delay: 0.15s; }
+.delay-4 { animation-delay: 0.2s; }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .stat-card .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .login-card {
+        padding: 1.75rem;
+        margin: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+}
+
+
+/* ============================================
+   MODO OSCURO (Dark Mode) - MEJORADO
+   ============================================ */
+
+body.dark-mode {
+    background: #1A202C;
+    color: #E2E8F0;
+}
+
+/* ---------- NAVBAR ---------- */
+body.dark-mode .navbar {
+    background: #0F1419 !important;
+}
+
+/* ---------- CARDS ---------- */
+body.dark-mode .card {
+    background: #2D3748;
+    border-color: #4A5568;
+    color: #E2E8F0;
+}
+
+body.dark-mode .card-header {
+    background: #1A202C;
+    color: #F7FAFC;
+    border-bottom-color: #4A5568;
+}
+
+body.dark-mode .card-body {
+    color: #E2E8F0;
+    background: #2D3748;
+}
+
+/* ---------- TEXTOS GENERALES ---------- */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+    color: #F7FAFC;
+}
+
+body.dark-mode p {
+    color: #E2E8F0;
+}
+
+body.dark-mode strong {
+    color: #F7FAFC;
+}
+
+body.dark-mode .text-muted {
+    color: #A0AEC0 !important;
+}
+
+body.dark-mode small {
+    color: #A0AEC0;
+}
+
+/* ---------- TABLAS ---------- */
+body.dark-mode .table {
+    color: #E2E8F0;
+    background: #2D3748;
+}
+
+body.dark-mode .table thead {
+    background: #1A202C !important;
+}
+
+body.dark-mode .table thead th {
+    color: #F7FAFC !important;
+    border-bottom: 2px solid #4A5568;
+    background: #1A202C;
+}
+
+body.dark-mode .table tbody {
+    background: #2D3748;
+}
+
+body.dark-mode .table tbody tr {
+    background: #2D3748;
+    border-color: #4A5568;
+}
+
+body.dark-mode .table tbody tr:hover {
+    background: #374151;
+}
+
+body.dark-mode .table td {
+    color: #F7FAFC !important;
+    border-color: #4A5568;
+    background: transparent;
+}
+
+body.dark-mode .table td strong {
+    color: #F7FAFC !important;
+}
+
+body.dark-mode .table td small {
+    color: #A0AEC0 !important;
+}
+
+/* ---------- BADGES ---------- */
+body.dark-mode .badge {
+    color: white !important;
+}
+
+body.dark-mode .badge.bg-warning {
+    background: #C05621 !important;
+    color: white !important;
+}
+
+body.dark-mode .badge.bg-info {
+    background: #2B6CB0 !important;
+    color: white !important;
+}
+
+body.dark-mode .badge.bg-success {
+    background: #2F855A !important;
+}
+
+body.dark-mode .badge.bg-danger {
+    background: #C53030 !important;
+}
+
+body.dark-mode .badge.bg-secondary {
+    background: #4A5568 !important;
+}
+
+/* ---------- FORMULARIOS ---------- */
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background: #1A202C;
+    border-color: #4A5568;
+    color: #F7FAFC;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+    background: #1A202C;
+    border-color: #5B9BD5;
+    color: #F7FAFC;
+    box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.25);
+}
+
+body.dark-mode .form-control::placeholder {
+    color: #718096;
+}
+
+body.dark-mode .form-label {
+    color: #E2E8F0;
+}
+
+body.dark-mode .form-check-label {
+    color: #E2E8F0;
+}
+
+/* ---------- MODALES ---------- */
+body.dark-mode .modal-content {
+    background: #2D3748;
+    color: #F7FAFC;
+    border-color: #4A5568;
+}
+
+body.dark-mode .modal-header {
+    background: #1A202C;
+    color: #F7FAFC;
+    border-bottom-color: #4A5568;
+}
+
+body.dark-mode .modal-title {
+    color: #F7FAFC;
+}
+
+body.dark-mode .modal-body {
+    background: #2D3748;
+    color: #E2E8F0;
+}
+
+body.dark-mode .modal-footer {
+    background: #2D3748;
+    border-top-color: #4A5568;
+}
+
+body.dark-mode .btn-close {
+    filter: invert(1) brightness(2);
+}
+
+/* ---------- FOOTER ---------- */
+body.dark-mode .footer {
+    background: #1A202C;
+    color: #A0AEC0;
+    border-top-color: #4A5568;
+}
+
+/* ---------- DROPDOWN ---------- */
+body.dark-mode .dropdown-menu {
+    background: #2D3748;
+    border-color: #4A5568;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .dropdown-item {
+    color: #E2E8F0;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background: #4A5568;
+    color: white;
+}
+
+body.dark-mode .dropdown-divider {
+    border-color: #4A5568;
+}
+
+/* ---------- ALERTAS ---------- */
+body.dark-mode .alert {
+    background: #2D3748;
+    color: #E2E8F0;
+    border-color: #4A5568;
+}
+
+body.dark-mode .alert-info {
+    background: #2C5282;
+    color: #F7FAFC;
+}
+
+body.dark-mode .alert-success {
+    background: #2F855A;
+    color: #F7FAFC;
+}
+
+body.dark-mode .alert-danger {
+    background: #C53030;
+    color: #F7FAFC;
+}
+
+body.dark-mode .alert-warning {
+    background: #C05621;
+    color: #F7FAFC;
+}
+
+/* ---------- BOTONES OUTLINE ---------- */
+body.dark-mode .btn-outline-primary {
+    color: #5B9BD5;
+    border-color: #5B9BD5;
+}
+
+body.dark-mode .btn-outline-primary:hover {
+    background: #5B9BD5;
+    color: white;
+}
+
+body.dark-mode .btn-secondary {
+    background: #4A5568;
+    color: white;
+}
+
+body.dark-mode .btn-secondary:hover {
+    background: #718096;
+}
+
+/* ---------- ESTADÍSTICAS ---------- */
+body.dark-mode .stat-card {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* ---------- SCROLLBAR ---------- */
+body.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #1A202C;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #4A5568;
+    border-radius: 5px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+}
+
+/* ============================================
+   BOTÓN TOGGLE MODO OSCURO
+   ============================================ */
+.dark-mode-toggle {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-left: 10px;
+}
+
+.dark-mode-toggle:hover {
+    background: rgba(255,255,255,0.15);
+    transform: rotate(15deg);
+}
+
+.dark-mode-toggle i {
+    font-size: 1.1rem;
+}
+
+body.dark-mode .dark-mode-toggle {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+}

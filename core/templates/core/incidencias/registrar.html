@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Registrar Incidencia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-exclamation-triangle"></i> Registrar Nueva Incidencia
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="nino" class="form-label">Niño involucrado</label>
+                        <select name="nino" id="nino" class="form-control" required>
+                            <option value="">-- Seleccionar niño --</option>
+                            {% for nino in ninos %}
+                                <option value="{{ nino.id }}">{{ nino.nombre_completo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label">Tipo de Incidencia</label>
+                        <select name="tipo" id="tipo" class="form-control" required>
+                            <option value="accidente">Accidente leve</option>
+                            <option value="enfermedad">Enfermedad</option>
+                            <option value="comportamiento">Comportamiento</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea name="descripcion" id="descripcion" class="form-control" rows="3" 
+                                  placeholder="Describe lo ocurrido..." required></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="accion_realizada" class="form-label">Acción Realizada</label>
+                        <textarea name="accion_realizada" id="accion_realizada" class="form-control" rows="2" 
+                                  placeholder="¿Qué se hizo?"></textarea>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="comunicacion_apoderado" id="comunicacion_apoderado" 
+                               class="form-check-input">
+                        <label class="form-check-label" for="comunicacion_apoderado">
+                            ¿Se comunicó al apoderado?
+                        </label>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-save"></i> Guardar Incidencia
+                        </button>
+                        <a href="{% url 'lista_incidencias' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

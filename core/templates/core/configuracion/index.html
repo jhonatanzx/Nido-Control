@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-gear text-primary"></i> Configuración del Sistema</h1>
+
+<div class="row g-4">
+    <!-- Aulas -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <i class="bi bi-building"></i> Gestión de Aulas
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Administra las aulas y grupos de la guardería.</p>
+                <p><strong>{{ total_aulas }}</strong> aulas registradas</p>
+                <a href="{% url 'lista_aulas' %}" class="btn btn-primary w-100">
+                    <i class="bi bi-gear"></i> Administrar Aulas
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usuarios -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <i class="bi bi-people"></i> Gestión de Usuarios
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Administra las cuidadoras y administradores del sistema.</p>
+                <p><strong>{{ total_usuarios }}</strong> usuarios activos</p>
+                <a href="{% url 'lista_usuarios' %}" class="btn btn-primary w-100">
+                    <i class="bi bi-gear"></i> Administrar Usuarios
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mi Perfil -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <i class="bi bi-person-circle"></i> Mi Perfil
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Actualiza tu información personal y contraseña.</p>
+                <p>Usuario: <strong>{{ user.username }}</strong></p>
+                <a href="{% url 'mi_perfil' %}" class="btn btn-primary w-100">
+                    <i class="bi bi-person"></i> Ver Mi Perfil
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información del sistema -->
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-info-circle"></i> Información del Sistema
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="border rounded p-3 text-center">
+                            <h4 class="text-primary mb-0">{{ total_ninos }}</h4>
+                            <small class="text-muted">Niños matriculados</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3 text-center">
+                            <h4 class="text-primary mb-0">{{ total_aulas }}</h4>
+                            <small class="text-muted">Aulas</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3 text-center">
+                            <h4 class="text-primary mb-0">{{ total_usuarios }}</h4>
+                            <small class="text-muted">Usuarios</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3 text-center">
+                            <h4 class="text-success mb-0">v1.0</h4>
+                            <small class="text-muted">Versión MVP</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

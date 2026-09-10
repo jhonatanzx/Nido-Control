@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Detalle de Incidencia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-exclamation-triangle"></i> Detalle de Incidencia
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>Niño:</strong> {{ incidencia.nino.nombre_completo }}</div>
+                    <div class="col-md-6"><strong>Tipo:</strong> <span class="badge bg-warning">{{ incidencia.get_tipo_display }}</span></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6"><strong>Fecha:</strong> {{ incidencia.fecha|date:"d/m/Y" }}</div>
+                    <div class="col-md-6"><strong>Hora:</strong> {{ incidencia.hora|time:"H:i" }}</div>
+                </div>
+                <div class="mb-3">
+                    <strong>Descripción:</strong>
+                    <p class="border p-3 rounded bg-light">{{ incidencia.descripcion }}</p>
+                </div>
+                <div class="mb-3">
+                    <strong>Acción Realizada:</strong>
+                    <p class="border p-3 rounded bg-light">{{ incidencia.accion_realizada|default:"No especificada" }}</p>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Comunicación:</strong>
+                        {% if incidencia.comunicacion_apoderado %}<span class="badge bg-success">Sí</span>{% else %}<span class="badge bg-danger">No</span>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Estado:</strong> <span class="badge bg-info">{{ incidencia.get_estado_display }}</span>
+                    </div>
+                </div>
+                <a href="{% url 'lista_incidencias' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
