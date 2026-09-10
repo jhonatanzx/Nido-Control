@@ -1,3 +1,5 @@
+from io import BytesIO
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -5,6 +7,10 @@ from django.contrib import messages
 from django.db.models import Count, Q, Sum
 from django.utils import timezone
 from datetime import datetime, timedelta
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 from .models import *
 from .forms import *
 
@@ -113,7 +119,7 @@ def registrar_nino(request):
 @login_required
 def detalle_nino(request, nino_id):
     nino = get_object_or_404(Nino, id=nino_id)
-    return render(request, 'core/ninos/detalle.html', {'nino': nino})
+    return render(request, 'core/ninos/detalle.html', {'nino': nino, 'nino_id': nino.id})
 
 @login_required
 def editar_nino(request, nino_id):
@@ -179,10 +185,13 @@ def registrar_asistencia(request, asistencia_id):
         asistencia.motivo_ausencia = motivo
         asistencia.usuario_registro = request.user
         
-        if estado == 'presente' and hora_ingreso:
-            asistencia.hora_ingreso = hora_ingreso
-        elif estado == 'ausente':
+        if estado == 'ausente':
             asistencia.hora_ingreso = None
+            asistencia.hora_salida = None
+        else:
+            asistencia.hora_ingreso = hora_ingreso or asistencia.hora_ingreso
+            if estado == 'tardanza' and not asistencia.hora_ingreso:
+                asistencia.hora_ingreso = timezone.now().time()
         
         asistencia.save()
         messages.success(request, f'Asistencia de {asistencia.nino.nombre_completo} actualizada')
@@ -274,6 +283,19 @@ def registrar_incidencia(request):
 def detalle_incidencia(request, incidencia_id):
     incidencia = get_object_or_404(Incidencia, id=incidencia_id)
     return render(request, 'core/incidencias/detalle.html', {'incidencia': incidencia})
+
+@login_required
+def finalizar_incidencia(request, incidencia_id):
+    incidencia = get_object_or_404(Incidencia, id=incidencia_id)
+
+    if request.method == 'POST':
+        incidencia.estado = 'cerrado'
+        if not incidencia.accion_realizada:
+            incidencia.accion_realizada = 'Acción finalizada' 
+        incidencia.save()
+        messages.success(request, f'Incidencia de {incidencia.nino.nombre_completo} finalizada correctamente')
+
+    return redirect('lista_incidencias')
 
 @login_required
 def generar_reportes(request):

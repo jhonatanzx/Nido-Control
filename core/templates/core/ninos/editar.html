@@ -4,16 +4,87 @@
 {% block title %}Editar Niño{% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-    <div class="card-header">
-        <i class="bi bi-pencil"></i> Editar Niño
-    </div>
-    <div class="card-body">
-        <p><strong>ID:</strong> {{ nino_id }}</p>
-        <p class="text-muted">Próximamente: Formulario de edición</p>
-        <a href="{% url 'lista_ninos' %}" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Volver
-        </a>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-pencil"></i> Editar Niño
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_nombres" class="form-label">Nombres</label>
+                            <input type="text" class="form-control" id="id_nombres" name="nombres" value="{{ nino.nombres }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_apellidos" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="id_apellidos" name="apellidos" value="{{ nino.apellidos }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento" value="{{ nino.fecha_nacimiento|date:'Y-m-d' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_sexo" class="form-label">Sexo</label>
+                            <select class="form-control" id="id_sexo" name="sexo" required>
+                                <option value="M" {% if nino.sexo == 'M' %}selected{% endif %}>Masculino</option>
+                                <option value="F" {% if nino.sexo == 'F' %}selected{% endif %}>Femenino</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_aula" class="form-label">Aula</label>
+                        <select class="form-control" id="id_aula" name="aula">
+                            <option value="">Sin asignar</option>
+                            {% for aula in aulas %}
+                                <option value="{{ aula.id }}" {% if nino.aula and nino.aula.id == aula.id %}selected{% endif %}>{{ aula.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_alergias" class="form-label">Alergias</label>
+                        <textarea class="form-control" id="id_alergias" name="alergias" rows="2">{{ nino.alergias }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_restricciones" class="form-label">Restricciones Alimentarias</label>
+                        <textarea class="form-control" id="id_restricciones" name="restricciones" rows="2">{{ nino.restricciones }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_informacion_medica" class="form-label">Información Médica</label>
+                        <textarea class="form-control" id="id_informacion_medica" name="informacion_medica" rows="2">{{ nino.informacion_medica }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_foto" class="form-label">Foto</label>
+                        {% if nino.foto %}
+                            <div class="mb-2">
+                                <img src="{{ nino.foto.url }}" alt="Foto actual" class="img-thumbnail" style="max-width: 120px;">
+                            </div>
+                        {% endif %}
+                        <input type="file" class="form-control" id="id_foto" name="foto" accept="image/*">
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Guardar cambios
+                        </button>
+                        <a href="{% url 'detalle_nino' nino.id %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

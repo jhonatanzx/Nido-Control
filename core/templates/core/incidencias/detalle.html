@@ -36,9 +36,19 @@
                         <strong>Estado:</strong> <span class="badge bg-info">{{ incidencia.get_estado_display }}</span>
                     </div>
                 </div>
-                <a href="{% url 'lista_incidencias' %}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Volver
-                </a>
+                <div class="d-flex gap-2">
+                    {% if incidencia.estado != 'cerrado' %}
+                        <form method="post" action="{% url 'finalizar_incidencia' incidencia.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Finalizar acción
+                            </button>
+                        </form>
+                    {% endif %}
+                    <a href="{% url 'lista_incidencias' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                </div>
             </div>
         </div>
     </div>

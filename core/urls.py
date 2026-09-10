@@ -26,6 +26,7 @@ urlpatterns = [
     path('incidencias/', views.lista_incidencias, name='lista_incidencias'),
     path('incidencias/registrar/', views.registrar_incidencia, name='registrar_incidencia'),
     path('incidencias/<int:incidencia_id>/', views.detalle_incidencia, name='detalle_incidencia'),
+    path('incidencias/<int:incidencia_id>/finalizar/', views.finalizar_incidencia, name='finalizar_incidencia'),
     
     # Reportes
     path('reportes/', views.generar_reportes, name='generar_reportes'),
