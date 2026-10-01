@@ -26,6 +26,28 @@ class NinoEditTests(TestCase):
             informacion_medica='Sin observaciones',
         )
 
+    def test_registro_admin_desde_login_crea_usuario_admin(self):
+        response = self.client.post(
+            reverse('registro_admin'),
+            {
+                'username': 'admin_nuevo',
+                'email': 'nuevo@admin.com',
+                'password': '12345678',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+        self.assertTrue(get_user_model().objects.filter(username='admin_nuevo', rol='admin').exists())
+        self.assertTrue(get_user_model().objects.get(username='admin_nuevo').is_superuser)
+
+    def test_login_muestra_solo_boton_para_registrar_admin(self):
+        response = self.client.get(reverse('login'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Registrar administrador')
+        self.assertNotContains(response, 'Crea tu usuario')
+
     def test_get_editar_nino_renders_form(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse('editar_nino', args=[self.nino.id]))
@@ -134,6 +156,20 @@ class NinoEditTests(TestCase):
         registro_response = self.client.get(reverse('registrar_nino'))
         self.assertEqual(registro_response.status_code, 302)
         self.assertRedirects(registro_response, reverse('dashboard'))
+
+    def test_dashboard_muestra_aulas_predeterminadas_y_horario(self):
+        from .views import ensure_default_aulas
+        ensure_default_aulas()
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('dashboard'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Aula.objects.filter(nombre='Pollitos').exists())
+        self.assertTrue(Aula.objects.filter(nombre='Jirafitas').exists())
+        self.assertTrue(Aula.objects.filter(nombre='Abejitas').exists())
+        self.assertContains(response, 'Lunes a viernes')
+        self.assertContains(response, '8:00 a. m.')
+        self.assertContains(response, '1:00 p. m.')
 
     def test_reporte_asistencia_generates_pdf(self):
         self.client.force_login(self.user)

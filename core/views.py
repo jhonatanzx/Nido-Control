@@ -15,6 +15,19 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 from .models import *
 from .forms import *
 
+def ensure_default_aulas():
+    aulas_default = {
+        'Pollitos': 'Niños de 1 año',
+        'Jirafitas': 'Niños de 2 a 3 años',
+        'Abejitas': 'Niños de 2 a 3 años',
+    }
+    for nombre, descripcion in aulas_default.items():
+        Aula.objects.get_or_create(
+            nombre=nombre,
+            defaults={'capacidad': 12, 'descripcion': descripcion}
+        )
+
+
 def es_administrador(user):
     return user.is_authenticated and (user.is_superuser or getattr(user, 'rol', '') == 'admin')
 
@@ -65,6 +78,44 @@ def login_view(request):
     
     return render(request, 'core/login.html')
 
+
+def registro_admin(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        if not username or not password:
+            messages.error(request, 'El usuario y la contraseña son obligatorios para registrar un administrador.')
+            return redirect('login')
+
+        if Usuario.objects.filter(username=username).exists():
+            messages.error(request, 'Ya existe un usuario con ese nombre.')
+            return redirect('login')
+
+        if Usuario.objects.filter(rol='admin').exists():
+            messages.error(request, 'Ya existe un administrador registrado. Inicia sesión para continuar.')
+            return redirect('login')
+
+        user = Usuario.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            rol='admin',
+            is_staff=True,
+            is_superuser=True,
+        )
+        user.estado = True
+        user.save()
+
+        messages.success(request, 'Administrador registrado correctamente. Ya puedes iniciar sesión.')
+        return redirect('login')
+
+    return render(request, 'core/registro_admin.html')
+
 def logout_view(request):
     logout(request)
     messages.info(request, 'Sesión cerrada correctamente')
@@ -72,6 +123,7 @@ def logout_view(request):
 
 @login_required
 def dashboard(request):
+    ensure_default_aulas()
     hoy = timezone.now().date()
     
     total_ninos = Nino.objects.filter(estado_matricula=True).count()
@@ -104,6 +156,12 @@ def dashboard(request):
     for nino in ninos_para_entrega:
         nino.entrega_hoy = entregas_por_nino.get(nino.id)
     
+    horario_atencion = {
+        'dias': 'Lunes a viernes',
+        'inicio': '8:00 a. m.',
+        'fin': '1:00 p. m.',
+    }
+
     context = {
         'total_ninos': total_ninos,
         'presentes': presentes,
@@ -114,6 +172,7 @@ def dashboard(request):
         'hoy': hoy,
         'ninos_para_entrega': ninos_para_entrega,
         'entregas_hoy': entregas_hoy,
+        'horario_atencion': horario_atencion,
     }
     return render(request, 'core/dashboard.html', context)
 
@@ -174,6 +233,7 @@ def lista_ninos(request):
 @login_required
 @admin_required
 def registrar_nino(request):
+    ensure_default_aulas()
     if request.method == 'POST':
         # Crear un nuevo niño manualmente (sin usar forms para simplificar)
         nombres = request.POST.get('nombres')
@@ -270,6 +330,7 @@ def detalle_nino(request, nino_id):
 @login_required
 @admin_required
 def editar_nino(request, nino_id):
+    ensure_default_aulas()
     nino = get_object_or_404(Nino, id=nino_id)
     apoderados = list(nino.apoderados.order_by('id')[:2])
     
@@ -798,6 +859,7 @@ def configuracion(request):
 @admin_required
 def lista_aulas(request):
     """Lista de aulas"""
+    ensure_default_aulas()
     aulas = Aula.objects.all()
     return render(request, 'core/configuracion/aulas.html', {'aulas': aulas})
 

@@ -13,6 +13,10 @@
             <i class="bi bi-calendar3"></i> 
             Bienvenido, <strong>{{ user.username }}</strong>. Hoy es {{ hoy|date:"d/m/Y" }}
         </p>
+        <div class="alert alert-light border d-inline-flex align-items-center gap-2 mb-0">
+            <i class="bi bi-clock-history text-primary"></i>
+            <span><strong>Horario de atención:</strong> {{ horario_atencion.dias }} · {{ horario_atencion.inicio }} a {{ horario_atencion.fin }}</span>
+        </div>
     </div>
 </div>
 
