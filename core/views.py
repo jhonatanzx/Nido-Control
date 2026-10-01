@@ -1,4 +1,5 @@
 from io import BytesIO
+from functools import wraps
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
@@ -13,6 +14,38 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 from .models import *
 from .forms import *
+
+def es_administrador(user):
+    return user.is_authenticated and (user.is_superuser or getattr(user, 'rol', '') == 'admin')
+
+
+def es_cuidadora(user):
+    return user.is_authenticated and getattr(user, 'rol', '') == 'cuidadora'
+
+
+def admin_required(view_func):
+    @wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if not es_administrador(request.user):
+            messages.error(request, 'No tienes permisos de administrador para acceder a esta sección.')
+            return redirect('dashboard')
+        return view_func(request, *args, **kwargs)
+    return _wrapped
+
+
+def cuidadora_required(view_func):
+    @wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if not (es_administrador(request.user) or es_cuidadora(request.user)):
+            messages.error(request, 'No tienes permisos para acceder a esta sección.')
+            return redirect('dashboard')
+        return view_func(request, *args, **kwargs)
+    return _wrapped
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -58,6 +91,18 @@ def dashboard(request):
             'total': total
         })
     asistencia_semanal.reverse()
+
+    entregas_hoy = RegistroEntrega.objects.filter(fecha=hoy).select_related(
+        'nino', 'apoderado', 'persona_entrega'
+    )
+    ninos_para_entrega = Nino.objects.filter(
+        estado_matricula=True,
+        asistencia__fecha=hoy,
+        asistencia__estado__in=['presente', 'tardanza'],
+    ).prefetch_related('apoderados', 'autorizados').distinct().order_by('apellidos', 'nombres')
+    entregas_por_nino = {entrega.nino_id: entrega for entrega in entregas_hoy}
+    for nino in ninos_para_entrega:
+        nino.entrega_hoy = entregas_por_nino.get(nino.id)
     
     context = {
         'total_ninos': total_ninos,
@@ -67,15 +112,67 @@ def dashboard(request):
         'bitacoras_hoy': bitacoras_hoy,
         'asistencia_semanal': asistencia_semanal,
         'hoy': hoy,
+        'ninos_para_entrega': ninos_para_entrega,
+        'entregas_hoy': entregas_hoy,
     }
     return render(request, 'core/dashboard.html', context)
 
 @login_required
+@cuidadora_required
+def registrar_entrega(request, nino_id):
+    nino = get_object_or_404(Nino, id=nino_id, estado_matricula=True)
+    hoy = timezone.now().date()
+
+    if request.method == 'POST':
+        if RegistroEntrega.objects.filter(nino=nino, fecha=hoy).exists():
+            messages.error(request, f'{nino.nombre_completo} ya fue entregado hoy')
+            return redirect('dashboard')
+
+        asistencia = Asistencia.objects.filter(
+            nino=nino, fecha=hoy, estado__in=['presente', 'tardanza']
+        ).first()
+        if not asistencia:
+            messages.error(request, 'No se puede entregar un niño sin asistencia registrada hoy')
+            return redirect('dashboard')
+
+        documento = request.POST.get('documento', '').strip()
+        if not documento:
+            messages.error(request, 'Ingresa el DNI del padre, apoderado o persona autorizada')
+            return redirect('dashboard')
+
+        apoderado = Apoderado.objects.filter(
+            nino=nino, documento=documento, estado=True
+        ).first()
+        autorizado = PersonaAutorizada.objects.filter(
+            nino=nino, documento=documento, estado=True
+        ).first()
+        persona = apoderado or autorizado
+
+        if not persona:
+            messages.error(request, 'DNI no coincide con una persona autorizada. El niño no fue entregado')
+            return redirect('dashboard')
+
+        RegistroEntrega.objects.create(
+            nino=nino,
+            apoderado=apoderado,
+            persona_entrega=autorizado,
+            nombre_persona=persona.nombres,
+            documento_verificado=documento,
+            usuario_verifica=request.user,
+            observaciones=f'Parentesco: {persona.parentesco}',
+        )
+        messages.success(request, f'Entrega de {nino.nombre_completo} finalizada con éxito')
+
+    return redirect('dashboard')
+
+@login_required
+@cuidadora_required
 def lista_ninos(request):
     ninos = Nino.objects.filter(estado_matricula=True).order_by('apellidos', 'nombres')
     return render(request, 'core/ninos/lista.html', {'ninos': ninos})
 
 @login_required
+@admin_required
 def registrar_nino(request):
     if request.method == 'POST':
         # Crear un nuevo niño manualmente (sin usar forms para simplificar)
@@ -88,7 +185,7 @@ def registrar_nino(request):
         restricciones = request.POST.get('restricciones', '')
         informacion_medica = request.POST.get('informacion_medica', '')
         foto = request.FILES.get('foto')
-        
+
         if nombres and apellidos and fecha_nacimiento:
             nino = Nino(
                 nombres=nombres,
@@ -108,6 +205,54 @@ def registrar_nino(request):
                     pass
             
             nino.save()
+
+            apoderado_entries = []
+            for index in [1, 2]:
+                nombres_apoderado = request.POST.get(f'apoderado_{index}_nombres', '').strip()
+                parentesco_apoderado = request.POST.get(f'apoderado_{index}_parentesco', '').strip()
+                documento_apoderado = request.POST.get(f'apoderado_{index}_documento', '').strip()
+                telefono_apoderado = request.POST.get(f'apoderado_{index}_telefono', '').strip()
+                correo_apoderado = request.POST.get(f'apoderado_{index}_correo', '').strip()
+                direccion_apoderado = request.POST.get(f'apoderado_{index}_direccion', '').strip()
+
+                if not any([nombres_apoderado, parentesco_apoderado, documento_apoderado, telefono_apoderado, correo_apoderado, direccion_apoderado]):
+                    if index == 1:
+                        nombres_apoderado = request.POST.get('apoderado_nombres', '').strip()
+                        parentesco_apoderado = request.POST.get('apoderado_parentesco', '').strip()
+                        documento_apoderado = request.POST.get('apoderado_documento', '').strip()
+                        telefono_apoderado = request.POST.get('apoderado_telefono', '').strip()
+                        correo_apoderado = request.POST.get('apoderado_correo', '').strip()
+                        direccion_apoderado = request.POST.get('apoderado_direccion', '').strip()
+                    else:
+                        continue
+
+                if not any([nombres_apoderado, parentesco_apoderado, documento_apoderado, telefono_apoderado, correo_apoderado, direccion_apoderado]):
+                    continue
+
+                if not (nombres_apoderado and parentesco_apoderado and documento_apoderado and telefono_apoderado):
+                    messages.warning(request, f'Faltan datos del apoderado {index}: nombres, parentesco, documento y teléfono son obligatorios para el retiro seguro.')
+                    continue
+
+                apoderado_entries.append({
+                    'nombres': nombres_apoderado,
+                    'parentesco': parentesco_apoderado,
+                    'documento': documento_apoderado,
+                    'telefono': telefono_apoderado,
+                    'correo': correo_apoderado,
+                    'direccion': direccion_apoderado,
+                })
+
+            for apoderado_data in apoderado_entries:
+                Apoderado.objects.create(
+                    nino=nino,
+                    nombres=apoderado_data['nombres'],
+                    parentesco=apoderado_data['parentesco'],
+                    documento=apoderado_data['documento'],
+                    telefono=apoderado_data['telefono'],
+                    correo=apoderado_data['correo'],
+                    direccion=apoderado_data['direccion'],
+                )
+
             messages.success(request, f'¡Niño {nino.nombre_completo} registrado exitosamente!')
             return redirect('lista_ninos')
         else:
@@ -117,13 +262,16 @@ def registrar_nino(request):
     return render(request, 'core/ninos/registrar.html', {'aulas': aulas})
 
 @login_required
+@cuidadora_required
 def detalle_nino(request, nino_id):
     nino = get_object_or_404(Nino, id=nino_id)
     return render(request, 'core/ninos/detalle.html', {'nino': nino, 'nino_id': nino.id})
 
 @login_required
+@admin_required
 def editar_nino(request, nino_id):
     nino = get_object_or_404(Nino, id=nino_id)
+    apoderados = list(nino.apoderados.order_by('id')[:2])
     
     if request.method == 'POST':
         nino.nombres = request.POST.get('nombres', nino.nombres)
@@ -143,15 +291,44 @@ def editar_nino(request, nino_id):
                 nino.aula = Aula.objects.get(id=aula_id)
             except Aula.DoesNotExist:
                 pass
-        
+
+        for index in [1, 2]:
+            nombres = request.POST.get(f'apoderado_{index}_nombres', '').strip()
+            parentesco = request.POST.get(f'apoderado_{index}_parentesco', '').strip()
+            documento = request.POST.get(f'apoderado_{index}_documento', '').strip()
+            telefono = request.POST.get(f'apoderado_{index}_telefono', '').strip()
+            correo = request.POST.get(f'apoderado_{index}_correo', '').strip()
+            direccion = request.POST.get(f'apoderado_{index}_direccion', '').strip()
+
+            if not any([nombres, parentesco, documento, telefono, correo, direccion]):
+                continue
+
+            if not (nombres and parentesco and documento and telefono):
+                messages.warning(request, f'Faltan datos obligatorios para el apoderado {index}.')
+                continue
+
+            apoderado = apoderados[index - 1] if index - 1 < len(apoderados) else None
+            if apoderado is None:
+                apoderado = Apoderado(nino=nino)
+
+            apoderado.nombres = nombres
+            apoderado.parentesco = parentesco
+            apoderado.documento = documento
+            apoderado.telefono = telefono
+            apoderado.correo = correo
+            apoderado.direccion = direccion
+            apoderado.estado = True
+            apoderado.save()
+
         nino.save()
         messages.success(request, f'Niño {nino.nombre_completo} actualizado correctamente')
         return redirect('detalle_nino', nino_id=nino.id)
     
     aulas = Aula.objects.all()
-    return render(request, 'core/ninos/editar.html', {'nino': nino, 'aulas': aulas})
+    return render(request, 'core/ninos/editar.html', {'nino': nino, 'aulas': aulas, 'apoderados': apoderados})
 
 @login_required
+@cuidadora_required
 def asistencia_hoy(request):
     hoy = timezone.now().date()
     ninos = Nino.objects.filter(estado_matricula=True)
@@ -173,6 +350,7 @@ def asistencia_hoy(request):
     return render(request, 'core/asistencia/hoy.html', context)
 
 @login_required
+@cuidadora_required
 def registrar_asistencia(request, asistencia_id):
     asistencia = get_object_or_404(Asistencia, id=asistencia_id)
     
@@ -199,7 +377,7 @@ def registrar_asistencia(request, asistencia_id):
     return redirect('asistencia_hoy')
 
 @login_required
-@login_required
+@cuidadora_required
 def registrar_salida(request, asistencia_id):
     asistencia = get_object_or_404(Asistencia, id=asistencia_id)
     
@@ -213,6 +391,7 @@ def registrar_salida(request, asistencia_id):
     return redirect('asistencia_hoy')
 
 @login_required
+@admin_required
 def bitacora_hoy(request):
     hoy = timezone.now().date()
     ninos = Nino.objects.filter(estado_matricula=True)
@@ -230,6 +409,7 @@ def bitacora_hoy(request):
     return render(request, 'core/bitacora/hoy.html', context)
 
 @login_required
+@admin_required
 def registrar_bitacora(request, bitacora_id):
     bitacora = get_object_or_404(Bitacora, id=bitacora_id)
     
@@ -247,11 +427,13 @@ def registrar_bitacora(request, bitacora_id):
     return redirect('bitacora_hoy')
 
 @login_required
+@admin_required
 def lista_incidencias(request):
     incidencias = Incidencia.objects.all().order_by('-fecha', '-hora')
     return render(request, 'core/incidencias/lista.html', {'incidencias': incidencias})
 
 @login_required
+@admin_required
 def registrar_incidencia(request):
     if request.method == 'POST':
         nino_id = request.POST.get('nino')
@@ -280,11 +462,13 @@ def registrar_incidencia(request):
     return render(request, 'core/incidencias/registrar.html', {'ninos': ninos})
 
 @login_required
+@admin_required
 def detalle_incidencia(request, incidencia_id):
     incidencia = get_object_or_404(Incidencia, id=incidencia_id)
     return render(request, 'core/incidencias/detalle.html', {'incidencia': incidencia})
 
 @login_required
+@admin_required
 def finalizar_incidencia(request, incidencia_id):
     incidencia = get_object_or_404(Incidencia, id=incidencia_id)
 
@@ -298,11 +482,12 @@ def finalizar_incidencia(request, incidencia_id):
     return redirect('lista_incidencias')
 
 @login_required
+@admin_required
 def generar_reportes(request):
     return render(request, 'core/reportes/index.html')
 
 @login_required
-@login_required
+@admin_required
 def reporte_asistencia(request):
     """Genera reporte de asistencia en PDF"""
     hoy = timezone.now().date()
@@ -360,6 +545,7 @@ def reporte_asistencia(request):
 
 
 @login_required
+@admin_required
 def reporte_incidencias(request):
     """Genera reporte de incidencias en PDF"""
     incidencias = Incidencia.objects.all().order_by('-fecha')[:50]
@@ -413,6 +599,7 @@ def reporte_incidencias(request):
 
 
 @login_required
+@admin_required
 def reporte_bitacora(request):
     """Genera reporte de bitácora en PDF"""
     hoy = timezone.now().date()
@@ -471,6 +658,7 @@ def reporte_bitacora(request):
 # ============================================
 
 @login_required
+@admin_required
 def estadisticas(request):
     """Vista principal de estadísticas con gráficos"""
     hoy = timezone.now().date()
@@ -590,6 +778,7 @@ def estadisticas(request):
 # ============================================
 
 @login_required
+@admin_required
 def configuracion(request):
     """Panel de configuración principal"""
     # Estadísticas generales
@@ -606,6 +795,7 @@ def configuracion(request):
 
 
 @login_required
+@admin_required
 def lista_aulas(request):
     """Lista de aulas"""
     aulas = Aula.objects.all()
@@ -613,6 +803,7 @@ def lista_aulas(request):
 
 
 @login_required
+@admin_required
 def crear_aula(request):
     """Crear nueva aula"""
     if request.method == 'POST':
@@ -635,6 +826,7 @@ def crear_aula(request):
 
 
 @login_required
+@admin_required
 def editar_aula(request, aula_id):
     """Editar aula existente"""
     aula = get_object_or_404(Aula, id=aula_id)
@@ -651,6 +843,7 @@ def editar_aula(request, aula_id):
 
 
 @login_required
+@admin_required
 def eliminar_aula(request, aula_id):
     """Eliminar aula"""
     aula = get_object_or_404(Aula, id=aula_id)
@@ -661,6 +854,7 @@ def eliminar_aula(request, aula_id):
 
 
 @login_required
+@admin_required
 def lista_usuarios(request):
     """Lista de usuarios"""
     usuarios = Usuario.objects.all().order_by('-date_joined')
@@ -668,6 +862,7 @@ def lista_usuarios(request):
 
 
 @login_required
+@admin_required
 def crear_usuario(request):
     """Crear nuevo usuario"""
     if request.method == 'POST':
@@ -688,6 +883,13 @@ def crear_usuario(request):
                     rol=rol,
                     telefono=telefono
                 )
+                if rol == 'admin':
+                    user.is_staff = True
+                    user.is_superuser = True
+                else:
+                    user.is_staff = False
+                    user.is_superuser = False
+                user.save()
                 messages.success(request, f'Usuario "{username}" creado correctamente')
                 return redirect('lista_usuarios')
         else:
@@ -697,6 +899,7 @@ def crear_usuario(request):
 
 
 @login_required
+@admin_required
 def cambiar_estado_usuario(request, usuario_id):
     """Activar/Desactivar usuario"""
     usuario = get_object_or_404(Usuario, id=usuario_id)
@@ -714,6 +917,7 @@ def cambiar_estado_usuario(request, usuario_id):
 
 
 @login_required
+@cuidadora_required
 def mi_perfil(request):
     """Ver y editar perfil del usuario actual"""
     if request.method == 'POST':
@@ -730,6 +934,7 @@ def mi_perfil(request):
 
 
 @login_required
+@cuidadora_required
 def cambiar_password(request):
     """Cambiar contraseña del usuario actual"""
     if request.method == 'POST':

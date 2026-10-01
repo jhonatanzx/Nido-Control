@@ -108,8 +108,10 @@ class Asistencia(models.Model):
 
 class RegistroEntrega(models.Model):
     nino = models.ForeignKey(Nino, on_delete=models.CASCADE)
+    apoderado = models.ForeignKey('Apoderado', on_delete=models.SET_NULL, null=True, blank=True)
     persona_entrega = models.ForeignKey(PersonaAutorizada, on_delete=models.SET_NULL, null=True)
     nombre_persona = models.CharField(max_length=100)
+    documento_verificado = models.CharField(max_length=20, blank=True, default='')
     fecha = models.DateField(default=timezone.now)
     hora = models.TimeField(auto_now_add=True)
     usuario_verifica = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)

@@ -39,7 +39,7 @@ class AsistenciaAdmin(admin.ModelAdmin):
 
 @admin.register(RegistroEntrega)
 class RegistroEntregaAdmin(admin.ModelAdmin):
-    list_display = ['nino', 'nombre_persona', 'fecha', 'hora']
+    list_display = ['nino', 'nombre_persona', 'documento_verificado', 'fecha', 'hora']
     list_filter = ['fecha']
 
 @admin.register(Bitacora)

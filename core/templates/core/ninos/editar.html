@@ -64,6 +64,95 @@
                         <textarea class="form-control" id="id_informacion_medica" name="informacion_medica" rows="2">{{ nino.informacion_medica }}</textarea>
                     </div>
 
+                    {% with apoderado_1=apoderados.0|default:'' apoderado_2=apoderados.1|default:'' %}
+                    <div class="mb-4 mt-4 border rounded p-3 bg-light">
+                        <h5 class="mb-3">Padre o apoderado para retiro seguro</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_1_nombres" class="form-label">Nombres y apellidos</label>
+                                <input type="text" class="form-control" id="id_apoderado_1_nombres" name="apoderado_1_nombres" value="{{ apoderado_1.nombres|default:'' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_1_parentesco" class="form-label">Parentesco</label>
+                                <select class="form-control" id="id_apoderado_1_parentesco" name="apoderado_1_parentesco">
+                                    <option value="">Seleccione</option>
+                                    <option value="padre" {% if apoderado_1.parentesco == 'padre' %}selected{% endif %}>Padre/Madre</option>
+                                    <option value="abuelo" {% if apoderado_1.parentesco == 'abuelo' %}selected{% endif %}>Abuelo/Abuela</option>
+                                    <option value="tio" {% if apoderado_1.parentesco == 'tio' %}selected{% endif %}>Tío/Tía</option>
+                                    <option value="hermano" {% if apoderado_1.parentesco == 'hermano' %}selected{% endif %}>Hermano/Hermana</option>
+                                    <option value="otro" {% if apoderado_1.parentesco == 'otro' %}selected{% endif %}>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_1_documento" class="form-label">Documento</label>
+                                <input type="text" class="form-control" id="id_apoderado_1_documento" name="apoderado_1_documento" value="{{ apoderado_1.documento|default:'' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_1_telefono" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="id_apoderado_1_telefono" name="apoderado_1_telefono" value="{{ apoderado_1.telefono|default:'' }}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_1_correo" class="form-label">Correo</label>
+                                <input type="email" class="form-control" id="id_apoderado_1_correo" name="apoderado_1_correo" value="{{ apoderado_1.correo|default:'' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_1_direccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="id_apoderado_1_direccion" name="apoderado_1_direccion" value="{{ apoderado_1.direccion|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 border rounded p-3 bg-light">
+                        <h5 class="mb-3">Segundo apoderado</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_2_nombres" class="form-label">Nombres y apellidos</label>
+                                <input type="text" class="form-control" id="id_apoderado_2_nombres" name="apoderado_2_nombres" value="{{ apoderado_2.nombres|default:'' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_2_parentesco" class="form-label">Parentesco</label>
+                                <select class="form-control" id="id_apoderado_2_parentesco" name="apoderado_2_parentesco">
+                                    <option value="">Seleccione</option>
+                                    <option value="padre" {% if apoderado_2.parentesco == 'padre' %}selected{% endif %}>Padre/Madre</option>
+                                    <option value="abuelo" {% if apoderado_2.parentesco == 'abuelo' %}selected{% endif %}>Abuelo/Abuela</option>
+                                    <option value="tio" {% if apoderado_2.parentesco == 'tio' %}selected{% endif %}>Tío/Tía</option>
+                                    <option value="hermano" {% if apoderado_2.parentesco == 'hermano' %}selected{% endif %}>Hermano/Hermana</option>
+                                    <option value="otro" {% if apoderado_2.parentesco == 'otro' %}selected{% endif %}>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_2_documento" class="form-label">Documento</label>
+                                <input type="text" class="form-control" id="id_apoderado_2_documento" name="apoderado_2_documento" value="{{ apoderado_2.documento|default:'' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_2_telefono" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="id_apoderado_2_telefono" name="apoderado_2_telefono" value="{{ apoderado_2.telefono|default:'' }}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_2_correo" class="form-label">Correo</label>
+                                <input type="email" class="form-control" id="id_apoderado_2_correo" name="apoderado_2_correo" value="{{ apoderado_2.correo|default:'' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_apoderado_2_direccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="id_apoderado_2_direccion" name="apoderado_2_direccion" value="{{ apoderado_2.direccion|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                    {% endwith %}
+
                     <div class="mb-3">
                         <label for="id_foto" class="form-label">Foto</label>
                         {% if nino.foto %}

@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
-from .models import Aula, Nino
+from .models import Apoderado, Asistencia, Aula, Nino, RegistroEntrega
 
 
 class NinoEditTests(TestCase):
@@ -57,6 +58,82 @@ class NinoEditTests(TestCase):
         self.assertEqual(self.nino.alergias, 'Polen')
         self.assertEqual(self.nino.restricciones, 'No tomar leche')
         self.assertEqual(self.nino.informacion_medica, 'Revisar cada 6 meses')
+
+    def test_editar_nino_puede_guardar_apoderados(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse('editar_nino', args=[self.nino.id]),
+            {
+                'nombres': 'Ana',
+                'apellidos': 'García',
+                'fecha_nacimiento': '2018-05-10',
+                'sexo': 'F',
+                'apoderado_1_nombres': 'Carlos García',
+                'apoderado_1_parentesco': 'padre',
+                'apoderado_1_documento': '12345678',
+                'apoderado_1_telefono': '987654321',
+                'apoderado_1_correo': 'carlos@example.com',
+                'apoderado_1_direccion': 'Calle 1',
+                'apoderado_2_nombres': 'María García',
+                'apoderado_2_parentesco': 'otro',
+                'apoderado_2_documento': '87654321',
+                'apoderado_2_telefono': '912345678',
+                'apoderado_2_correo': 'maria@example.com',
+                'apoderado_2_direccion': 'Calle 2',
+            },
+        )
+
+        self.assertRedirects(response, reverse('detalle_nino', args=[self.nino.id]))
+        self.assertEqual(self.nino.apoderados.count(), 2)
+        self.assertTrue(self.nino.apoderados.filter(documento='12345678').exists())
+        self.assertTrue(self.nino.apoderados.filter(documento='87654321').exists())
+
+    def test_registrar_nino_puede_guardar_dos_apoderados(self):
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse('registrar_nino'),
+            {
+                'nombres': 'Luis',
+                'apellidos': 'Pérez',
+                'fecha_nacimiento': '2020-01-15',
+                'sexo': 'M',
+                'apoderado_1_nombres': 'Carlos Pérez',
+                'apoderado_1_parentesco': 'padre',
+                'apoderado_1_documento': '11111111',
+                'apoderado_1_telefono': '987654321',
+                'apoderado_1_correo': 'carlos@example.com',
+                'apoderado_1_direccion': 'Calle 1',
+                'apoderado_2_nombres': 'María Pérez',
+                'apoderado_2_parentesco': 'otro',
+                'apoderado_2_documento': '22222222',
+                'apoderado_2_telefono': '912345678',
+                'apoderado_2_correo': 'maria@example.com',
+                'apoderado_2_direccion': 'Calle 2',
+            },
+        )
+
+        nino = Nino.objects.get(nombres='Luis', apellidos='Pérez')
+        self.assertRedirects(response, reverse('lista_ninos'))
+        self.assertEqual(nino.apoderados.count(), 2)
+        self.assertTrue(nino.apoderados.filter(documento='11111111').exists())
+        self.assertTrue(nino.apoderados.filter(documento='22222222').exists())
+
+    def test_cuidadora_puede_usar_asistencia_pero_no_registrar_ninos(self):
+        cuidadora = get_user_model().objects.create_user(
+            username='cuidadora',
+            password='123456',
+            rol='cuidadora',
+            is_staff=False,
+            is_superuser=False,
+        )
+        self.client.force_login(cuidadora)
+
+        asistencia_response = self.client.get(reverse('asistencia_hoy'))
+        self.assertEqual(asistencia_response.status_code, 200)
+
+        registro_response = self.client.get(reverse('registrar_nino'))
+        self.assertEqual(registro_response.status_code, 302)
+        self.assertRedirects(registro_response, reverse('dashboard'))
 
     def test_reporte_asistencia_generates_pdf(self):
         self.client.force_login(self.user)
@@ -126,3 +203,61 @@ class NinoEditTests(TestCase):
         asistencia.refresh_from_db()
         self.assertRedirects(response, reverse('asistencia_hoy'))
         self.assertEqual(str(asistencia.hora_salida), '12:15:00')
+
+    def test_entrega_exitosa_cuando_dni_coincide(self):
+        apoderado = Apoderado.objects.create(
+            nino=self.nino,
+            nombres='Carlos García',
+            parentesco='padre',
+            documento='12345678',
+            telefono='999999999',
+        )
+        Asistencia.objects.create(nino=self.nino, fecha=timezone.now().date(), estado='presente')
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('registrar_entrega', args=[self.nino.id]),
+            {'documento': apoderado.documento},
+        )
+
+        self.assertRedirects(response, reverse('dashboard'))
+        entrega = RegistroEntrega.objects.get(nino=self.nino)
+        self.assertEqual(entrega.apoderado, apoderado)
+        self.assertEqual(entrega.documento_verificado, '12345678')
+
+    def test_entrega_rechazada_cuando_dni_no_coincide(self):
+        Apoderado.objects.create(
+            nino=self.nino,
+            nombres='Carlos García',
+            parentesco='padre',
+            documento='12345678',
+            telefono='999999999',
+        )
+        Asistencia.objects.create(nino=self.nino, fecha=timezone.now().date(), estado='presente')
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('registrar_entrega', args=[self.nino.id]),
+            {'documento': '00000000'},
+            follow=True,
+        )
+
+        self.assertFalse(RegistroEntrega.objects.filter(nino=self.nino).exists())
+        self.assertContains(response, 'DNI no coincide')
+
+    def test_no_permite_dos_entregas_el_mismo_dia(self):
+        Asistencia.objects.create(nino=self.nino, fecha=timezone.now().date(), estado='presente')
+        RegistroEntrega.objects.create(
+            nino=self.nino,
+            nombre_persona='Carlos García',
+            documento_verificado='12345678',
+            usuario_verifica=self.user,
+        )
+        self.client.force_login(self.user)
+
+        self.client.post(
+            reverse('registrar_entrega', args=[self.nino.id]),
+            {'documento': '12345678'},
+        )
+
+        self.assertEqual(RegistroEntrega.objects.filter(nino=self.nino).count(), 1)

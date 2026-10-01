@@ -64,6 +64,95 @@
                         <textarea class="form-control" id="id_informacion_medica" name="informacion_medica" rows="2"></textarea>
                     </div>
                     
+                    <div class="mb-4 mt-4 border rounded p-3 bg-light">
+                        <h5 class="mb-3">Padre o apoderado para retiro seguro</h5>
+                        <div class="mb-4">
+                            <h6 class="mb-3">Primer apoderado</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_1_nombres" class="form-label">Nombres y apellidos</label>
+                                    <input type="text" class="form-control" id="id_apoderado_1_nombres" name="apoderado_1_nombres" placeholder="Ej: María López">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_1_parentesco" class="form-label">Parentesco</label>
+                                    <select class="form-control" id="id_apoderado_1_parentesco" name="apoderado_1_parentesco">
+                                        <option value="">Seleccione</option>
+                                        <option value="padre">Padre/Madre</option>
+                                        <option value="abuelo">Abuelo/Abuela</option>
+                                        <option value="tio">Tío/Tía</option>
+                                        <option value="hermano">Hermano/Hermana</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_1_documento" class="form-label">Documento</label>
+                                    <input type="text" class="form-control" id="id_apoderado_1_documento" name="apoderado_1_documento" placeholder="DNI / Pasaporte">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_1_telefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="id_apoderado_1_telefono" name="apoderado_1_telefono" placeholder="Ej: +56 9 1234 5678">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_1_correo" class="form-label">Correo</label>
+                                    <input type="email" class="form-control" id="id_apoderado_1_correo" name="apoderado_1_correo" placeholder="ejemplo@correo.com">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_1_direccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="id_apoderado_1_direccion" name="apoderado_1_direccion" placeholder="Calle, número, comuna">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 class="mb-3">Segundo apoderado</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_2_nombres" class="form-label">Nombres y apellidos</label>
+                                    <input type="text" class="form-control" id="id_apoderado_2_nombres" name="apoderado_2_nombres" placeholder="Ej: Juan López">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_2_parentesco" class="form-label">Parentesco</label>
+                                    <select class="form-control" id="id_apoderado_2_parentesco" name="apoderado_2_parentesco">
+                                        <option value="">Seleccione</option>
+                                        <option value="padre">Padre/Madre</option>
+                                        <option value="abuelo">Abuelo/Abuela</option>
+                                        <option value="tio">Tío/Tía</option>
+                                        <option value="hermano">Hermano/Hermana</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_2_documento" class="form-label">Documento</label>
+                                    <input type="text" class="form-control" id="id_apoderado_2_documento" name="apoderado_2_documento" placeholder="DNI / Pasaporte">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_2_telefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="id_apoderado_2_telefono" name="apoderado_2_telefono" placeholder="Ej: +56 9 1234 5678">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_2_correo" class="form-label">Correo</label>
+                                    <input type="email" class="form-control" id="id_apoderado_2_correo" name="apoderado_2_correo" placeholder="ejemplo@correo.com">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_2_direccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="id_apoderado_2_direccion" name="apoderado_2_direccion" placeholder="Calle, número, comuna">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label for="id_foto" class="form-label">Foto</label>
                         <input type="file" class="form-control" id="id_foto" name="foto" accept="image/*">
