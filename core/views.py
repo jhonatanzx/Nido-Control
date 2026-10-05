@@ -17,15 +17,18 @@ from .forms import *
 
 def ensure_default_aulas():
     aulas_default = {
-        'Pollitos': 'Niños de 1 año',
-        'Jirafitas': 'Niños de 2 a 3 años',
-        'Abejitas': 'Niños de 2 a 3 años',
+        'Pollitos': '1 año',
+        'Jirafitas': '2 a 3 años',
+        'Abejitas': '2 a 3 años',
     }
     for nombre, descripcion in aulas_default.items():
-        Aula.objects.get_or_create(
+        aula, created = Aula.objects.get_or_create(
             nombre=nombre,
             defaults={'capacidad': 12, 'descripcion': descripcion}
         )
+        if not created and aula.descripcion != descripcion:
+            aula.descripcion = descripcion
+            aula.save()
 
 
 def es_administrador(user):

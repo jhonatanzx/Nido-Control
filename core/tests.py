@@ -171,6 +171,26 @@ class NinoEditTests(TestCase):
         self.assertContains(response, '8:00 a. m.')
         self.assertContains(response, '1:00 p. m.')
 
+    def test_aulas_predeterminadas_tienen_rango_de_edad(self):
+        from .views import ensure_default_aulas
+
+        ensure_default_aulas()
+
+        self.assertEqual(Aula.objects.get(nombre='Pollitos').descripcion, '1 año')
+        self.assertEqual(Aula.objects.get(nombre='Jirafitas').descripcion, '2 a 3 años')
+        self.assertEqual(Aula.objects.get(nombre='Abejitas').descripcion, '2 a 3 años')
+
+    def test_registro_nino_muestra_rango_de_edad_en_el_select(self):
+        from .views import ensure_default_aulas
+
+        ensure_default_aulas()
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('registrar_nino'))
+
+        self.assertContains(response, 'Pollitos - 1 año')
+        self.assertContains(response, 'Jirafitas - 2 a 3 años')
+        self.assertContains(response, 'Abejitas - 2 a 3 años')
+
     def test_reporte_asistencia_generates_pdf(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse('reporte_asistencia'))

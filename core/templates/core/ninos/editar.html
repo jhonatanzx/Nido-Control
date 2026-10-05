@@ -44,7 +44,7 @@
                         <select class="form-control" id="id_aula" name="aula">
                             <option value="">Sin asignar</option>
                             {% for aula in aulas %}
-                                <option value="{{ aula.id }}" {% if nino.aula and nino.aula.id == aula.id %}selected{% endif %}>{{ aula.nombre }}</option>
+                                <option value="{{ aula.id }}" {% if nino.aula and nino.aula.id == aula.id %}selected{% endif %}>{{ aula.nombre }}{% if aula.descripcion %} - {{ aula.descripcion }}{% endif %}</option>
                             {% endfor %}
                         </select>
                     </div>
