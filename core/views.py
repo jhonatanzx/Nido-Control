@@ -95,6 +95,10 @@ def registro_admin(request):
             messages.error(request, 'El usuario y la contraseña son obligatorios para registrar un administrador.')
             return redirect('login')
 
+        if len(password) < 8:
+            messages.error(request, 'La contraseña debe tener al menos 8 caracteres.')
+            return redirect('login')
+
         if Usuario.objects.filter(username=username).exists():
             messages.error(request, 'Ya existe un usuario con ese nombre.')
             return redirect('login')
@@ -936,30 +940,97 @@ def crear_usuario(request):
         password = request.POST.get('password')
         rol = request.POST.get('rol', 'cuidadora')
         telefono = request.POST.get('telefono', '')
-        
-        if username and password:
-            if Usuario.objects.filter(username=username).exists():
-                messages.error(request, 'El nombre de usuario ya existe')
-            else:
-                user = Usuario.objects.create_user(
-                    username=username,
-                    email=email,
-                    password=password,
-                    rol=rol,
-                    telefono=telefono
-                )
-                if rol == 'admin':
-                    user.is_staff = True
-                    user.is_superuser = True
-                else:
-                    user.is_staff = False
-                    user.is_superuser = False
-                user.save()
-                messages.success(request, f'Usuario "{username}" creado correctamente')
-                return redirect('lista_usuarios')
-        else:
+
+        if not username or not password:
             messages.error(request, 'Por favor completa los campos obligatorios')
-    
+            return redirect('lista_usuarios')
+
+        if len(password) < 8:
+            messages.error(request, 'La contraseña debe tener al menos 8 caracteres.')
+            return redirect('lista_usuarios')
+
+        if Usuario.objects.filter(username=username).exists():
+            messages.error(request, 'El nombre de usuario ya existe')
+            return redirect('lista_usuarios')
+
+        user = Usuario.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            rol=rol,
+            telefono=telefono
+        )
+        if rol == 'admin':
+            user.is_staff = True
+            user.is_superuser = True
+        else:
+            user.is_staff = False
+            user.is_superuser = False
+        user.save()
+        messages.success(request, f'Usuario "{username}" creado correctamente')
+        return redirect('lista_usuarios')
+
+    return redirect('lista_usuarios')
+
+
+@login_required
+@admin_required
+def editar_usuario(request, usuario_id):
+    """Editar datos de un usuario"""
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        rol = request.POST.get('rol', usuario.rol)
+        telefono = request.POST.get('telefono', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        if not username:
+            messages.error(request, 'El nombre de usuario es obligatorio.')
+            return redirect('editar_usuario', usuario_id=usuario.id)
+
+        if Usuario.objects.filter(username=username).exclude(id=usuario.id).exists():
+            messages.error(request, 'Ya existe otro usuario con ese nombre.')
+            return redirect('editar_usuario', usuario_id=usuario.id)
+
+        if password and len(password) < 8:
+            messages.error(request, 'La contraseña debe tener al menos 8 caracteres.')
+            return redirect('editar_usuario', usuario_id=usuario.id)
+
+        usuario.username = username
+        usuario.email = email
+        usuario.rol = rol
+        usuario.telefono = telefono
+        if rol == 'admin':
+            usuario.is_staff = True
+            usuario.is_superuser = True
+        else:
+            usuario.is_staff = False
+            usuario.is_superuser = False
+        if password:
+            usuario.set_password(password)
+        usuario.save()
+
+        messages.success(request, f'Usuario "{usuario.username}" actualizado correctamente')
+        return redirect('lista_usuarios')
+
+    return render(request, 'core/configuracion/editar_usuario.html', {'usuario': usuario})
+
+
+@login_required
+@admin_required
+def eliminar_usuario(request, usuario_id):
+    """Eliminar un usuario"""
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    if usuario == request.user:
+        messages.error(request, 'No puedes eliminar tu propio usuario.')
+        return redirect('lista_usuarios')
+
+    nombre = usuario.username
+    usuario.delete()
+    messages.success(request, f'Usuario "{nombre}" eliminado correctamente')
     return redirect('lista_usuarios')
 
 

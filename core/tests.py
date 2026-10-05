@@ -157,6 +157,31 @@ class NinoEditTests(TestCase):
         self.assertEqual(registro_response.status_code, 302)
         self.assertRedirects(registro_response, reverse('dashboard'))
 
+    def test_crear_usuario_requiere_contraseña_de_minimo_8_caracteres(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('crear_usuario'),
+            {
+                'username': 'nuevo_usuario',
+                'email': 'nuevo@example.com',
+                'password': '12345',
+                'rol': 'cuidadora',
+                'telefono': '987654321',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(get_user_model().objects.filter(username='nuevo_usuario').exists())
+
+    def test_gestion_usuarios_muestra_botones_de_editar_y_eliminar_solo_para_admin(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('lista_usuarios'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Editar')
+        self.assertContains(response, 'Eliminar')
+
     def test_dashboard_muestra_aulas_predeterminadas_y_horario(self):
         from .views import ensure_default_aulas
         ensure_default_aulas()

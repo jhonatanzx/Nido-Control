@@ -50,17 +50,33 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if usuario != request.user %}
-                                    <a href="{% url 'cambiar_estado_usuario' usuario.id %}" 
-                                       class="btn btn-sm {% if usuario.estado %}btn-warning{% else %}btn-success{% endif %}"
-                                       onclick="return confirm('¿Cambiar estado de {{ usuario.username }}?')">
-                                        {% if usuario.estado %}
-                                            <i class="bi bi-x-circle"></i> Desactivar
+                                {% if request.user.is_superuser or request.user.rol == 'admin' %}
+                                    <div class="d-flex gap-2 align-items-center flex-wrap">
+                                        <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-pencil-square"></i> Editar
+                                        </a>
+                                        {% if usuario != request.user %}
+                                            <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-sm btn-danger"
+                                               onclick="return confirm('¿Eliminar al usuario {{ usuario.username }}?')">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </a>
+                                            <a href="{% url 'cambiar_estado_usuario' usuario.id %}" 
+                                               class="btn btn-sm {% if usuario.estado %}btn-warning{% else %}btn-success{% endif %}"
+                                               onclick="return confirm('¿Cambiar estado de {{ usuario.username }}?')">
+                                                {% if usuario.estado %}
+                                                    <i class="bi bi-x-circle"></i> Desactivar
+                                                {% else %}
+                                                    <i class="bi bi-check-circle"></i> Activar
+                                                {% endif %}
+                                            </a>
                                         {% else %}
-                                            <i class="bi bi-check-circle"></i> Activar
+                                            <a href="#" class="btn btn-sm btn-danger disabled" aria-disabled="true" onclick="return false;">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </a>
+                                            <span class="badge bg-primary">Tú</span>
                                         {% endif %}
-                                    </a>
-                                {% else %}
+                                    </div>
+                                {% elif usuario == request.user %}
                                     <span class="badge bg-primary">Tú</span>
                                 {% endif %}
                             </td>
@@ -100,6 +116,7 @@
                     <div class="mb-3">
                         <label class="form-label">Contraseña</label>
                         <input type="password" name="password" class="form-control" required minlength="8">
+                        <small class="text-muted">Mínimo 8 caracteres.</small>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Rol</label>
