@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Editar Menú{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header"><i class="bi bi-pencil-square"></i> Editar menú</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="tipoComida" class="form-label">Tipo de comida</label>
+                        <select id="tipoComida" name="tipo_comida" class="form-control" required>
+                            {% for valor, etiqueta in tipos_comida %}
+                                <option value="{{ valor }}" {% if menu.tipo_comida == valor %}selected{% endif %}>{{ etiqueta }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fechaComida" class="form-label">Fecha</label>
+                        <input id="fechaComida" type="date" name="fecha" class="form-control" value="{{ menu.fecha|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcionMenu" class="form-label">Descripción del menú</label>
+                        <textarea id="descripcionMenu" name="descripcion" class="form-control" rows="5" required maxlength="2000">{{ menu.descripcion }}</textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'menu_diario' %}?fecha={{ menu.fecha|date:'Y-m-d' }}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

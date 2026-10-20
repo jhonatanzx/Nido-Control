@@ -33,9 +33,10 @@ class PersonaAutorizadaAdmin(admin.ModelAdmin):
 
 @admin.register(Asistencia)
 class AsistenciaAdmin(admin.ModelAdmin):
-    list_display = ['nino', 'fecha', 'estado', 'hora_ingreso', 'hora_salida']
+    list_display = ['nino', 'fecha', 'estado', 'fecha_hora_ingreso', 'fecha_hora_salida']
     list_filter = ['estado', 'fecha']
     search_fields = ['nino__nombres', 'nino__apellidos']
+    readonly_fields = ['hora_ingreso', 'hora_salida', 'fecha_hora_ingreso', 'fecha_hora_salida']
 
 @admin.register(RegistroEntrega)
 class RegistroEntregaAdmin(admin.ModelAdmin):
@@ -46,6 +47,12 @@ class RegistroEntregaAdmin(admin.ModelAdmin):
 class BitacoraAdmin(admin.ModelAdmin):
     list_display = ['nino', 'fecha', 'estado_animo']
     list_filter = ['fecha', 'estado_animo']
+
+@admin.register(MenuDiario)
+class MenuDiarioAdmin(admin.ModelAdmin):
+    list_display = ['fecha', 'tipo_comida', 'descripcion', 'usuario_registro']
+    list_filter = ['fecha', 'tipo_comida']
+    readonly_fields = ['fecha_registro']
 
 @admin.register(Incidencia)
 class IncidenciaAdmin(admin.ModelAdmin):

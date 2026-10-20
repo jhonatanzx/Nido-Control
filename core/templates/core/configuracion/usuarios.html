@@ -60,15 +60,18 @@
                                                onclick="return confirm('¿Eliminar al usuario {{ usuario.username }}?')">
                                                 <i class="bi bi-trash"></i> Eliminar
                                             </a>
-                                            <a href="{% url 'cambiar_estado_usuario' usuario.id %}" 
-                                               class="btn btn-sm {% if usuario.estado %}btn-warning{% else %}btn-success{% endif %}"
-                                               onclick="return confirm('¿Cambiar estado de {{ usuario.username }}?')">
-                                                {% if usuario.estado %}
-                                                    <i class="bi bi-x-circle"></i> Desactivar
-                                                {% else %}
-                                                    <i class="bi bi-check-circle"></i> Activar
-                                                {% endif %}
-                                            </a>
+                                            <form method="post" action="{% url 'cambiar_estado_usuario' usuario.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                        class="btn btn-sm {% if usuario.estado %}btn-warning{% else %}btn-success{% endif %}"
+                                                        onclick="return confirm('¿{% if usuario.estado %}Desactivar{% else %}Reactivar{% endif %} a {{ usuario.username }}?')">
+                                                    {% if usuario.estado %}
+                                                        <i class="bi bi-x-circle"></i> Desactivar
+                                                    {% else %}
+                                                        <i class="bi bi-check-circle"></i> Reactivar
+                                                    {% endif %}
+                                                </button>
+                                            </form>
                                         {% else %}
                                             <a href="#" class="btn btn-sm btn-danger disabled" aria-disabled="true" onclick="return false;">
                                                 <i class="bi bi-trash"></i> Eliminar
@@ -127,7 +130,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Teléfono</label>
-                        <input type="text" name="telefono" class="form-control">
+                        <input type="tel" name="telefono" class="form-control" inputmode="numeric" maxlength="9" pattern="[0-9]{0,9}" title="Ingrese solo números, con un máximo de 9 dígitos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                     </div>
                 </div>
                 <div class="modal-footer">

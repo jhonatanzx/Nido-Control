@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="id_fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento" value="{{ nino.fecha_nacimiento|date:'Y-m-d' }}" required>
+                            <input type="date" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento" value="{{ nino.fecha_nacimiento|date:'Y-m-d' }}" max="{{ fecha_maxima }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="id_sexo" class="form-label">Sexo</label>
@@ -88,8 +88,8 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="id_apoderado_1_documento" class="form-label">Documento</label>
-                                <input type="text" class="form-control" id="id_apoderado_1_documento" name="apoderado_1_documento" value="{{ apoderado_1.documento|default:'' }}">
+                                <label for="id_apoderado_1_documento" class="form-label">DNI (8 dígitos)</label>
+                                <input type="text" class="form-control" id="id_apoderado_1_documento" name="apoderado_1_documento" value="{{ apoderado_1.documento|default:'' }}" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" title="Ingrese exactamente 8 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="id_apoderado_1_telefono" class="form-label">Teléfono</label>
@@ -131,8 +131,8 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="id_apoderado_2_documento" class="form-label">Documento</label>
-                                <input type="text" class="form-control" id="id_apoderado_2_documento" name="apoderado_2_documento" value="{{ apoderado_2.documento|default:'' }}">
+                                <label for="id_apoderado_2_documento" class="form-label">DNI (8 dígitos)</label>
+                                <input type="text" class="form-control" id="id_apoderado_2_documento" name="apoderado_2_documento" value="{{ apoderado_2.documento|default:'' }}" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" title="Ingrese exactamente 8 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="id_apoderado_2_telefono" class="form-label">Teléfono</label>

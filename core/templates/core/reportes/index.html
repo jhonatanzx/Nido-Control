@@ -6,13 +6,15 @@
 {% block content %}
 <h1 class="mb-4"><i class="bi bi-file-pdf text-danger"></i> Generación de Reportes</h1>
 
+<div id="reporte-descarga-estado" class="alert d-none" role="status" aria-live="polite"></div>
+
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card shadow-sm h-100">
             <div class="card-header"><i class="bi bi-check-circle"></i> Reporte de Asistencia</div>
             <div class="card-body">
                 <p class="text-muted">Genera reporte de asistencia del día.</p>
-                <a href="{% url 'reporte_asistencia' %}" class="btn btn-primary w-100" target="_blank">
+                <a href="{% url 'reporte_asistencia' %}" class="btn btn-primary w-100" data-pdf-download>
                     <i class="bi bi-file-pdf"></i> Generar PDF
                 </a>
             </div>
@@ -23,7 +25,7 @@
             <div class="card-header"><i class="bi bi-exclamation-triangle"></i> Reporte de Incidencias</div>
             <div class="card-body">
                 <p class="text-muted">Genera reporte de todas las incidencias.</p>
-                <a href="{% url 'reporte_incidencias' %}" class="btn btn-warning w-100" target="_blank">
+                <a href="{% url 'reporte_incidencias' %}" class="btn btn-warning w-100" data-pdf-download>
                     <i class="bi bi-file-pdf"></i> Generar PDF
                 </a>
             </div>
@@ -34,11 +36,118 @@
             <div class="card-header"><i class="bi bi-journal"></i> Reporte de Bitácora</div>
             <div class="card-body">
                 <p class="text-muted">Genera reporte de bitácora del día.</p>
-                <a href="{% url 'reporte_bitacora' %}" class="btn btn-info w-100" target="_blank">
+                <a href="{% url 'reporte_bitacora' %}" class="btn btn-info w-100" data-pdf-download>
                     <i class="bi bi-file-pdf"></i> Generar PDF
                 </a>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-person-vcard"></i> Reporte detallado por estudiante</div>
+            <div class="card-body">
+                <p class="text-muted">Consulta únicamente la asistencia, bitácora e incidencias del estudiante seleccionado durante una semana.</p>
+                <form method="get" action="{% url 'reporte_estudiantes' %}" data-pdf-download>
+                    <div class="mb-3">
+                        <label for="reporte-nino" class="form-label">Estudiante</label>
+                        <select id="reporte-nino" name="nino" class="form-select" required>
+                            <option value="" selected disabled>Selecciona un estudiante</option>
+                            {% for nino in ninos_reporte %}
+                                <option value="{{ nino.id }}">{{ nino.nombre_completo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reporte-semana" class="form-label">Semana</label>
+                        <input id="reporte-semana" name="semana" type="week" class="form-control" value="{{ semana_actual }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-file-pdf"></i> Generar reporte semanal PDF
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const status = document.getElementById('reporte-descarga-estado');
+
+        function showStatus(message, type) {
+            status.className = `alert alert-${type}`;
+            status.textContent = message;
+        }
+
+        async function downloadPdf(url, trigger) {
+            if (trigger.dataset.downloading) return;
+            trigger.dataset.downloading = 'true';
+            trigger.disabled = true;
+            trigger.classList.add('disabled');
+            trigger.setAttribute('aria-busy', 'true');
+            showStatus('Generando el reporte PDF…', 'info');
+
+            try {
+                const response = await fetch(url, {
+                    credentials: 'same-origin',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
+                if (!response.ok) {
+                    throw new Error(`El servidor respondió con el estado ${response.status}.`);
+                }
+                if (!response.headers.get('Content-Type')?.includes('application/pdf')) {
+                    throw new Error('El servidor no devolvió un archivo PDF. Comprueba tu sesión e inténtalo de nuevo.');
+                }
+
+                const blob = await response.blob();
+                const signature = new TextDecoder().decode(await blob.slice(0, 5).arrayBuffer());
+                if (signature !== '%PDF-') {
+                    throw new Error('No se pudo validar el archivo PDF generado.');
+                }
+
+                const contentDisposition = response.headers.get('Content-Disposition') || '';
+                const filenameMatch = contentDisposition.match(/filename="?([^";]+)"?/i);
+                const filename = filenameMatch ? filenameMatch[1] : 'reporte.pdf';
+                const downloadUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+                showStatus('El reporte se generó correctamente y la descarga comenzó.', 'success');
+            } catch (error) {
+                const message = error instanceof TypeError
+                    ? 'No se pudo conectar con el servidor para generar el reporte. Revisa tu conexión e inténtalo de nuevo.'
+                    : error.message || 'No se pudo generar o descargar el reporte. Inténtalo de nuevo.';
+                showStatus(message, 'danger');
+            } finally {
+                trigger.disabled = false;
+                trigger.classList.remove('disabled');
+                trigger.removeAttribute('aria-busy');
+                delete trigger.dataset.downloading;
+            }
+        }
+
+        document.querySelectorAll('a[data-pdf-download]').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                downloadPdf(link.href, link);
+            });
+        });
+
+        document.querySelectorAll('form[data-pdf-download]').forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                if (!form.reportValidity()) return;
+                const url = new URL(form.action, window.location.origin);
+                new FormData(form).forEach((value, key) => url.searchParams.append(key, value));
+                downloadPdf(url, form.querySelector('[type="submit"]'));
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -1,6 +1,11 @@
+from io import BytesIO
+from pathlib import Path
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.files.base import ContentFile
 from django.utils import timezone
+from PIL import Image, ImageOps
 
 class Usuario(AbstractUser):
     ROLES = [
@@ -39,6 +44,34 @@ class Nino(models.Model):
     estado_matricula = models.BooleanField(default=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     foto = models.ImageField(upload_to='fotos_ninos/', blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        foto_anterior = None
+        if self.pk and (kwargs.get('update_fields') is None or 'foto' in kwargs['update_fields']):
+            foto_anterior = type(self).objects.filter(pk=self.pk).values_list('foto', flat=True).first()
+
+        if self.foto and not self.foto._committed:
+            with Image.open(self.foto) as imagen:
+                imagen.seek(0)
+                imagen = ImageOps.exif_transpose(imagen)
+                if 'A' in imagen.getbands() or 'transparency' in imagen.info:
+                    imagen_con_alpha = imagen.convert('RGBA')
+                    fondo = Image.new('RGB', imagen_con_alpha.size, 'white')
+                    fondo.paste(imagen_con_alpha, mask=imagen_con_alpha.getchannel('A'))
+                    imagen = fondo
+                else:
+                    imagen = imagen.convert('RGB')
+
+                contenido = BytesIO()
+                imagen.save(contenido, format='JPEG', quality=85, optimize=True)
+
+            nombre = f'{Path(self.foto.name).stem}.jpg'
+            self.foto = ContentFile(contenido.getvalue(), name=nombre)
+
+        super().save(*args, **kwargs)
+
+        if foto_anterior and foto_anterior != self.foto.name:
+            self.foto.storage.delete(foto_anterior)
     
     @property
     def edad(self):
@@ -96,6 +129,8 @@ class Asistencia(models.Model):
     fecha = models.DateField(default=timezone.now)
     hora_ingreso = models.TimeField(null=True, blank=True)
     hora_salida = models.TimeField(null=True, blank=True)
+    fecha_hora_ingreso = models.DateTimeField(null=True, blank=True)
+    fecha_hora_salida = models.DateTimeField(null=True, blank=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='presente')
     motivo_ausencia = models.TextField(blank=True)
     usuario_registro = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
@@ -140,6 +175,27 @@ class Bitacora(models.Model):
     
     def __str__(self):
         return f"Bitácora: {self.nino.nombre_completo} - {self.fecha}"
+
+
+class MenuDiario(models.Model):
+    TIPOS_COMIDA = [
+        ('desayuno', 'Desayuno'),
+        ('almuerzo', 'Almuerzo'),
+        ('merienda', 'Merienda'),
+    ]
+    fecha = models.DateField(default=timezone.localdate)
+    tipo_comida = models.CharField(max_length=20, choices=TIPOS_COMIDA)
+    descripcion = models.TextField()
+    usuario_registro = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['fecha', 'tipo_comida']
+        unique_together = ['fecha', 'tipo_comida']
+
+    def __str__(self):
+        return f'{self.get_tipo_comida_display()} - {self.fecha}'
+
 
 class Incidencia(models.Model):
     TIPOS = [

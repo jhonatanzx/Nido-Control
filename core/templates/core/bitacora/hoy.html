@@ -9,6 +9,53 @@
     <span class="badge bg-primary fs-6">{{ hoy|date:"d/m/Y" }}</span>
 </div>
 
+<div class="card shadow-sm mb-4">
+    <div class="card-header"><i class="bi bi-funnel"></i> Filtros analíticos</div>
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-6 col-lg-3">
+                <label for="fechaDesde" class="form-label">Desde</label>
+                <input type="date" id="fechaDesde" name="fecha_desde" class="form-control" value="{{ filtros.fecha_desde }}">
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="fechaHasta" class="form-label">Hasta</label>
+                <input type="date" id="fechaHasta" name="fecha_hasta" class="form-control" value="{{ filtros.fecha_hasta }}">
+            </div>
+            <div class="col-md-6 col-lg-2">
+                <label for="filtroNino" class="form-label">Niño</label>
+                <select id="filtroNino" name="nino" class="form-select">
+                    <option value="">Todos</option>
+                    {% for nino in ninos %}
+                        <option value="{{ nino.id }}" {% if filtros.nino == nino.id|stringformat:"s" %}selected{% endif %}>{{ nino.nombre_completo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 col-lg-2">
+                <label for="filtroAula" class="form-label">Aula</label>
+                <select id="filtroAula" name="aula" class="form-select">
+                    <option value="">Todas</option>
+                    {% for aula in aulas %}
+                        <option value="{{ aula.id }}" {% if filtros.aula == aula.id|stringformat:"s" %}selected{% endif %}>{{ aula.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 col-lg-2">
+                <label for="filtroEstadoAnimo" class="form-label">Estado de ánimo</label>
+                <select id="filtroEstadoAnimo" name="estado_animo" class="form-select">
+                    <option value="">Todos</option>
+                    {% for valor, etiqueta in estados_animo %}
+                        <option value="{{ valor }}" {% if filtros.estado_animo == valor %}selected{% endif %}>{{ etiqueta }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Aplicar filtros</button>
+                <a href="{% url 'bitacora_hoy' %}" class="btn btn-outline-secondary">Limpiar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card shadow-sm">
     <div class="card-header"><i class="bi bi-list-check"></i> Registro de Actividades</div>
     <div class="card-body">
@@ -43,12 +90,37 @@
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label">Alimentación</label>
-                                                    <textarea name="alimentacion" class="form-control" rows="2">{{ bitacora.alimentacion }}</textarea>
+                                                    <label class="form-label">Desayuno</label>
+                                                    <select name="menu_desayuno" class="form-control">
+                                                        <option value="">-- Seleccionar desayuno --</option>
+                                                        {% for menu in bitacora.menus_desayuno %}
+                                                            <option value="{{ menu.id }}" {% if menu.descripcion == bitacora.alimentacion %}selected{% endif %}>
+                                                                {{ menu.descripcion|truncatechars:100 }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    {% if not menus_desayuno %}
+                                                        <small class="text-muted">No hay menú de desayuno registrado para hoy.</small>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Descanso</label>
-                                                    <textarea name="descanso" class="form-control" rows="2">{{ bitacora.descanso }}</textarea>
+                                                    <div class="dropdown descanso-dropdown">
+                                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                                            <span class="descanso-resumen">Sin selección</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu w-100 p-2">
+                                                        {% for opcion in bitacora.opciones_descanso %}
+                                                            <li>
+                                                                <label class="dropdown-item form-check mb-0">
+                                                                    <input class="form-check-input me-2" type="checkbox" name="descanso" value="{{ opcion.valor }}" {% if opcion.seleccionado %}checked{% endif %}>
+                                                                    <span class="form-check-label">{{ opcion.valor }}</span>
+                                                                </label>
+                                                            </li>
+                                                        {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                    <small class="form-text">Selecciona una o varias opciones:</small>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -91,10 +163,25 @@
             </div>
         {% else %}
             <div class="text-center py-5">
-                <p class="text-muted">No hay niños registrados</p>
-                <a href="{% url 'registrar_nino' %}" class="btn btn-primary">Registrar primer niño</a>
+                <p class="text-muted">No hay registros que coincidan con los filtros seleccionados.</p>
             </div>
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('.descanso-dropdown').forEach(function(dropdown) {
+        const resumen = dropdown.querySelector('.descanso-resumen');
+        const actualizarResumen = function() {
+            const seleccionadas = Array.from(dropdown.querySelectorAll('input[name="descanso"]:checked'))
+                .map(function(opcion) { return opcion.value; });
+            resumen.textContent = seleccionadas.length ? seleccionadas.join(', ') : 'Sin selección';
+        };
+
+        dropdown.addEventListener('change', actualizarResumen);
+        actualizarResumen();
+    });
+</script>
 {% endblock %}

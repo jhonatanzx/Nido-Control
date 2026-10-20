@@ -34,7 +34,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Teléfono</label>
-                        <input type="text" name="telefono" value="{{ usuario.telefono|default:'' }}" class="form-control">
+                        <input type="tel" name="telefono" value="{{ usuario.telefono|default:'' }}" class="form-control" inputmode="numeric" maxlength="9" pattern="[0-9]{0,9}" title="Ingrese solo números, con un máximo de 9 dígitos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                     </div>
 
                     <div class="mb-3">

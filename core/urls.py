@@ -14,6 +14,7 @@ urlpatterns = [
     path('ninos/registrar/', views.registrar_nino, name='registrar_nino'),
     path('ninos/<int:nino_id>/', views.detalle_nino, name='detalle_nino'),
     path('ninos/<int:nino_id>/editar/', views.editar_nino, name='editar_nino'),
+    path('ninos/<int:nino_id>/estado/', views.cambiar_estado_nino, name='cambiar_estado_nino'),
     
     # Asistencia
     path('asistencia/', views.asistencia_hoy, name='asistencia_hoy'),
@@ -23,6 +24,12 @@ urlpatterns = [
     # Bitácora
     path('bitacora/', views.bitacora_hoy, name='bitacora_hoy'),
     path('bitacora/<int:bitacora_id>/registrar/', views.registrar_bitacora, name='registrar_bitacora'),
+
+    # Menú de alimentación
+    path('menu/', views.menu_diario, name='menu_diario'),
+    path('menu/crear/', views.crear_menu_diario, name='crear_menu_diario'),
+    path('menu/<int:menu_id>/editar/', views.editar_menu_diario, name='editar_menu_diario'),
+    path('menu/<int:menu_id>/eliminar/', views.eliminar_menu_diario, name='eliminar_menu_diario'),
     
     # Incidencias
     path('incidencias/', views.lista_incidencias, name='lista_incidencias'),
@@ -32,6 +39,7 @@ urlpatterns = [
     
     # Reportes
     path('reportes/', views.generar_reportes, name='generar_reportes'),
+    path('reportes/estudiantes/', views.reporte_estudiantes, name='reporte_estudiantes'),
     path('reportes/asistencia/', views.reporte_asistencia, name='reporte_asistencia'),
     path('reportes/incidencias/', views.reporte_incidencias, name='reporte_incidencias'),
     path('reportes/bitacora/', views.reporte_bitacora, name='reporte_bitacora'),

@@ -20,34 +20,42 @@
     </div>
 </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-md-3 fade-in delay-1">
-        <div class="stat-card primary">
-            <div class="stat-number">{{ total_ninos }}</div>
-            <div class="stat-label"><i class="bi bi-people"></i> Niños Matriculados</div>
+<div class="row g-4 mb-4 align-items-start">
+    <div class="col-12 col-sm-6 col-xl-3 fade-in delay-1">
+        <button type="button" id="dashboard-toggle-matriculados" class="stat-card stat-card-trigger primary" data-bs-toggle="collapse" data-bs-target="#dashboard-details-matriculados" aria-expanded="false" aria-controls="dashboard-details-matriculados">
+            <span class="stat-number">{{ total_ninos }}</span>
+            <span class="stat-label"><i class="bi bi-people"></i> Niños Matriculados</span>
             <i class="stat-icon bi bi-people"></i>
-        </div>
+            <i class="bi bi-chevron-down stat-card-chevron" aria-hidden="true"></i>
+        </button>
+        {% include 'core/includes/dashboard_stat_details.html' with category='matriculados' %}
     </div>
-    <div class="col-md-3 fade-in delay-2">
-        <div class="stat-card success">
-            <div class="stat-number">{{ presentes }}</div>
-            <div class="stat-label"><i class="bi bi-check-circle"></i> Presentes Hoy</div>
+    <div class="col-12 col-sm-6 col-xl-3 fade-in delay-2">
+        <button type="button" id="dashboard-toggle-presentes" class="stat-card stat-card-trigger success" data-bs-toggle="collapse" data-bs-target="#dashboard-details-presentes" aria-expanded="false" aria-controls="dashboard-details-presentes">
+            <span class="stat-number">{{ presentes }}</span>
+            <span class="stat-label"><i class="bi bi-check-circle"></i> Presentes Hoy</span>
             <i class="stat-icon bi bi-check-circle"></i>
-        </div>
+            <i class="bi bi-chevron-down stat-card-chevron" aria-hidden="true"></i>
+        </button>
+        {% include 'core/includes/dashboard_stat_details.html' with category='presentes' %}
     </div>
-    <div class="col-md-3 fade-in delay-3">
-        <div class="stat-card danger">
-            <div class="stat-number">{{ ausentes }}</div>
-            <div class="stat-label"><i class="bi bi-x-circle"></i> Ausentes Hoy</div>
+    <div class="col-12 col-sm-6 col-xl-3 fade-in delay-3">
+        <button type="button" id="dashboard-toggle-ausentes" class="stat-card stat-card-trigger danger" data-bs-toggle="collapse" data-bs-target="#dashboard-details-ausentes" aria-expanded="false" aria-controls="dashboard-details-ausentes">
+            <span class="stat-number">{{ ausentes }}</span>
+            <span class="stat-label"><i class="bi bi-x-circle"></i> Ausentes Hoy</span>
             <i class="stat-icon bi bi-x-circle"></i>
-        </div>
+            <i class="bi bi-chevron-down stat-card-chevron" aria-hidden="true"></i>
+        </button>
+        {% include 'core/includes/dashboard_stat_details.html' with category='ausentes' %}
     </div>
-    <div class="col-md-3 fade-in delay-4">
-        <div class="stat-card warning">
-            <div class="stat-number">{{ incidencias_hoy }}</div>
-            <div class="stat-label"><i class="bi bi-exclamation-triangle"></i> Incidencias Hoy</div>
+    <div class="col-12 col-sm-6 col-xl-3 fade-in delay-4">
+        <button type="button" id="dashboard-toggle-incidencias" class="stat-card stat-card-trigger warning" data-bs-toggle="collapse" data-bs-target="#dashboard-details-incidencias" aria-expanded="false" aria-controls="dashboard-details-incidencias">
+            <span class="stat-number">{{ incidencias_hoy }}</span>
+            <span class="stat-label"><i class="bi bi-exclamation-triangle"></i> Incidencias Hoy</span>
             <i class="stat-icon bi bi-exclamation-triangle"></i>
-        </div>
+            <i class="bi bi-chevron-down stat-card-chevron" aria-hidden="true"></i>
+        </button>
+        {% include 'core/includes/dashboard_stat_details.html' with category='incidencias' %}
     </div>
 </div>
 

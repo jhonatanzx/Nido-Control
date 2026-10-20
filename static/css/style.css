@@ -109,12 +109,71 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
+.stat-card-trigger {
+    display: block;
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.stat-card-chevron {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.2rem;
+    opacity: 0.75;
+    transition: transform 0.2s ease;
+}
+
+.stat-card-trigger[aria-expanded="true"] .stat-card-chevron {
+    transform: rotate(180deg);
+}
+
+.stat-card-trigger:focus-visible {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 3px;
+}
+
+.dashboard-stat-details {
+    max-height: 24rem;
+    overflow-y: auto;
+}
+
+.dashboard-stat-details-body {
+    padding: 1rem;
+}
+
+.dashboard-stat-group {
+    padding: 0.35rem 0;
+}
+
+.dashboard-stat-group + .dashboard-stat-group {
+    margin-top: 0.5rem;
+}
+
+.dashboard-stat-group-title {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.dashboard-stat-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-stat-list li + li {
+    margin-top: 0.2rem;
+}
+
 .stat-card:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-md);
 }
 
 .stat-card .stat-number {
+    display: block;
     font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 0.2rem;
@@ -122,6 +181,7 @@ body {
 }
 
 .stat-card .stat-label {
+    display: block;
     font-size: 0.9rem;
     opacity: 0.9;
     font-weight: 500;

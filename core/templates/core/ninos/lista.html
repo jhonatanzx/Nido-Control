@@ -36,6 +36,18 @@
                             <td>
                                 <a href="{% url 'detalle_nino' nino.id %}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
                                 <a href="{% url 'editar_nino' nino.id %}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                                {% if puede_gestionar_estado %}
+                                    <form method="post" action="{% url 'cambiar_estado_nino' nino.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm {% if nino.estado_matricula %}btn-secondary{% else %}btn-success{% endif %}">
+                                            {% if nino.estado_matricula %}
+                                                <i class="bi bi-person-dash"></i> Desactivar matrícula
+                                            {% else %}
+                                                <i class="bi bi-person-check"></i> Reactivar matrícula
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
