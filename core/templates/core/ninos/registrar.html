@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_1_telefono" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="id_apoderado_1_telefono" name="apoderado_1_telefono" placeholder="Ej: +56 9 1234 5678">
+                                    <input type="text" class="form-control" id="id_apoderado_1_telefono" name="apoderado_1_telefono" placeholder="9 dígitos" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                                 </div>
                             </div>
 
@@ -136,7 +136,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_2_telefono" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="id_apoderado_2_telefono" name="apoderado_2_telefono" placeholder="Ej: +56 9 1234 5678">
+                                    <input type="text" class="form-control" id="id_apoderado_2_telefono" name="apoderado_2_telefono" placeholder="9 dígitos" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                                 </div>
                             </div>
 
@@ -151,11 +151,56 @@
                                 </div>
                             </div>
                         </div>
+
+                        <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#tercerApoderado" aria-expanded="false" aria-controls="tercerApoderado">
+                            <i class="bi bi-plus-circle"></i> Agregar tercer apoderado
+                        </button>
+                        <div class="collapse mt-3" id="tercerApoderado">
+                            <h6 class="mb-3">Tercer apoderado</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_nombres" class="form-label">Nombres y apellidos</label>
+                                    <input type="text" class="form-control" id="id_apoderado_3_nombres" name="apoderado_3_nombres" placeholder="Ej: Ana López">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_parentesco" class="form-label">Parentesco</label>
+                                    <select class="form-control" id="id_apoderado_3_parentesco" name="apoderado_3_parentesco">
+                                        <option value="">Seleccione</option>
+                                        <option value="padre">Padre/Madre</option>
+                                        <option value="abuelo">Abuelo/Abuela</option>
+                                        <option value="tio">Tío/Tía</option>
+                                        <option value="hermano">Hermano/Hermana</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_documento" class="form-label">DNI (8 dígitos)</label>
+                                    <input type="text" class="form-control" id="id_apoderado_3_documento" name="apoderado_3_documento" placeholder="12345678" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" title="Ingrese exactamente 8 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_telefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="id_apoderado_3_telefono" name="apoderado_3_telefono" placeholder="9 dígitos" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_correo" class="form-label">Correo</label>
+                                    <input type="email" class="form-control" id="id_apoderado_3_correo" name="apoderado_3_correo" placeholder="ejemplo@correo.com">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_direccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="id_apoderado_3_direccion" name="apoderado_3_direccion" placeholder="Calle, número, comuna">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="id_foto" class="form-label">Foto</label>
-                        <input type="file" class="form-control" id="id_foto" name="foto" accept="image/*">
+                        <input type="file" class="form-control" id="id_foto" name="foto" accept=".jpg,image/jpeg">
+                        <small class="form-text text-muted">Solo se permiten imágenes con formato .jpg.</small>
                     </div>
                     
                     <div class="d-flex gap-2">

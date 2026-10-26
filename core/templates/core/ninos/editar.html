@@ -64,7 +64,7 @@
                         <textarea class="form-control" id="id_informacion_medica" name="informacion_medica" rows="2">{{ nino.informacion_medica }}</textarea>
                     </div>
 
-                    {% with apoderado_1=apoderados.0|default:'' apoderado_2=apoderados.1|default:'' %}
+                    {% with apoderado_1=apoderados.0|default:'' apoderado_2=apoderados.1|default:'' apoderado_3=apoderados.2|default:'' %}
                     <div class="mb-4 mt-4 border rounded p-3 bg-light">
                         <h5 class="mb-3">Padre o apoderado para retiro seguro</h5>
 
@@ -93,7 +93,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="id_apoderado_1_telefono" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" id="id_apoderado_1_telefono" name="apoderado_1_telefono" value="{{ apoderado_1.telefono|default:'' }}">
+                                <input type="text" class="form-control" id="id_apoderado_1_telefono" name="apoderado_1_telefono" value="{{ apoderado_1.telefono|default:'' }}" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                             </div>
                         </div>
 
@@ -136,7 +136,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="id_apoderado_2_telefono" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" id="id_apoderado_2_telefono" name="apoderado_2_telefono" value="{{ apoderado_2.telefono|default:'' }}">
+                                <input type="text" class="form-control" id="id_apoderado_2_telefono" name="apoderado_2_telefono" value="{{ apoderado_2.telefono|default:'' }}" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                             </div>
                         </div>
 
@@ -151,6 +151,52 @@
                             </div>
                         </div>
                     </div>
+
+                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#tercerApoderadoEditar" aria-expanded="{% if apoderado_3 %}true{% else %}false{% endif %}" aria-controls="tercerApoderadoEditar">
+                        <i class="bi bi-plus-circle"></i> {% if apoderado_3 %}Editar tercer apoderado{% else %}Agregar tercer apoderado{% endif %}
+                    </button>
+                    <div class="collapse mt-3 {% if apoderado_3 %}show{% endif %}" id="tercerApoderadoEditar">
+                        <div class="border rounded p-3 bg-light">
+                            <h5 class="mb-3">Tercer apoderado</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_nombres" class="form-label">Nombres y apellidos</label>
+                                    <input type="text" class="form-control" id="id_apoderado_3_nombres" name="apoderado_3_nombres" value="{{ apoderado_3.nombres|default:'' }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_parentesco" class="form-label">Parentesco</label>
+                                    <select class="form-control" id="id_apoderado_3_parentesco" name="apoderado_3_parentesco">
+                                        <option value="">Seleccione</option>
+                                        <option value="padre" {% if apoderado_3.parentesco == 'padre' %}selected{% endif %}>Padre/Madre</option>
+                                        <option value="abuelo" {% if apoderado_3.parentesco == 'abuelo' %}selected{% endif %}>Abuelo/Abuela</option>
+                                        <option value="tio" {% if apoderado_3.parentesco == 'tio' %}selected{% endif %}>Tío/Tía</option>
+                                        <option value="hermano" {% if apoderado_3.parentesco == 'hermano' %}selected{% endif %}>Hermano/Hermana</option>
+                                        <option value="otro" {% if apoderado_3.parentesco == 'otro' %}selected{% endif %}>Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_documento" class="form-label">DNI (8 dígitos)</label>
+                                    <input type="text" class="form-control" id="id_apoderado_3_documento" name="apoderado_3_documento" value="{{ apoderado_3.documento|default:'' }}" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" title="Ingrese exactamente 8 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_telefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="id_apoderado_3_telefono" name="apoderado_3_telefono" value="{{ apoderado_3.telefono|default:'' }}" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_correo" class="form-label">Correo</label>
+                                    <input type="email" class="form-control" id="id_apoderado_3_correo" name="apoderado_3_correo" value="{{ apoderado_3.correo|default:'' }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_apoderado_3_direccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="id_apoderado_3_direccion" name="apoderado_3_direccion" value="{{ apoderado_3.direccion|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endwith %}
 
                     <div class="mb-3">
@@ -160,7 +206,8 @@
                                 <img src="{{ nino.foto.url }}" alt="Foto actual" class="img-thumbnail" style="max-width: 120px;">
                             </div>
                         {% endif %}
-                        <input type="file" class="form-control" id="id_foto" name="foto" accept="image/*">
+                        <input type="file" class="form-control" id="id_foto" name="foto" accept=".jpg,image/jpeg">
+                        <small class="form-text text-muted">Solo se permiten imágenes con formato .jpg.</small>
                     </div>
 
                     <div class="d-flex gap-2">

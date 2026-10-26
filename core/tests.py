@@ -1,10 +1,13 @@
 import os
 import tempfile
-from datetime import datetime, time, timedelta
+from datetime import date, datetime, time, timedelta
 from io import BytesIO
-from unittest.mock import patch
+from io import StringIO
+from unittest.mock import Mock, patch
 
 from PIL import Image
+from reportlab.lib.pagesizes import A4
+from django.core.management import call_command, CommandError
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -12,7 +15,280 @@ from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 
-from .models import Apoderado, Asistencia, Aula, Bitacora, Incidencia, MenuDiario, Nino, RegistroEntrega
+from .models import Apoderado, Asistencia, Aula, Bitacora, Incidencia, MenuDiario, Nino, Pago, RegistroEntrega
+
+
+class ReportHeaderTests(TestCase):
+    def test_detailed_report_illustrations_are_above_content_area(self):
+        from .views import dibujar_encabezado_reporte_detallado
+
+        canvas = Mock()
+        dibujar_encabezado_reporte_detallado(canvas, None)
+
+        image_bottoms = [call.args[2] for call in canvas.drawImage.call_args_list]
+        self.assertEqual(len(image_bottoms), 2)
+        self.assertTrue(all(image_bottom > A4[1] - 125 for image_bottom in image_bottoms))
+
+
+class PagoStatusTests(TestCase):
+    def setUp(self):
+        self.admin = get_user_model().objects.create_superuser(
+            username='admin_pagos',
+            email='admin@example.com',
+            password='123456',
+        )
+        self.aula = Aula.objects.create(nombre='Aula Sol', capacidad=12)
+        self.otra_aula = Aula.objects.create(nombre='Aula Luna', capacidad=12)
+        self.nino = Nino.objects.create(
+            nombres='Ana',
+            apellidos='García',
+            fecha_nacimiento='2020-05-10',
+            sexo='F',
+            aula=self.aula,
+        )
+        self.periodo = timezone.localdate().strftime('%Y-%m')
+        Pago.objects.create(
+            nino=self.nino,
+            concepto='Mensualidad',
+            periodo=self.periodo,
+            monto='250.00',
+            estado='pagado',
+        )
+        self.sin_pagos = Nino.objects.create(
+            nombres='Luis',
+            apellidos='Pérez',
+            fecha_nacimiento='2021-02-15',
+            sexo='M',
+            aula=self.aula,
+        )
+        self.otro_nino = Nino.objects.create(
+            nombres='Mateo',
+            apellidos='Rojas',
+            fecha_nacimiento='2021-03-20',
+            sexo='M',
+            aula=self.otra_aula,
+        )
+
+    def test_lista_pagos_muestra_estado_del_mes_y_deuda_en_rojo(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.get(reverse('lista_pagos'), {'periodo': self.periodo})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Ana García')
+        self.assertContains(response, 'Al día')
+        self.assertContains(response, 'Luis Pérez')
+        self.assertContains(response, 'Debe')
+        self.assertNotContains(response, '250.00')
+        self.assertContains(response, 'Registrar pago')
+
+    def test_lista_pagos_filtra_por_aula(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.get(
+            reverse('lista_pagos'),
+            {'aula': str(self.otra_aula.pk), 'periodo': self.periodo},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Mateo Rojas')
+        self.assertNotContains(response, 'Ana García')
+        self.assertNotContains(response, 'Luis Pérez')
+
+    def test_lista_pagos_restringida_a_administradores(self):
+        cuidadora = get_user_model().objects.create_user(
+            username='cuidadora_pagos',
+            password='123456',
+            rol='cuidadora',
+        )
+        self.client.force_login(cuidadora)
+
+        response = self.client.get(reverse('lista_pagos'))
+
+        self.assertRedirects(response, reverse('dashboard'))
+
+    def test_registrar_pago_marca_al_dia_sin_monto_y_actualiza_lista(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.post(
+            reverse('cambiar_estado_pago', args=[self.sin_pagos.pk]),
+            {
+                'periodo': self.periodo,
+                'dia': str(timezone.localdate().day),
+                'estado': 'pagado',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'periodo={self.periodo}', response['Location'])
+        pago = Pago.objects.get(nino=self.sin_pagos, periodo=self.periodo)
+        self.assertEqual(pago.estado, 'pagado')
+        self.assertEqual(pago.monto, 0)
+        lista = self.client.get(reverse('lista_pagos'), {'periodo': self.periodo})
+        self.assertContains(lista, 'Luis Pérez')
+        self.assertContains(lista, 'Al día')
+
+    def test_registrar_pago_puede_marcar_deuda_y_no_duplica_registro_mensual(self):
+        self.client.force_login(self.admin)
+
+        Pago.objects.create(
+            nino=self.sin_pagos,
+            concepto='Mensualidad',
+            periodo=self.periodo,
+            monto=0,
+            estado='pagado',
+        )
+        pago_anterior = Pago.objects.get(nino=self.sin_pagos, periodo=self.periodo)
+        response = self.client.post(
+            reverse('cambiar_estado_pago', args=[self.sin_pagos.pk]),
+            {
+                'periodo': self.periodo,
+                'dia': str(timezone.localdate().day),
+                'estado': 'pendiente',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        pagos = Pago.objects.filter(nino=self.sin_pagos, periodo=self.periodo)
+        self.assertEqual(pagos.count(), 1)
+        pago_anterior.refresh_from_db()
+        self.assertEqual(pago_anterior.estado, 'pendiente')
+        lista = self.client.get(reverse('lista_pagos'), {'periodo': self.periodo})
+        self.assertContains(lista, 'Debe')
+
+    def test_registrar_pago_rechaza_estado_y_mes_invalidos(self):
+        self.client.force_login(self.admin)
+
+        invalid_state = self.client.post(
+            reverse('cambiar_estado_pago', args=[self.sin_pagos.pk]),
+            {'periodo': self.periodo, 'estado': 'pagado; malicious'},
+        )
+        invalid_period = self.client.post(
+            reverse('cambiar_estado_pago', args=[self.sin_pagos.pk]),
+            {'periodo': 'mes-invalido', 'estado': 'pagado'},
+        )
+
+        self.assertEqual(invalid_state.status_code, 302)
+        self.assertEqual(invalid_period.status_code, 302)
+        self.assertFalse(Pago.objects.filter(nino=self.sin_pagos).exists())
+
+    def test_lista_pagos_muestra_mes_actual_por_defecto(self):
+        self.sin_pagos.estado_matricula = False
+        self.sin_pagos.save(update_fields=['estado_matricula'])
+        self.client.force_login(self.admin)
+
+        response = self.client.get(reverse('lista_pagos'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['periodo'], self.periodo)
+        self.assertContains(response, 'name="mes"')
+        self.assertContains(response, 'name="anio"')
+        self.assertContains(response, 'Enero')
+        self.assertContains(response, 'Octubre')
+        self.assertContains(response, 'name="dia"')
+        self.assertContains(response, 'name="anio"')
+
+    def test_lista_pagos_acepta_mes_y_anio_en_espanol(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.get(
+            reverse('lista_pagos'),
+            {'mes': '10', 'anio': '2026', 'dia': '15'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['periodo'], '2026-10')
+        self.assertEqual(response.context['mes_seleccionado'], 10)
+        self.assertEqual(response.context['anio_seleccionado'], 2026)
+        self.assertEqual(response.context['dia_seleccionado'], 15)
+
+    def test_lista_pagos_rechaza_anio_posterior_al_actual(self):
+        self.client.force_login(self.admin)
+        anio_futuro = timezone.localdate().year + 1
+
+        response = self.client.get(
+            reverse('lista_pagos'),
+            {'mes': '1', 'anio': str(anio_futuro), 'dia': '1'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['anio_seleccionado'], timezone.localdate().year)
+        self.assertContains(response, 'max="2026"')
+
+    def test_fecha_de_pago_se_muestra_y_estado_respeta_dia_de_corte(self):
+        self.client.force_login(self.admin)
+        fecha_pago = date(timezone.localdate().year, timezone.localdate().month, 20)
+        self.nino.pago_set.update(fecha_pago=fecha_pago)
+        dia_corte = 10
+
+        response = self.client.get(
+            reverse('lista_pagos'),
+            {
+                'periodo': self.periodo,
+                'dia': str(dia_corte),
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, fecha_pago.strftime('%d/%m/%Y'))
+        self.assertContains(response, 'Debe')
+
+    def test_lista_pagos_limita_dias_al_mes_seleccionado(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.get(
+            reverse('lista_pagos'),
+            {'mes': '2', 'anio': str(timezone.localdate().year), 'dia': '30'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['dia_seleccionado'], 28 if timezone.localdate().year % 4 else 29)
+        self.assertEqual(len(response.context['dias']), response.context['dias'][-1])
+
+    def test_reportes_incluye_formulario_de_reporte_de_pagos(self):
+        self.client.force_login(self.admin)
+
+        response = self.client.get(reverse('generar_reportes'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reporte de pagos')
+        self.assertContains(response, reverse('reporte_pagos'))
+        self.assertContains(response, 'Día de corte')
+        self.assertContains(response, 'Todas las aulas')
+
+    def test_reporte_pagos_genera_pdf_para_mes_y_aula(self):
+        self.client.force_login(self.admin)
+        hoy = timezone.localdate()
+
+        response = self.client.get(
+            reverse('reporte_pagos'),
+            {
+                'mes': hoy.month,
+                'anio': hoy.year,
+                'dia': hoy.day,
+                'aula': self.aula.pk,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertIn('pagos_', response['Content-Disposition'])
+        self.assertTrue(response.content.startswith(b'%PDF-'))
+
+    def test_reporte_pagos_rechaza_fecha_futura(self):
+        self.client.force_login(self.admin)
+        fecha_futura = timezone.localdate().replace(year=timezone.localdate().year + 1)
+
+        response = self.client.get(
+            reverse('reporte_pagos'),
+            {
+                'mes': fecha_futura.month,
+                'anio': fecha_futura.year,
+                'dia': fecha_futura.day,
+            },
+        )
+
+        self.assertRedirects(response, reverse('generar_reportes'))
 
 
 def imagen_subida(nombre, formato, color):
@@ -146,6 +422,76 @@ class NinoEditTests(TestCase):
         self.assertContains(response, 'debe contener exactamente 8 dígitos numéricos')
         self.assertFalse(Nino.objects.filter(nombres='Luis', apellidos='Pérez').exists())
 
+    def test_registrar_nino_rechaza_foto_que_no_sea_jpg(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('registrar_nino'),
+            {
+                'nombres': 'Luis',
+                'apellidos': 'Pérez',
+                'fecha_nacimiento': '2020-01-15',
+                'sexo': 'M',
+                'foto': imagen_subida('foto.png', 'PNG', 'blue'),
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'La foto debe estar en formato .jpg.')
+        self.assertFalse(Nino.objects.filter(nombres='Luis', apellidos='Pérez').exists())
+
+    def test_registrar_nino_rechaza_telefono_de_apoderado_invalido(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('registrar_nino'),
+            {
+                'nombres': 'Luis',
+                'apellidos': 'Pérez',
+                'fecha_nacimiento': '2020-01-15',
+                'sexo': 'M',
+                'apoderado_1_nombres': 'Carlos Pérez',
+                'apoderado_1_parentesco': 'padre',
+                'apoderado_1_documento': '12345678',
+                'apoderado_1_telefono': '12345AB89',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'El teléfono del apoderado 1 debe contener exactamente 9 dígitos numéricos.')
+        self.assertFalse(Nino.objects.filter(nombres='Luis', apellidos='Pérez').exists())
+
+    def test_editar_nino_rechaza_telefono_de_tercer_apoderado_invalido(self):
+        apoderado = Apoderado.objects.create(
+            nino=self.nino,
+            nombres='Luis García',
+            parentesco='abuelo',
+            documento='33333333',
+            telefono='923456789',
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('editar_nino', args=[self.nino.id]),
+            {
+                'nombres': 'Ana Editada',
+                'apellidos': 'García',
+                'fecha_nacimiento': '2018-05-10',
+                'sexo': 'F',
+                'apoderado_3_nombres': 'Luis García',
+                'apoderado_3_parentesco': 'abuelo',
+                'apoderado_3_documento': '33333333',
+                'apoderado_3_telefono': '12345678',
+            },
+        )
+
+        self.nino.refresh_from_db()
+        apoderado.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'El teléfono del apoderado 3 debe contener exactamente 9 dígitos numéricos.')
+        self.assertEqual(self.nino.nombres, 'Ana')
+        self.assertEqual(apoderado.telefono, '923456789')
+
     def test_registrar_nino_rechaza_fecha_nacimiento_futura(self):
         self.client.force_login(self.user)
         formulario = self.client.get(reverse('registrar_nino'))
@@ -186,7 +532,7 @@ class NinoEditTests(TestCase):
         self.assertEqual(self.nino.fecha_nacimiento.isoformat(), '2018-05-10')
         self.assertEqual(self.nino.nombres, 'Ana')
 
-    def test_editar_nino_reemplaza_foto_y_elimina_archivo_anterior(self):
+    def test_editar_nino_reemplaza_foto_jpg_y_elimina_archivo_anterior(self):
         self.nino.foto = imagen_subida('foto_anterior.jpg', 'JPEG', 'red')
         self.nino.save()
         ruta_anterior = self.nino.foto.path
@@ -199,7 +545,7 @@ class NinoEditTests(TestCase):
                 'apellidos': 'García',
                 'fecha_nacimiento': '2018-05-10',
                 'sexo': 'F',
-                'foto': imagen_subida('foto_nueva.gif', 'GIF', 'blue'),
+                'foto': imagen_subida('foto_nueva.jpg', 'JPEG', 'blue'),
             },
         )
 
@@ -210,6 +556,48 @@ class NinoEditTests(TestCase):
             self.assertEqual(foto_guardada.format, 'JPEG')
         self.assertFalse(os.path.exists(ruta_anterior))
         self.assertTrue(os.path.exists(self.nino.foto.path))
+
+    def test_editar_nino_rechaza_foto_que_no_sea_jpg_y_conserva_la_actual(self):
+        self.nino.foto = imagen_subida('foto_actual.jpg', 'JPEG', 'red')
+        self.nino.save()
+        ruta_anterior = self.nino.foto.path
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('editar_nino', args=[self.nino.id]),
+            {
+                'nombres': 'Ana',
+                'apellidos': 'García',
+                'fecha_nacimiento': '2018-05-10',
+                'sexo': 'F',
+                'foto': imagen_subida('foto_nueva.png', 'PNG', 'blue'),
+            },
+        )
+
+        self.nino.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'La foto debe estar en formato .jpg.')
+        self.assertEqual(self.nino.foto.name, 'fotos_ninos/foto_actual.jpg')
+        self.assertTrue(os.path.exists(ruta_anterior))
+
+    def test_editar_nino_rechaza_archivo_no_jpeg_renombrado_como_jpg(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('editar_nino', args=[self.nino.id]),
+            {
+                'nombres': 'Ana',
+                'apellidos': 'García',
+                'fecha_nacimiento': '2018-05-10',
+                'sexo': 'F',
+                'foto': imagen_subida('foto_falsa.jpg', 'GIF', 'blue'),
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'El archivo seleccionado no es una imagen JPG válida.')
+        self.nino.refresh_from_db()
+        self.assertFalse(self.nino.foto)
 
     def test_editar_nino_conserva_foto_actual_si_no_se_reemplaza(self):
         self.nino.foto = imagen_subida('foto_actual.jpg', 'JPEG', 'green')
@@ -248,13 +636,81 @@ class NinoEditTests(TestCase):
                 'apoderado_2_telefono': '912345678',
                 'apoderado_2_correo': 'maria@example.com',
                 'apoderado_2_direccion': 'Calle 2',
+                'apoderado_3_nombres': 'Luis García',
+                'apoderado_3_parentesco': 'abuelo',
+                'apoderado_3_documento': '33333333',
+                'apoderado_3_telefono': '923456789',
+                'apoderado_3_correo': 'luis@example.com',
+                'apoderado_3_direccion': 'Calle 3',
             },
         )
 
         self.assertRedirects(response, reverse('detalle_nino', args=[self.nino.id]))
-        self.assertEqual(self.nino.apoderados.count(), 2)
+        self.assertEqual(self.nino.apoderados.count(), 3)
         self.assertTrue(self.nino.apoderados.filter(documento='12345678').exists())
         self.assertTrue(self.nino.apoderados.filter(documento='87654321').exists())
+        self.assertTrue(self.nino.apoderados.filter(documento='33333333', nombres='Luis García').exists())
+
+    def test_editar_nino_muestra_tercer_apoderado_guardado(self):
+        Apoderado.objects.create(
+            nino=self.nino,
+            nombres='Carlos García',
+            parentesco='padre',
+            documento='11111111',
+            telefono='911111111',
+        )
+        Apoderado.objects.create(
+            nino=self.nino,
+            nombres='María García',
+            parentesco='madre',
+            documento='22222222',
+            telefono='922222222',
+        )
+        tercer_apoderado = Apoderado.objects.create(
+            nino=self.nino,
+            nombres='Luis García',
+            parentesco='abuelo',
+            documento='33333333',
+            telefono='923456789',
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse('editar_nino', args=[self.nino.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['apoderados']), 3)
+        self.assertContains(response, 'Editar tercer apoderado')
+        self.assertContains(response, 'id="tercerApoderadoEditar"')
+        self.assertContains(response, f'value="{tercer_apoderado.nombres}"')
+        self.assertContains(response, f'value="{tercer_apoderado.documento}"')
+
+        response = self.client.post(
+            reverse('editar_nino', args=[self.nino.id]),
+            {
+                'nombres': 'Ana',
+                'apellidos': 'García',
+                'fecha_nacimiento': '2018-05-10',
+                'sexo': 'F',
+                'apoderado_1_nombres': 'Carlos García',
+                'apoderado_1_parentesco': 'padre',
+                'apoderado_1_documento': '11111111',
+                'apoderado_1_telefono': '911111111',
+                'apoderado_2_nombres': 'María García',
+                'apoderado_2_parentesco': 'madre',
+                'apoderado_2_documento': '22222222',
+                'apoderado_2_telefono': '922222222',
+                'apoderado_3_nombres': 'Luis García Actualizado',
+                'apoderado_3_parentesco': 'abuelo',
+                'apoderado_3_documento': '33333334',
+                'apoderado_3_telefono': '923456789',
+            },
+        )
+
+        tercer_apoderado.refresh_from_db()
+        self.assertRedirects(response, reverse('detalle_nino', args=[self.nino.id]))
+        self.assertEqual(self.nino.apoderados.count(), 3)
+        self.assertEqual(tercer_apoderado.nombres, 'Luis García Actualizado')
+        self.assertEqual(tercer_apoderado.documento, '33333334')
 
     def test_registrar_nino_puede_guardar_dos_apoderados(self):
         self.client.force_login(self.user)
@@ -285,6 +741,41 @@ class NinoEditTests(TestCase):
         self.assertEqual(nino.apoderados.count(), 2)
         self.assertTrue(nino.apoderados.filter(documento='11111111').exists())
         self.assertTrue(nino.apoderados.filter(documento='22222222').exists())
+
+    def test_registrar_nino_puede_agregar_un_tercer_apoderado_desplegable(self):
+        self.client.force_login(self.user)
+
+        formulario = self.client.get(reverse('registrar_nino'))
+        self.assertContains(formulario, 'Agregar tercer apoderado')
+        self.assertContains(formulario, 'id="tercerApoderado"')
+        self.assertContains(formulario, 'name="apoderado_3_nombres"')
+
+        response = self.client.post(
+            reverse('registrar_nino'),
+            {
+                'nombres': 'Lucía',
+                'apellidos': 'Ramírez',
+                'fecha_nacimiento': '2021-02-10',
+                'sexo': 'F',
+                'apoderado_1_nombres': 'Carlos Ramírez',
+                'apoderado_1_parentesco': 'padre',
+                'apoderado_1_documento': '11111111',
+                'apoderado_1_telefono': '987654321',
+                'apoderado_2_nombres': 'María Ramírez',
+                'apoderado_2_parentesco': 'madre',
+                'apoderado_2_documento': '22222222',
+                'apoderado_2_telefono': '987654322',
+                'apoderado_3_nombres': 'Ana Ramírez',
+                'apoderado_3_parentesco': 'abuelo',
+                'apoderado_3_documento': '33333333',
+                'apoderado_3_telefono': '987654323',
+            },
+        )
+
+        nino = Nino.objects.get(nombres='Lucía', apellidos='Ramírez')
+        self.assertRedirects(response, reverse('lista_ninos'))
+        self.assertEqual(nino.apoderados.count(), 3)
+        self.assertTrue(nino.apoderados.filter(documento='33333333', nombres='Ana Ramírez').exists())
 
     def test_cuidadora_puede_usar_asistencia_pero_no_registrar_ninos(self):
         cuidadora = get_user_model().objects.create_user(
@@ -321,8 +812,12 @@ class NinoEditTests(TestCase):
         self.assertFalse(nino.estado_matricula)
 
         lista = self.client.get(reverse('lista_ninos'))
-        self.assertContains(lista, 'Luis Pérez')
-        self.assertContains(lista, 'Reactivar matrícula')
+        self.assertNotContains(lista, 'Luis Pérez')
+        self.assertContains(lista, 'Ver matrículas inactivas')
+
+        lista_inactivos = self.client.get(reverse('lista_ninos'), {'estado': 'inactivos'})
+        self.assertContains(lista_inactivos, 'Luis Pérez')
+        self.assertContains(lista_inactivos, 'Reactivar matrícula')
 
         response = self.client.post(reverse('cambiar_estado_nino', args=[nino.id]))
         nino.refresh_from_db()
@@ -619,6 +1114,40 @@ class NinoEditTests(TestCase):
         self.assertEqual(Aula.objects.get(nombre='Jirafitas').descripcion, '2 a 3 años')
         self.assertEqual(Aula.objects.get(nombre='Abejitas').descripcion, '2 a 3 años')
 
+    @patch('core.management.commands.marcar_ausentes.timezone.localtime')
+    def test_comando_marca_como_ausentes_a_quienes_no_tienen_asistencia_al_cierre(self, mock_localtime):
+        hoy = datetime(2026, 10, 22).date()
+        mock_localtime.return_value = timezone.make_aware(datetime.combine(hoy, time(17, 0)))
+        otro_nino = Nino.objects.create(
+            nombres='Luis',
+            apellidos='Pérez',
+            fecha_nacimiento='2020-01-15',
+            sexo='M',
+            aula=self.aula,
+        )
+        Asistencia.objects.create(nino=self.nino, fecha=hoy, estado='presente')
+        salida = StringIO()
+
+        call_command('marcar_ausentes', stdout=salida)
+
+        ausencias = Asistencia.objects.get(nino=otro_nino, fecha=hoy)
+        self.assertEqual(ausencias.estado, 'ausente')
+        self.assertEqual(Asistencia.objects.get(nino=self.nino, fecha=hoy).estado, 'presente')
+        self.assertIn('Se registraron 1 ausencias', salida.getvalue())
+
+        call_command('marcar_ausentes', stdout=StringIO())
+        self.assertEqual(Asistencia.objects.filter(nino=otro_nino, fecha=hoy).count(), 1)
+
+    @patch('core.management.commands.marcar_ausentes.timezone.localtime')
+    def test_comando_de_ausencias_no_se_ejecuta_antes_del_cierre(self, mock_localtime):
+        hoy = datetime(2026, 10, 22).date()
+        mock_localtime.return_value = timezone.make_aware(datetime.combine(hoy, time(16, 59)))
+
+        with self.assertRaises(CommandError):
+            call_command('marcar_ausentes')
+
+        self.assertFalse(Asistencia.objects.filter(fecha=hoy).exists())
+
     def test_registro_nino_muestra_rango_de_edad_en_el_select(self):
         from .views import ensure_default_aulas
 
@@ -637,6 +1166,7 @@ class NinoEditTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertIn('attachment; filename="asistencia_', response['Content-Disposition'])
+        self.assertGreaterEqual(response.content.count(b'/Subtype /Image'), 2)
 
     def test_reporte_incidencias_generates_pdf(self):
         self.client.force_login(self.user)
@@ -645,6 +1175,7 @@ class NinoEditTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertIn('attachment; filename="incidencias.pdf"', response['Content-Disposition'])
+        self.assertGreaterEqual(response.content.count(b'/Subtype /Image'), 2)
 
     def test_reporte_bitacora_generates_pdf(self):
         self.client.force_login(self.user)
@@ -653,6 +1184,7 @@ class NinoEditTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertIn('attachment; filename="bitacora_', response['Content-Disposition'])
+        self.assertGreaterEqual(response.content.count(b'/Subtype /Image'), 2)
 
     def test_reporte_estudiantes_generates_weekly_detail_pdf(self):
         self.client.force_login(self.user)
@@ -691,6 +1223,7 @@ class NinoEditTests(TestCase):
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertTrue(response.content.startswith(b'%PDF'))
         self.assertIn(f'reporte_estudiante_{self.nino.id}_{inicio_semana}_', response['Content-Disposition'])
+        self.assertGreaterEqual(response.content.count(b'/Subtype /Image'), 2)
 
     def test_reporte_estudiantes_rechaza_semana_invalida(self):
         self.client.force_login(self.user)
@@ -758,6 +1291,8 @@ class NinoEditTests(TestCase):
         self.assertTrue(response.context['rango_personalizado'])
         self.assertContains(response, f'value="{fecha_dentro.isoformat()}"')
         self.assertContains(response, f'value="{hoy.isoformat()}"')
+        rango_visible = f'{fecha_dentro.strftime("%d/%m/%Y")} – {hoy.strftime("%d/%m/%Y")}'
+        self.assertEqual(response.content.decode().count(rango_visible), 3)
 
     def test_estadisticas_muestra_error_para_rango_invalido(self):
         self.client.force_login(self.user)
@@ -926,6 +1461,11 @@ class NinoEditTests(TestCase):
         response = self.client.get(reverse('bitacora_hoy'))
 
         self.assertContains(response, 'Desayuno')
+        self.assertContains(response, 'Comió 30 % de la porción')
+        self.assertContains(response, 'Comió 50 % de la porción')
+        self.assertContains(response, 'Comió al 100 %')
+        self.assertContains(response, 'name="desayuno"')
+        self.assertContains(response, 'name="descanso_otro"')
         self.assertContains(response, f'value="{menu.id}"')
         self.assertContains(response, 'Avena con fruta y leche')
 
@@ -951,6 +1491,64 @@ class NinoEditTests(TestCase):
         self.assertEqual(
             bitacora.descanso,
             'Durmió durante toda la siesta\nSe despertó antes de terminar la siesta',
+        )
+
+    def test_bitacora_desayuno_guarda_varias_porciones_seleccionadas(self):
+        self.client.force_login(self.user)
+        bitacora = self.nino.bitacora_set.create(fecha=timezone.localdate())
+
+        response = self.client.post(
+            reverse('registrar_bitacora', args=[bitacora.id]),
+            {
+                'desayuno': ['Comió 30 % de la porción', 'Comió 50 % de la porción'],
+                'actividades': '',
+                'higiene': '',
+                'estado_animo': '',
+                'observaciones': '',
+            },
+        )
+
+        bitacora.refresh_from_db()
+        self.assertRedirects(response, reverse('bitacora_hoy'))
+        self.assertEqual(
+            bitacora.alimentacion,
+            'Comió 30 % de la porción\nComió 50 % de la porción',
+        )
+
+    def test_bitacora_desayuno_rechaza_opcion_invalida(self):
+        self.client.force_login(self.user)
+        bitacora = self.nino.bitacora_set.create(
+            fecha=timezone.localdate(),
+            alimentacion='Avena con fruta',
+        )
+
+        response = self.client.post(
+            reverse('registrar_bitacora', args=[bitacora.id]),
+            {'desayuno': ['Una opción no disponible']},
+        )
+
+        bitacora.refresh_from_db()
+        self.assertRedirects(response, reverse('bitacora_hoy'))
+        self.assertEqual(bitacora.alimentacion, 'Avena con fruta')
+
+    def test_bitacora_descanso_guarda_opcion_personalizada_editable(self):
+        self.client.force_login(self.user)
+        bitacora = self.nino.bitacora_set.create(fecha=timezone.localdate())
+
+        response = self.client.post(
+            reverse('registrar_bitacora', args=[bitacora.id]),
+            {
+                'descanso': ['No durmió'],
+                'descanso_otro_activar': 'on',
+                'descanso_otro': 'Durmió después del almuerzo',
+            },
+        )
+
+        bitacora.refresh_from_db()
+        self.assertRedirects(response, reverse('bitacora_hoy'))
+        self.assertEqual(
+            bitacora.descanso,
+            'No durmió\nDurmió después del almuerzo',
         )
 
     def test_bitacora_descanso_muestra_cuatro_opciones_y_permite_seleccionar_varias(self):
@@ -1128,6 +1726,32 @@ class NinoEditTests(TestCase):
 
         self.assertFalse(RegistroEntrega.objects.filter(nino=self.nino).exists())
         self.assertContains(response, 'DNI no coincide')
+
+    def test_entrega_rechaza_documento_que_no_tenga_exactamente_ocho_digitos(self):
+        self.client.force_login(self.user)
+        Asistencia.objects.create(nino=self.nino, fecha=timezone.localdate(), estado='presente')
+
+        for documento in ['1234567', '123456789', '1234AB78']:
+            with self.subTest(documento=documento):
+                response = self.client.post(
+                    reverse('registrar_entrega', args=[self.nino.id]),
+                    {'documento': documento},
+                    follow=True,
+                )
+
+                self.assertContains(response, 'debe contener exactamente 8 dígitos numéricos')
+                self.assertFalse(RegistroEntrega.objects.filter(nino=self.nino).exists())
+
+    def test_campo_dni_de_entrega_acepta_solo_ocho_digitos(self):
+        self.client.force_login(self.user)
+        Asistencia.objects.create(nino=self.nino, fecha=timezone.localdate(), estado='presente')
+
+        response = self.client.get(reverse('dashboard'))
+
+        self.assertContains(response, 'inputmode="numeric"')
+        self.assertContains(response, 'pattern="[0-9]{8}"')
+        self.assertContains(response, 'minlength="8" maxlength="8"')
+        self.assertContains(response, "replace(/[^0-9]/g, '').slice(0, 8)")
 
     def test_no_permite_dos_entregas_el_mismo_dia(self):
         Asistencia.objects.create(nino=self.nino, fecha=timezone.now().date(), estado='presente')

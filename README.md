@@ -132,6 +132,19 @@ http://127.0.0.1:8000
 
 text
 
+### Automatizar el registro de ausencias al cierre
+
+El comando `python manage.py marcar_ausentes` registra como ausentes a los niños matriculados que no tengan asistencia cuando se ejecute, a partir de las 5:00 p. m. (hora de Lima), de lunes a viernes. Es seguro ejecutarlo más de una vez.
+
+Para ejecutarlo automáticamente en Windows, crea una tarea en el **Programador de tareas**:
+
+1. Selecciona **Crear tarea básica** y configura un desencadenador semanal de lunes a viernes a las 5:00 p. m.
+2. Como acción, selecciona **Iniciar un programa**.
+3. En **Programa o script**, indica la ruta completa al Python del entorno virtual, por ejemplo `%USERPROFILE%\Documents\Nido-control\venv\Scripts\python.exe`.
+4. En **Agregar argumentos**, escribe `manage.py marcar_ausentes`.
+5. En **Iniciar en**, indica la carpeta del proyecto, por ejemplo `%USERPROFILE%\Documents\Nido-control`.
+6. Guarda la tarea y usa **Ejecutar** para verificar que finalice correctamente.
+
 ### Solución de Problemas en Windows
 
 | Error | Solución |

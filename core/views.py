@@ -1,20 +1,24 @@
 from io import BytesIO
 from functools import wraps
 import re
+import calendar
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, Prefetch, Q, Sum
 from django.urls import reverse
 from django.utils import timezone
 from datetime import date, datetime, timedelta
+from urllib.parse import urlencode
 from xml.sax.saxutils import escape
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.platypus import Flowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 from .models import *
 from .forms import *
 
@@ -24,6 +28,37 @@ OPCIONES_DESCANSO = [
     'No durmió',
     'Se despertó antes de terminar la siesta',
 ]
+OPCIONES_DESAYUNO = [
+    'Comió 30 % de la porción',
+    'Comió 50 % de la porción',
+    'Comió al 100 %',
+]
+
+
+def dibujar_encabezado_reporte(canvas, _document, image_y=None):
+    canvas.saveState()
+    image_size = 52
+    if image_y is None:
+        image_y = A4[1] - 126
+    image_paths = (
+        settings.BASE_DIR / 'static' / 'images' / 'encabezado-bebes.png',
+        settings.BASE_DIR / 'static' / 'images' / 'encabezado-movil.png',
+    )
+    for image_path, x in zip(image_paths, (24, A4[0] - 24 - image_size)):
+        canvas.drawImage(
+            str(image_path),
+            x,
+            image_y,
+            width=image_size,
+            height=image_size,
+            preserveAspectRatio=True,
+            anchor='c',
+        )
+    canvas.restoreState()
+
+
+def dibujar_encabezado_reporte_detallado(canvas, document):
+    dibujar_encabezado_reporte(canvas, document, image_y=A4[1] - 88)
 
 
 def ensure_default_aulas():
@@ -42,8 +77,8 @@ def ensure_default_aulas():
             aula.save()
 
 
-def apoderado_con_dni_invalido(datos):
-    for index in [1, 2]:
+def apoderado_con_dni_invalido(datos, cantidad=2):
+    for index in range(1, cantidad + 1):
         campos = {
             campo: datos.get(f'apoderado_{index}_{campo}', '').strip()
             for campo in ['nombres', 'parentesco', 'documento', 'telefono', 'correo', 'direccion']
@@ -58,6 +93,16 @@ def apoderado_con_dni_invalido(datos):
         if any(campos.values()) and not re.fullmatch(r'[0-9]{8}', campos['documento']):
             return index
 
+    return None
+
+
+def apoderado_con_telefono_invalido(datos, cantidad=2):
+    for index in range(1, cantidad + 1):
+        telefono = datos.get(f'apoderado_{index}_telefono', '').strip()
+        if index == 1 and not telefono:
+            telefono = datos.get('apoderado_telefono', '').strip()
+        if telefono and not re.fullmatch(r'[0-9]{9}', telefono):
+            return index
     return None
 
 
@@ -312,8 +357,8 @@ def registrar_entrega(request, nino_id):
             return redirect('dashboard')
 
         documento = request.POST.get('documento', '').strip()
-        if not documento:
-            messages.error(request, 'Ingresa el DNI del padre, apoderado o persona autorizada')
+        if not re.fullmatch(r'[0-9]{8}', documento):
+            messages.error(request, 'El DNI de quien recoge debe contener exactamente 8 dígitos numéricos.')
             return redirect('dashboard')
 
         apoderado = Apoderado.objects.filter(
@@ -345,15 +390,167 @@ def registrar_entrega(request, nino_id):
 @cuidadora_required
 def lista_ninos(request):
     puede_gestionar_estado = es_administrador(request.user)
-    ninos = Nino.objects.all()
-    if not puede_gestionar_estado:
-        ninos = ninos.filter(estado_matricula=True)
+    mostrar_inactivos = (
+        puede_gestionar_estado and request.GET.get('estado') == 'inactivos'
+    )
+    ninos = Nino.objects.filter(estado_matricula=not mostrar_inactivos)
     ninos = ninos.order_by('apellidos', 'nombres')
     return render(
         request,
         'core/ninos/lista.html',
-        {'ninos': ninos, 'puede_gestionar_estado': puede_gestionar_estado},
+        {
+            'ninos': ninos,
+            'puede_gestionar_estado': puede_gestionar_estado,
+            'mostrar_inactivos': mostrar_inactivos,
+        },
     )
+
+
+@login_required
+@admin_required
+def lista_pagos(request):
+    aulas = list(Aula.objects.order_by('nombre'))
+    aula_seleccionada = request.GET.get('aula', '').strip()
+    hoy = timezone.localdate()
+    periodo = request.GET.get('periodo', '').strip()
+    if not periodo and ('mes' in request.GET or 'anio' in request.GET):
+        try:
+            mes = int(request.GET.get('mes', ''))
+            anio = int(request.GET.get('anio', ''))
+            if anio > hoy.year:
+                raise ValueError
+            date(anio, mes, 1)
+            periodo = f'{anio:04d}-{mes:02d}'
+        except (TypeError, ValueError):
+            messages.error(request, 'Selecciona un mes y un año válidos. No se permiten años posteriores al actual.')
+
+    if periodo:
+        try:
+            fecha_periodo = date.fromisoformat(f'{periodo}-01')
+            if fecha_periodo.strftime('%Y-%m') != periodo or fecha_periodo.year > hoy.year:
+                raise ValueError
+        except ValueError:
+            messages.error(request, 'Selecciona un mes y año válidos. No se permiten años posteriores al actual.')
+            periodo = ''
+    if not periodo:
+        periodo = hoy.strftime('%Y-%m')
+
+    anio_seleccionado, mes_seleccionado = map(int, periodo.split('-'))
+    dias_del_mes = calendar.monthrange(anio_seleccionado, mes_seleccionado)[1]
+    try:
+        dia_seleccionado = int(request.GET.get('dia', ''))
+        if not 1 <= dia_seleccionado <= dias_del_mes:
+            raise ValueError
+    except ValueError:
+        dia_seleccionado = (
+            min(hoy.day, dias_del_mes)
+            if periodo == hoy.strftime('%Y-%m')
+            else dias_del_mes
+        )
+        if 'dia' in request.GET:
+            messages.error(request, 'Selecciona un día válido para el mes elegido.')
+    fecha_corte = date(anio_seleccionado, mes_seleccionado, dia_seleccionado)
+
+    ninos = Nino.objects.filter(estado_matricula=True)
+
+    if aula_seleccionada == 'sin-aula':
+        ninos = ninos.filter(aula__isnull=True)
+    elif aula_seleccionada in {str(aula.pk) for aula in aulas}:
+        ninos = ninos.filter(aula_id=int(aula_seleccionada))
+    else:
+        aula_seleccionada = ''
+
+    ninos = ninos.select_related('aula').prefetch_related(
+        Prefetch(
+            'pago_set',
+            queryset=Pago.objects.filter(periodo=periodo).order_by('-pk'),
+            to_attr='pagos_del_mes',
+        )
+    ).order_by('apellidos', 'nombres')
+
+    for nino in ninos:
+        nino.pago_del_mes = nino.pagos_del_mes[0] if nino.pagos_del_mes else None
+        nino.esta_al_dia = bool(
+            nino.pago_del_mes
+            and nino.pago_del_mes.estado == 'pagado'
+            and (
+                nino.pago_del_mes.fecha_pago is None
+                or nino.pago_del_mes.fecha_pago <= fecha_corte
+            )
+        )
+
+    return render(
+        request,
+        'core/pagos/lista.html',
+        {
+            'ninos': ninos,
+            'aulas': aulas,
+            'aula_seleccionada': aula_seleccionada,
+            'periodo': periodo,
+            'dia_seleccionado': dia_seleccionado,
+            'dias': range(1, dias_del_mes + 1),
+            'anio_actual': hoy.year,
+            'meses': [
+                (1, 'Enero'), (2, 'Febrero'), (3, 'Marzo'), (4, 'Abril'),
+                (5, 'Mayo'), (6, 'Junio'), (7, 'Julio'), (8, 'Agosto'),
+                (9, 'Septiembre'), (10, 'Octubre'), (11, 'Noviembre'),
+                (12, 'Diciembre'),
+            ],
+            'mes_seleccionado': mes_seleccionado,
+            'anio_seleccionado': anio_seleccionado,
+        },
+    )
+
+
+@login_required
+@admin_required
+def cambiar_estado_pago(request, nino_id):
+    if request.method != 'POST':
+        return redirect('lista_pagos')
+
+    nino = get_object_or_404(Nino, pk=nino_id, estado_matricula=True)
+    periodo = request.POST.get('periodo', '').strip()
+    dia = request.POST.get('dia', '').strip()
+    estado = request.POST.get('estado', '')
+    aula = request.POST.get('aula', '').strip()
+
+    try:
+        fecha_periodo = date.fromisoformat(f'{periodo}-01')
+        if fecha_periodo.strftime('%Y-%m') != periodo or fecha_periodo.year > timezone.localdate().year:
+            raise ValueError
+        fecha_corte = date(fecha_periodo.year, fecha_periodo.month, int(dia))
+    except ValueError:
+        messages.error(request, 'Selecciona una fecha válida. No se permiten años posteriores al actual.')
+        return redirect('lista_pagos')
+
+    if estado not in {'pagado', 'pendiente'}:
+        messages.error(request, 'Selecciona un estado de pago válido.')
+        return redirect('lista_pagos')
+
+    pago = Pago.objects.filter(nino=nino, periodo=periodo).order_by('-pk').first()
+    fecha_pago = timezone.localdate() if estado == 'pagado' else None
+    if pago:
+        pago.estado = estado
+        pago.fecha_pago = fecha_pago
+        pago.save(update_fields=['estado', 'fecha_pago'])
+    else:
+        Pago.objects.create(
+            nino=nino,
+            concepto='Mensualidad',
+            periodo=periodo,
+            monto=0,
+            estado=estado,
+            fecha_pago=fecha_pago,
+        )
+
+    estado_mensaje = 'al día' if estado == 'pagado' else 'con deuda'
+    messages.success(request, f'Pago de {nino.nombre_completo} actualizado: {estado_mensaje}.')
+
+    filtros = {'periodo': periodo}
+    filtros['dia'] = fecha_corte.day
+    if aula:
+        filtros['aula'] = aula
+    return redirect(f'{reverse("lista_pagos")}?{urlencode(filtros)}')
 
 
 @login_required
@@ -394,7 +591,7 @@ def registrar_nino(request):
                     {'aulas': Aula.objects.all(), 'fecha_maxima': timezone.localdate().isoformat()},
                 )
 
-            apoderado_invalido = apoderado_con_dni_invalido(request.POST)
+            apoderado_invalido = apoderado_con_dni_invalido(request.POST, cantidad=3)
             if apoderado_invalido:
                 messages.error(
                     request,
@@ -408,6 +605,29 @@ def registrar_nino(request):
                         'fecha_maxima': timezone.localdate().isoformat(),
                     },
                 )
+
+            telefono_invalido = apoderado_con_telefono_invalido(request.POST, cantidad=3)
+            if telefono_invalido:
+                messages.error(
+                    request,
+                    f'El teléfono del apoderado {telefono_invalido} debe contener exactamente 9 dígitos numéricos.',
+                )
+                return render(
+                    request,
+                    'core/ninos/registrar.html',
+                    {'aulas': Aula.objects.all(), 'fecha_maxima': timezone.localdate().isoformat()},
+                )
+
+            if foto:
+                try:
+                    validar_foto_jpg(foto)
+                except ValidationError as error:
+                    messages.error(request, error.messages[0])
+                    return render(
+                        request,
+                        'core/ninos/registrar.html',
+                        {'aulas': Aula.objects.all(), 'fecha_maxima': timezone.localdate().isoformat()},
+                    )
 
             nino = Nino(
                 nombres=nombres,
@@ -429,7 +649,7 @@ def registrar_nino(request):
             nino.save()
 
             apoderado_entries = []
-            for index in [1, 2]:
+            for index in [1, 2, 3]:
                 nombres_apoderado = request.POST.get(f'apoderado_{index}_nombres', '').strip()
                 parentesco_apoderado = request.POST.get(f'apoderado_{index}_parentesco', '').strip()
                 documento_apoderado = request.POST.get(f'apoderado_{index}_documento', '').strip()
@@ -498,9 +718,26 @@ def detalle_nino(request, nino_id):
 def editar_nino(request, nino_id):
     ensure_default_aulas()
     nino = get_object_or_404(Nino, id=nino_id)
-    apoderados = list(nino.apoderados.order_by('id')[:2])
+    apoderados = list(nino.apoderados.order_by('id')[:3])
     
     if request.method == 'POST':
+        foto = request.FILES.get('foto')
+        if foto:
+            try:
+                validar_foto_jpg(foto)
+            except ValidationError as error:
+                messages.error(request, error.messages[0])
+                return render(
+                    request,
+                    'core/ninos/editar.html',
+                    {
+                        'nino': nino,
+                        'aulas': Aula.objects.all(),
+                        'apoderados': apoderados,
+                        'fecha_maxima': timezone.localdate().isoformat(),
+                    },
+                )
+
         fecha_nacimiento = request.POST.get('fecha_nacimiento', '')
         if fecha_nacimiento_invalida(fecha_nacimiento):
             messages.error(request, 'La fecha de nacimiento no puede ser posterior a la fecha actual.')
@@ -516,11 +753,29 @@ def editar_nino(request, nino_id):
                 },
             )
 
-        apoderado_invalido = apoderado_con_dni_invalido(request.POST)
+        apoderado_invalido = apoderado_con_dni_invalido(request.POST, cantidad=3)
         if apoderado_invalido:
             messages.error(
                 request,
                 f'El DNI del apoderado {apoderado_invalido} debe contener exactamente 8 dígitos numéricos.',
+            )
+            aulas = Aula.objects.all()
+            return render(
+                request,
+                'core/ninos/editar.html',
+                {
+                    'nino': nino,
+                    'aulas': aulas,
+                    'apoderados': apoderados,
+                    'fecha_maxima': timezone.localdate().isoformat(),
+                },
+            )
+
+        telefono_invalido = apoderado_con_telefono_invalido(request.POST, cantidad=3)
+        if telefono_invalido:
+            messages.error(
+                request,
+                f'El teléfono del apoderado {telefono_invalido} debe contener exactamente 9 dígitos numéricos.',
             )
             aulas = Aula.objects.all()
             return render(
@@ -542,8 +797,8 @@ def editar_nino(request, nino_id):
         nino.restricciones = request.POST.get('restricciones', nino.restricciones)
         nino.informacion_medica = request.POST.get('informacion_medica', nino.informacion_medica)
         
-        if 'foto' in request.FILES:
-            nino.foto = request.FILES['foto']
+        if foto:
+            nino.foto = foto
         
         aula_id = request.POST.get('aula')
         if aula_id:
@@ -552,7 +807,7 @@ def editar_nino(request, nino_id):
             except Aula.DoesNotExist:
                 pass
 
-        for index in [1, 2]:
+        for index in [1, 2, 3]:
             nombres = request.POST.get(f'apoderado_{index}_nombres', '').strip()
             parentesco = request.POST.get(f'apoderado_{index}_parentesco', '').strip()
             documento = request.POST.get(f'apoderado_{index}_documento', '').strip()
@@ -742,6 +997,21 @@ def bitacora_hoy(request):
             menus_por_fecha.setdefault(menu.fecha, []).append(menu)
         for bitacora in bitacoras:
             bitacora.menus_desayuno = menus_por_fecha.get(bitacora.fecha, [])
+            lineas_alimentacion = bitacora.alimentacion.splitlines()
+            bitacora.desayunos_seleccionados = [
+                opcion for opcion in OPCIONES_DESAYUNO if opcion in lineas_alimentacion
+            ]
+            bitacora.alimentacion_base = '\n'.join(
+                linea for linea in lineas_alimentacion if linea not in OPCIONES_DESAYUNO
+            )
+            menu_actual = next(
+                (
+                    menu for menu in bitacora.menus_desayuno
+                    if menu.descripcion == bitacora.alimentacion_base
+                ),
+                None,
+            )
+            bitacora.menu_desayuno_seleccionado_id = menu_actual.id if menu_actual else ''
             descansos_actuales = bitacora.descanso.splitlines()
             opciones_descanso = [
                 {'valor': opcion, 'seleccionado': opcion in descansos_actuales}
@@ -762,6 +1032,7 @@ def bitacora_hoy(request):
         'hoy': hoy,
         'aulas': aulas,
         'ninos': ninos,
+        'opciones_desayuno': OPCIONES_DESAYUNO,
         'estados_animo': Bitacora.ESTADOS_ANIMO,
         'filtros': {
             'fecha_desde': fecha_desde_parametro,
@@ -789,15 +1060,30 @@ def registrar_bitacora(request, bitacora_id):
             if menu_desayuno is None:
                 messages.error(request, 'Selecciona un menú de desayuno válido para la fecha de esta bitácora.')
                 return redirect('bitacora_hoy')
-            bitacora.alimentacion = menu_desayuno.descripcion
+            alimentacion_base = menu_desayuno.descripcion
         else:
-            bitacora.alimentacion = ''
+            alimentacion_base = '\n'.join(
+                linea for linea in bitacora.alimentacion.splitlines() if linea not in OPCIONES_DESAYUNO
+            )
+        desayunos_seleccionados = request.POST.getlist('desayuno')
+        if any(desayuno not in OPCIONES_DESAYUNO for desayuno in desayunos_seleccionados):
+            messages.error(request, 'Selecciona únicamente las opciones disponibles para el desayuno.')
+            return redirect('bitacora_hoy')
+        bitacora.alimentacion = '\n'.join(
+            [valor for valor in [alimentacion_base, *dict.fromkeys(desayunos_seleccionados)] if valor]
+        )
         descansos_seleccionados = request.POST.getlist('descanso')
         descansos_actuales = bitacora.descanso.splitlines()
         opciones_validas = set(OPCIONES_DESCANSO + descansos_actuales)
         if any(descanso not in opciones_validas for descanso in descansos_seleccionados):
             messages.error(request, 'Selecciona únicamente las opciones disponibles para el descanso.')
             return redirect('bitacora_hoy')
+        descanso_otro = request.POST.get('descanso_otro', '').strip()
+        if request.POST.get('descanso_otro_activar') == 'on':
+            if not descanso_otro or len(descanso_otro) > 500:
+                messages.error(request, 'Escribe una opción de descanso de hasta 500 caracteres.')
+                return redirect('bitacora_hoy')
+            descansos_seleccionados.append(descanso_otro)
         bitacora.descanso = '\n'.join(dict.fromkeys(descansos_seleccionados))
         bitacora.actividades = request.POST.get('actividades', '')
         bitacora.higiene = request.POST.get('higiene', '')
@@ -976,36 +1262,141 @@ def generar_reportes(request):
     return render(request, 'core/reportes/index.html', {
         'ninos_reporte': Nino.objects.filter(estado_matricula=True).order_by('apellidos', 'nombres'),
         'semana_actual': timezone.localdate().strftime('%G-W%V'),
+        'meses': [
+            (1, 'Enero'), (2, 'Febrero'), (3, 'Marzo'), (4, 'Abril'),
+            (5, 'Mayo'), (6, 'Junio'), (7, 'Julio'), (8, 'Agosto'),
+            (9, 'Septiembre'), (10, 'Octubre'), (11, 'Noviembre'),
+            (12, 'Diciembre'),
+        ],
+        'aulas_reporte': Aula.objects.order_by('nombre'),
+        'hoy_reporte': timezone.localdate(),
+        'dias_reporte': range(1, 32),
     })
 
 
-class BabyIllustration(Flowable):
-    def __init__(self):
-        super().__init__()
-        self.width = 48
-        self.height = 48
+@login_required
+@admin_required
+def reporte_pagos(request):
+    hoy = timezone.localdate()
+    try:
+        anio = int(request.GET.get('anio', hoy.year))
+        mes = int(request.GET.get('mes', hoy.month))
+        dia = int(request.GET.get('dia', hoy.day))
+        fecha_corte = date(anio, mes, dia)
+        if anio > hoy.year or fecha_corte > hoy:
+            raise ValueError
+    except (TypeError, ValueError):
+        messages.error(
+            request,
+            'Selecciona una fecha válida para el reporte. No se permiten fechas futuras.',
+        )
+        return redirect('generar_reportes')
 
-    def draw(self):
-        canvas = self.canv
-        canvas.setFillColor(colors.HexColor('#F8B4C5'))
-        canvas.circle(8, 39, 2, fill=1, stroke=0)
-        canvas.circle(39, 34, 2, fill=1, stroke=0)
-        canvas.setFillColor(colors.HexColor('#8ED6C2'))
-        canvas.ellipse(8, 0, 40, 23, fill=1, stroke=0)
-        canvas.setFillColor(colors.HexColor('#F6C9A8'))
-        canvas.circle(24, 27, 15, fill=1, stroke=0)
-        canvas.circle(9, 26, 4, fill=1, stroke=0)
-        canvas.circle(39, 26, 4, fill=1, stroke=0)
-        canvas.setFillColor(colors.HexColor('#8C6CCB'))
-        canvas.wedge(9, 25, 39, 48, 0, 180, fill=1, stroke=0)
-        canvas.setFillColor(colors.HexColor('#FFD166'))
-        canvas.circle(24, 47, 3, fill=1, stroke=0)
-        canvas.setFillColor(colors.HexColor('#374151'))
-        canvas.circle(19, 28, 1.2, fill=1, stroke=0)
-        canvas.circle(29, 28, 1.2, fill=1, stroke=0)
-        canvas.setStrokeColor(colors.HexColor('#C66B72'))
-        canvas.setLineWidth(1)
-        canvas.arc(19, 18, 29, 26, 200, 140)
+    aula_id = request.GET.get('aula', '').strip()
+    ninos = Nino.objects.filter(estado_matricula=True)
+    aula_nombre = 'Todas las aulas'
+    if aula_id:
+        if not aula_id.isdecimal():
+            messages.error(request, 'Selecciona un aula válida para el reporte de pagos.')
+            return redirect('generar_reportes')
+        aula = get_object_or_404(Aula, pk=int(aula_id))
+        ninos = ninos.filter(aula=aula)
+        aula_nombre = aula.nombre
+
+    periodo = fecha_corte.strftime('%Y-%m')
+    ninos = ninos.select_related('aula').prefetch_related(
+        Prefetch(
+            'pago_set',
+            queryset=Pago.objects.filter(periodo=periodo).order_by('-pk'),
+            to_attr='pagos_del_mes',
+        )
+    ).order_by('apellidos', 'nombres')
+
+    data = [['Niño', 'Aula', 'Fecha de pago', 'Estado']]
+    estados = []
+    for nino in ninos:
+        pago = nino.pagos_del_mes[0] if nino.pagos_del_mes else None
+        al_dia = bool(
+            pago
+            and pago.estado == 'pagado'
+            and (pago.fecha_pago is None or pago.fecha_pago <= fecha_corte)
+        )
+        estados.append(al_dia)
+        data.append([
+            Paragraph(escape(nino.nombre_completo), getSampleStyleSheet()['BodyText']),
+            Paragraph(escape(nino.aula.nombre if nino.aula else 'Sin aula'), getSampleStyleSheet()['BodyText']),
+            pago.fecha_pago.strftime('%d/%m/%Y') if pago and pago.fecha_pago else '—',
+            'Al día' if al_dia else 'Debe',
+        ])
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=36,
+        leftMargin=36,
+        topMargin=125,
+        bottomMargin=36,
+    )
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'PaymentReportTitle',
+        parent=styles['Heading1'],
+        fontSize=18,
+        textColor=colors.HexColor('#24476B'),
+        alignment=1,
+        spaceAfter=12,
+    )
+    elements = [
+        Paragraph('NidoControl - Reporte de Pagos', title_style),
+        Paragraph(f'Fecha de corte: {fecha_corte.strftime("%d/%m/%Y")}', styles['Normal']),
+        Paragraph(f'Aula: {escape(aula_nombre)}', styles['Normal']),
+        Spacer(1, 8),
+        Paragraph(
+            f'Al día: {sum(estados)} &nbsp;&nbsp; Deben: {len(estados) - sum(estados)}',
+            styles['Normal'],
+        ),
+        Spacer(1, 12),
+    ]
+
+    table = Table(data, colWidths=[190, 125, 105, 90], repeatRows=1)
+    table_styles = [
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#315F83')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ('ALIGN', (2, 1), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#CBD5E1')),
+        ('LEFTPADDING', (0, 0), (-1, -1), 6),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]
+    for row_index, al_dia in enumerate(estados, start=1):
+        table_styles.append((
+            'BACKGROUND',
+            (0, row_index),
+            (-1, row_index),
+            colors.HexColor('#E8F5E9' if al_dia else '#FDECEA'),
+        ))
+        table_styles.append((
+            'TEXTCOLOR',
+            (3, row_index),
+            (3, row_index),
+            colors.HexColor('#198754' if al_dia else '#DC3545'),
+        ))
+    table.setStyle(TableStyle(table_styles))
+    if estados:
+        elements.append(table)
+    else:
+        elements.append(Paragraph('No hay niños matriculados para el aula seleccionada.', styles['Normal']))
+
+    doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="pagos_{fecha_corte.isoformat()}.pdf"'
+    return response
 
 
 @login_required
@@ -1035,7 +1426,7 @@ def reporte_estudiantes(request):
         return redirect('generar_reportes')
 
     buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=36, leftMargin=36, topMargin=32, bottomMargin=36)
+    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=36, leftMargin=36, topMargin=125, bottomMargin=36)
     elements = []
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
@@ -1104,7 +1495,6 @@ def reporte_estudiantes(request):
 
         header = Table(
             [[
-                BabyIllustration(),
                 [
                     Paragraph('Mi semana en NidoControl', title_style),
                     Paragraph(
@@ -1113,7 +1503,7 @@ def reporte_estudiantes(request):
                     ),
                 ],
             ]],
-            colWidths=[60, 463],
+            colWidths=[523],
         )
         header.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#EAF5FC')),
@@ -1198,7 +1588,11 @@ def reporte_estudiantes(request):
             [48, 65, 130, 120, 70, 90],
         )
 
-    doc.build(elements)
+    doc.build(
+        elements,
+        onFirstPage=dibujar_encabezado_reporte_detallado,
+        onLaterPages=dibujar_encabezado_reporte_detallado,
+    )
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = (
@@ -1215,7 +1609,7 @@ def reporte_asistencia(request):
     asistencias = Asistencia.objects.filter(fecha=hoy).select_related('nino')
     
     buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
     elements = []
     
     styles = getSampleStyleSheet()
@@ -1257,7 +1651,7 @@ def reporte_asistencia(request):
     else:
         elements.append(Paragraph("No hay registros de asistencia para hoy.", styles['Normal']))
     
-    doc.build(elements)
+    doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
@@ -1272,7 +1666,7 @@ def reporte_incidencias(request):
     incidencias = Incidencia.objects.all().order_by('-fecha')[:50]
     
     buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
     elements = []
     
     styles = getSampleStyleSheet()
@@ -1311,7 +1705,7 @@ def reporte_incidencias(request):
     else:
         elements.append(Paragraph("No hay incidencias registradas.", styles['Normal']))
     
-    doc.build(elements)
+    doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
@@ -1327,7 +1721,7 @@ def reporte_bitacora(request):
     bitacoras = Bitacora.objects.filter(fecha=hoy).select_related('nino')
     
     buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
     elements = []
     
     styles = getSampleStyleSheet()
@@ -1366,7 +1760,7 @@ def reporte_bitacora(request):
     else:
         elements.append(Paragraph("No hay registros de bitácora para hoy.", styles['Normal']))
     
-    doc.build(elements)
+    doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
@@ -1416,7 +1810,7 @@ def estadisticas(request):
             periodo = 'mes'
             fecha_inicio = hoy.replace(day=1)
             fecha_fin = hoy
-    
+
     total_ninos = Nino.objects.filter(estado_matricula=True).count()
     total_aulas = Aula.objects.count()
     

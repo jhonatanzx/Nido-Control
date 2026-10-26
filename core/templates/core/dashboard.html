@@ -97,7 +97,7 @@
                                             {% csrf_token %}
                                             <div class="col-sm-7">
                                                 <label class="form-label small" for="documento-{{ nino.id }}">DNI de quien recoge</label>
-                                                <input id="documento-{{ nino.id }}" name="documento" class="form-control" maxlength="20" required autocomplete="off" placeholder="Ingresa el DNI">
+                                                <input id="documento-{{ nino.id }}" name="documento" type="text" class="form-control" inputmode="numeric" pattern="[0-9]{8}" minlength="8" maxlength="8" required autocomplete="off" placeholder="DNI de 8 dígitos" title="Ingresa exactamente 8 dígitos numéricos" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)">
                                             </div>
                                             <div class="col-sm-5">
                                                 <button type="submit" class="btn btn-success w-100"><i class="bi bi-check2-circle"></i> Finalizar entrega</button>
@@ -134,7 +134,7 @@
                             <strong>Gestión sencilla, cuidado organizado y entrega segura.</strong>
                         </p>
                         <p class="text-muted small mb-0">
-                            <i class="bi bi-code-square"></i> Versión MVP - En desarrollo
+                            <i class="bi bi-code-square"></i> Versión 1.1.0
                         </p>
                     </div>
                     <div class="col-md-4 text-end">

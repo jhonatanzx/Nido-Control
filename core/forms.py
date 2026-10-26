@@ -16,7 +16,6 @@ class NinoForm(forms.ModelForm):
             'restricciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'informacion_medica': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
-
 class ApoderadoForm(forms.ModelForm):
     class Meta:
         model = Apoderado

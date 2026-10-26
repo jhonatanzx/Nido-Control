@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Estado de Pagos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1><i class="bi bi-cash-coin text-primary"></i> Pago mensual</h1>
+        <p class="text-muted mb-0">Marca cada mensualidad como al día o pendiente, sin registrar montos.</p>
+    </div>
+</div>
+
+<form method="get" class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-sm-6 col-md-3">
+                <label for="filtro-mes" class="form-label">Mes</label>
+                <select id="filtro-mes" name="mes" class="form-select" required>
+                    {% for numero, nombre in meses %}
+                        <option value="{{ numero }}" {% if mes_seleccionado == numero %}selected{% endif %}>{{ nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-2">
+                <label for="filtro-anio" class="form-label">Año</label>
+                <input id="filtro-anio" name="anio" type="number" class="form-control" min="1" max="{{ anio_actual }}" step="1" value="{{ anio_seleccionado }}" required>
+            </div>
+            <div class="col-sm-6 col-md-2">
+                <label for="filtro-dia" class="form-label">Día de corte</label>
+                <select id="filtro-dia" name="dia" class="form-select" required>
+                    {% for dia in dias %}
+                        <option value="{{ dia }}" {% if dia_seleccionado == dia %}selected{% endif %}>{{ dia }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-8 col-md-3">
+                <label for="filtro-aula" class="form-label">Filtrar por aula</label>
+                <select id="filtro-aula" name="aula" class="form-select">
+                    <option value="" {% if not aula_seleccionada %}selected{% endif %}>Todas las aulas</option>
+                    {% for aula in aulas %}
+                        <option value="{{ aula.id }}" {% if aula_seleccionada == aula.id|stringformat:"s" %}selected{% endif %}>{{ aula.nombre }}</option>
+                    {% endfor %}
+                    <option value="sin-aula" {% if aula_seleccionada == 'sin-aula' %}selected{% endif %}>Sin aula asignada</option>
+                </select>
+            </div>
+            <div class="col-sm-4 col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-funnel"></i> Filtrar
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if ninos %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Niño</th>
+                            <th>Aula</th>
+                            <th>Fecha de pago</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for nino in ninos %}
+                            <tr>
+                                <td><strong>{{ nino.nombre_completo }}</strong></td>
+                                <td>{{ nino.aula.nombre|default:"Sin aula" }}</td>
+                                <td>{{ nino.pago_del_mes.fecha_pago|date:"d/m/Y"|default:"—" }}</td>
+                                <td>
+                                    {% if nino.esta_al_dia %}
+                                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Al día</span>
+                                    {% else %}
+                                        <span class="badge bg-danger"><i class="bi bi-exclamation-circle"></i> Debe</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'cambiar_estado_pago' nino.id %}" class="d-inline-flex gap-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="periodo" value="{{ periodo }}">
+                                        <input type="hidden" name="dia" value="{{ dia_seleccionado }}">
+                                        <input type="hidden" name="aula" value="{{ aula_seleccionada }}">
+                                        {% if nino.esta_al_dia %}
+                                            <input type="hidden" name="estado" value="pendiente">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Marcar debe</button>
+                                        {% else %}
+                                            <input type="hidden" name="estado" value="pagado">
+                                            <button type="submit" class="btn btn-sm btn-success">Registrar pago</button>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-cash-coin display-1 text-muted"></i>
+                <p class="text-muted mt-3 mb-0">No hay niños matriculados para el aula seleccionada.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

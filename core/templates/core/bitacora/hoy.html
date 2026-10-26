@@ -91,17 +91,31 @@
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Desayuno</label>
-                                                    <select name="menu_desayuno" class="form-control">
-                                                        <option value="">-- Seleccionar desayuno --</option>
-                                                        {% for menu in bitacora.menus_desayuno %}
-                                                            <option value="{{ menu.id }}" {% if menu.descripcion == bitacora.alimentacion %}selected{% endif %}>
-                                                                {{ menu.descripcion|truncatechars:100 }}
-                                                            </option>
-                                                        {% endfor %}
-                                                    </select>
-                                                    {% if not menus_desayuno %}
+                                                    {% if bitacora.menu_desayuno_seleccionado_id %}
+                                                        <input type="hidden" name="menu_desayuno" value="{{ bitacora.menu_desayuno_seleccionado_id }}">
+                                                    {% endif %}
+                                                    {% if bitacora.menus_desayuno %}
+                                                        <small class="d-block text-muted mb-2">
+                                                            Menú de hoy: {{ bitacora.menus_desayuno.0.descripcion|truncatechars:100 }}
+                                                        </small>
+                                                    {% else %}
                                                         <small class="text-muted">No hay menú de desayuno registrado para hoy.</small>
                                                     {% endif %}
+                                                    <div class="dropdown desayuno-dropdown mt-2">
+                                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                                            <span class="desayuno-resumen">Sin selección</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu w-100 p-2">
+                                                        {% for opcion in opciones_desayuno %}
+                                                            <li>
+                                                                <label class="dropdown-item form-check mb-0">
+                                                                    <input class="form-check-input me-2" type="checkbox" name="desayuno" value="{{ opcion }}" {% if opcion in bitacora.desayunos_seleccionados %}checked{% endif %}>
+                                                                    <span class="form-check-label">{{ opcion }}</span>
+                                                                </label>
+                                                            </li>
+                                                        {% endfor %}
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Descanso</label>
@@ -121,6 +135,11 @@
                                                         </ul>
                                                     </div>
                                                     <small class="form-text">Selecciona una o varias opciones:</small>
+                                                    <div class="form-check mt-2">
+                                                        <input class="form-check-input descanso-otro-toggle" type="checkbox" name="descanso_otro_activar" value="on">
+                                                        <label class="form-check-label">Otro (especificar)</label>
+                                                    </div>
+                                                    <input type="text" name="descanso_otro" class="form-control descanso-otro-input mt-2" placeholder="Escribe otra opción de descanso" maxlength="500" hidden>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -172,16 +191,27 @@
 
 {% block extra_js %}
 <script>
-    document.querySelectorAll('.descanso-dropdown').forEach(function(dropdown) {
-        const resumen = dropdown.querySelector('.descanso-resumen');
+    document.querySelectorAll('.desayuno-dropdown, .descanso-dropdown').forEach(function(dropdown) {
+        const resumen = dropdown.querySelector('.desayuno-resumen, .descanso-resumen');
         const actualizarResumen = function() {
-            const seleccionadas = Array.from(dropdown.querySelectorAll('input[name="descanso"]:checked'))
+            const seleccionadas = Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked'))
                 .map(function(opcion) { return opcion.value; });
             resumen.textContent = seleccionadas.length ? seleccionadas.join(', ') : 'Sin selección';
         };
 
         dropdown.addEventListener('change', actualizarResumen);
         actualizarResumen();
+    });
+
+    document.querySelectorAll('.descanso-otro-toggle').forEach(function(toggle) {
+        const input = toggle.closest('.mb-3').querySelector('.descanso-otro-input');
+        const actualizarCampo = function() {
+            input.hidden = !toggle.checked;
+            input.required = toggle.checked;
+            if (!toggle.checked) input.value = '';
+        };
+        toggle.addEventListener('change', actualizarCampo);
+        actualizarCampo();
     });
 </script>
 {% endblock %}

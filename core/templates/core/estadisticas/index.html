@@ -33,7 +33,7 @@
                 </button>
             </div>
         </div>
-        <small class="form-text text-muted">El rango se aplica a asistencia, incidencias, estado de ánimo y sus totales.</small>
+        <small class="form-text text-muted">El rango se aplica a todos los gráficos y sus totales.</small>
     </div>
 </form>
 
@@ -47,20 +47,35 @@
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card shadow-sm">
-            <div class="card-header"><i class="bi bi-pie-chart"></i> Asistencia</div>
-            <div class="card-body"><canvas id="graficoAsistencia" style="max-height: 250px;"></canvas></div>
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-1">
+                <span><i class="bi bi-pie-chart"></i> Asistencia</span>
+                <small class="text-muted">{{ fecha_inicio|date:"d/m/Y" }} – {{ fecha_fin|date:"d/m/Y" }}</small>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoAsistencia" style="max-height: 250px;"></canvas>
+            </div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card shadow-sm">
-            <div class="card-header"><i class="bi bi-exclamation-triangle"></i> Incidencias</div>
-            <div class="card-body"><canvas id="graficoIncidencias" style="max-height: 250px;"></canvas></div>
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-1">
+                <span><i class="bi bi-exclamation-triangle"></i> Incidencias</span>
+                <small class="text-muted">{{ fecha_inicio|date:"d/m/Y" }} – {{ fecha_fin|date:"d/m/Y" }}</small>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoIncidencias" style="max-height: 250px;"></canvas>
+            </div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card shadow-sm">
-            <div class="card-header"><i class="bi bi-emoji-smile"></i> Estado de Ánimo</div>
-            <div class="card-body"><canvas id="graficoAnimo" style="max-height: 250px;"></canvas></div>
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-1">
+                <span><i class="bi bi-emoji-smile"></i> Estado de Ánimo</span>
+                <small class="text-muted">{{ fecha_inicio|date:"d/m/Y" }} – {{ fecha_fin|date:"d/m/Y" }}</small>
+            </div>
+            <div class="card-body">
+                <canvas id="graficoAnimo" style="max-height: 250px;"></canvas>
+            </div>
         </div>
     </div>
 </div>

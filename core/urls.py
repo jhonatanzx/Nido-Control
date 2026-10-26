@@ -15,6 +15,8 @@ urlpatterns = [
     path('ninos/<int:nino_id>/', views.detalle_nino, name='detalle_nino'),
     path('ninos/<int:nino_id>/editar/', views.editar_nino, name='editar_nino'),
     path('ninos/<int:nino_id>/estado/', views.cambiar_estado_nino, name='cambiar_estado_nino'),
+    path('pagos/', views.lista_pagos, name='lista_pagos'),
+    path('pagos/<int:nino_id>/estado/', views.cambiar_estado_pago, name='cambiar_estado_pago'),
     
     # Asistencia
     path('asistencia/', views.asistencia_hoy, name='asistencia_hoy'),
@@ -39,6 +41,7 @@ urlpatterns = [
     
     # Reportes
     path('reportes/', views.generar_reportes, name='generar_reportes'),
+    path('reportes/pagos/', views.reporte_pagos, name='reporte_pagos'),
     path('reportes/estudiantes/', views.reporte_estudiantes, name='reporte_estudiantes'),
     path('reportes/asistencia/', views.reporte_asistencia, name='reporte_asistencia'),
     path('reportes/incidencias/', views.reporte_incidencias, name='reporte_incidencias'),

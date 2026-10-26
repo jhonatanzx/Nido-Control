@@ -44,6 +44,52 @@
     </div>
     <div class="col-md-6">
         <div class="card shadow-sm h-100">
+            <div class="card-header"><i class="bi bi-cash-coin"></i> Reporte de pagos</div>
+            <div class="card-body">
+                <p class="text-muted">Consulta quién está al día y quién debe, con la fecha de pago y filtro por aula.</p>
+                <form method="get" action="{% url 'reporte_pagos' %}" data-pdf-download>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="reporte-pagos-mes" class="form-label">Mes</label>
+                            <select id="reporte-pagos-mes" name="mes" class="form-select" required>
+                                {% for numero, nombre in meses %}
+                                    <option value="{{ numero }}" {% if hoy_reporte.month == numero %}selected{% endif %}>{{ nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="reporte-pagos-anio" class="form-label">Año</label>
+                            <input id="reporte-pagos-anio" name="anio" type="number" class="form-control" min="1" max="{{ hoy_reporte.year }}" value="{{ hoy_reporte.year }}" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="reporte-pagos-dia" class="form-label">Día de corte</label>
+                            <select id="reporte-pagos-dia" name="dia" class="form-select" required>
+                                {% for dia in dias_reporte %}
+                                    <option value="{{ dia }}" {% if hoy_reporte.day == dia %}selected{% endif %}>{{ dia }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="reporte-pagos-aula" class="form-label">Aula</label>
+                            <select id="reporte-pagos-aula" name="aula" class="form-select">
+                                <option value="">Todas las aulas</option>
+                                {% for aula in aulas_reporte %}
+                                    <option value="{{ aula.id }}">{{ aula.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-file-pdf"></i> Generar reporte de pagos PDF
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
             <div class="card-header"><i class="bi bi-person-vcard"></i> Reporte detallado por estudiante</div>
             <div class="card-body">
                 <p class="text-muted">Consulta únicamente la asistencia, bitácora e incidencias del estudiante seleccionado durante una semana.</p>
@@ -75,6 +121,35 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const status = document.getElementById('reporte-descarga-estado');
+        const paymentMonth = document.getElementById('reporte-pagos-mes');
+        const paymentYear = document.getElementById('reporte-pagos-anio');
+        const paymentDay = document.getElementById('reporte-pagos-dia');
+        const currentYear = Number(paymentYear.max);
+        const currentMonth = {{ hoy_reporte.month }};
+        const currentDay = {{ hoy_reporte.day }};
+
+        function updatePaymentDays() {
+            const month = Number(paymentMonth.value);
+            const year = Number(paymentYear.value);
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const maxDay = year === currentYear && month === currentMonth
+                ? Math.min(daysInMonth, currentDay)
+                : daysInMonth;
+            const selectedDay = Math.min(Number(paymentDay.value) || currentDay, maxDay);
+
+            paymentDay.replaceChildren();
+            for (let day = 1; day <= maxDay; day += 1) {
+                const option = document.createElement('option');
+                option.value = String(day);
+                option.textContent = String(day);
+                option.selected = day === selectedDay;
+                paymentDay.appendChild(option);
+            }
+        }
+
+        updatePaymentDays();
+        paymentMonth.addEventListener('change', updatePaymentDays);
+        paymentYear.addEventListener('input', updatePaymentDays);
 
         function showStatus(message, type) {
             status.className = `alert alert-${type}`;

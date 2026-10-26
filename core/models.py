@@ -4,8 +4,26 @@ from pathlib import Path
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.files.base import ContentFile
+from django.core.exceptions import ValidationError
 from django.utils import timezone
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, UnidentifiedImageError
+
+
+def validar_foto_jpg(foto):
+    if Path(foto.name).suffix.lower() != '.jpg':
+        raise ValidationError('La foto debe estar en formato .jpg.')
+
+    try:
+        foto.seek(0)
+        with Image.open(foto) as imagen:
+            if imagen.format != 'JPEG':
+                raise ValidationError('El archivo seleccionado no es una imagen JPG válida.')
+            imagen.verify()
+    except (UnidentifiedImageError, OSError, ValueError) as error:
+        raise ValidationError('El archivo seleccionado no es una imagen JPG válida.') from error
+    finally:
+        foto.seek(0)
+
 
 class Usuario(AbstractUser):
     ROLES = [
@@ -43,7 +61,12 @@ class Nino(models.Model):
     informacion_medica = models.TextField(blank=True)
     estado_matricula = models.BooleanField(default=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
-    foto = models.ImageField(upload_to='fotos_ninos/', blank=True, null=True)
+    foto = models.ImageField(
+        upload_to='fotos_ninos/',
+        blank=True,
+        null=True,
+        validators=[validar_foto_jpg],
+    )
 
     def save(self, *args, **kwargs):
         foto_anterior = None
@@ -51,6 +74,7 @@ class Nino(models.Model):
             foto_anterior = type(self).objects.filter(pk=self.pk).values_list('foto', flat=True).first()
 
         if self.foto and not self.foto._committed:
+            validar_foto_jpg(self.foto)
             with Image.open(self.foto) as imagen:
                 imagen.seek(0)
                 imagen = ImageOps.exif_transpose(imagen)

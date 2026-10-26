@@ -6,9 +6,18 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><i class="bi bi-people text-primary"></i> Lista de Niños</h1>
-    <a href="{% url 'registrar_nino' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> Registrar Niño
-    </a>
+    <div class="d-flex gap-2">
+        {% if puede_gestionar_estado %}
+            {% if mostrar_inactivos %}
+                <a href="{% url 'lista_ninos' %}" class="btn btn-outline-primary">Ver niños activos</a>
+            {% else %}
+                <a href="{% url 'lista_ninos' %}?estado=inactivos" class="btn btn-outline-primary">Ver matrículas inactivas</a>
+            {% endif %}
+        {% endif %}
+        <a href="{% url 'registrar_nino' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Registrar Niño
+        </a>
+    </div>
 </div>
 
 <div class="card shadow-sm">
