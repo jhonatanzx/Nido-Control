@@ -1350,6 +1350,45 @@ class NinoEditTests(TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assertIn(prefijo, response['Content-Disposition'])
 
+    def test_reportes_operativos_permiten_filtrar_por_alumno(self):
+        self.client.force_login(self.user)
+        parametros = {'nino': str(self.nino.pk)}
+
+        for nombre, prefijo in (
+            ('reporte_asistencia', 'asistencia_'),
+            ('reporte_incidencias', 'incidencias_'),
+            ('reporte_bitacora', 'bitacora_'),
+        ):
+            with self.subTest(reporte=nombre):
+                response = self.client.get(reverse(nombre), parametros)
+
+                self.assertEqual(response.status_code, 200)
+                self.assertIn(
+                    f'{prefijo}{timezone.localdate():%Y-%m}_alumno_{self.nino.pk}.pdf',
+                    response['Content-Disposition'],
+                )
+
+    def test_pagina_de_reportes_muestra_selector_de_alumno_en_los_tres_reportes(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse('generar_reportes'))
+
+        self.assertEqual(response.status_code, 200)
+        for selector in ('asistencia-nino', 'incidencias-nino', 'bitacora-nino'):
+            with self.subTest(selector=selector):
+                self.assertContains(response, f'id="{selector}"')
+        self.assertContains(response, 'Todos los alumnos')
+
+    def test_reportes_operativos_rechazan_un_alumno_invalido(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(
+            reverse('reporte_asistencia'),
+            {'nino': 'alumno-invalido'},
+        )
+
+        self.assertRedirects(response, reverse('generar_reportes'))
+
     def test_reporte_estudiantes_generates_monthly_detail_pdf(self):
         self.client.force_login(self.user)
         hoy = timezone.localdate()

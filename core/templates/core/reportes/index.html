@@ -13,7 +13,7 @@
         <div class="card shadow-sm h-100">
             <div class="card-header"><i class="bi bi-check-circle"></i> Reporte de Asistencia</div>
             <div class="card-body">
-                <p class="text-muted">Genera el reporte de asistencia del mes seleccionado.</p>
+                <p class="text-muted">Genera el reporte de asistencia del mes seleccionado, ordenado por alumno y fecha.</p>
                 <form method="get" action="{% url 'reporte_asistencia' %}" data-pdf-download>
                     <div class="row g-3 mb-3">
                         <div class="col-sm-6">
@@ -29,6 +29,15 @@
                             <input id="asistencia-anio" name="anio" type="number" class="form-control" min="1" max="{{ hoy_reporte.year }}" value="{{ hoy_reporte.year }}" required>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label for="asistencia-nino" class="form-label">Alumno</label>
+                        <select id="asistencia-nino" name="nino" class="form-select">
+                            <option value="">Todos los alumnos</option>
+                            {% for nino in ninos_reporte %}
+                                <option value="{{ nino.id }}">{{ nino.apellidos }}, {{ nino.nombres }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary w-100"><i class="bi bi-file-pdf"></i> Generar PDF mensual</button>
                 </form>
             </div>
@@ -38,7 +47,7 @@
         <div class="card shadow-sm h-100">
             <div class="card-header"><i class="bi bi-exclamation-triangle"></i> Reporte de Incidencias</div>
             <div class="card-body">
-                <p class="text-muted">Genera el reporte de incidencias del mes seleccionado.</p>
+                <p class="text-muted">Genera el reporte de incidencias del mes seleccionado, ordenado por alumno y fecha.</p>
                 <form method="get" action="{% url 'reporte_incidencias' %}" data-pdf-download>
                     <div class="row g-3 mb-3">
                         <div class="col-sm-6">
@@ -54,6 +63,15 @@
                             <input id="incidencias-anio" name="anio" type="number" class="form-control" min="1" max="{{ hoy_reporte.year }}" value="{{ hoy_reporte.year }}" required>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label for="incidencias-nino" class="form-label">Alumno</label>
+                        <select id="incidencias-nino" name="nino" class="form-select">
+                            <option value="">Todos los alumnos</option>
+                            {% for nino in ninos_reporte %}
+                                <option value="{{ nino.id }}">{{ nino.apellidos }}, {{ nino.nombres }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-warning w-100"><i class="bi bi-file-pdf"></i> Generar PDF mensual</button>
                 </form>
             </div>
@@ -63,7 +81,7 @@
         <div class="card shadow-sm h-100">
             <div class="card-header"><i class="bi bi-journal"></i> Reporte de Bitácora</div>
             <div class="card-body">
-                <p class="text-muted">Genera el reporte de bitácora del mes seleccionado.</p>
+                <p class="text-muted">Genera el reporte de bitácora del mes seleccionado, ordenado por alumno y fecha.</p>
                 <form method="get" action="{% url 'reporte_bitacora' %}" data-pdf-download>
                     <div class="row g-3 mb-3">
                         <div class="col-sm-6">
@@ -78,6 +96,15 @@
                             <label for="bitacora-anio" class="form-label">Año</label>
                             <input id="bitacora-anio" name="anio" type="number" class="form-control" min="1" max="{{ hoy_reporte.year }}" value="{{ hoy_reporte.year }}" required>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bitacora-nino" class="form-label">Alumno</label>
+                        <select id="bitacora-nino" name="nino" class="form-select">
+                            <option value="">Todos los alumnos</option>
+                            {% for nino in ninos_reporte %}
+                                <option value="{{ nino.id }}">{{ nino.apellidos }}, {{ nino.nombres }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-info w-100"><i class="bi bi-file-pdf"></i> Generar PDF mensual</button>
                 </form>

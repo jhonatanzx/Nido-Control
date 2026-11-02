@@ -1273,6 +1273,25 @@ def rango_mensual_reporte(request):
     return fecha_inicio, fecha_fin, f'{anio:04d}-{mes:02d}', etiqueta_mes
 
 
+def filtrar_alumno_reporte(request, registros):
+    alumno_id = request.GET.get('nino', '').strip()
+    if not alumno_id:
+        return registros, 'Todos los alumnos', None
+    if not alumno_id.isdecimal():
+        messages.error(request, 'Selecciona un alumno válido para el reporte.')
+        return None
+
+    try:
+        alumno = Nino.objects.filter(pk=int(alumno_id)).first()
+    except (OverflowError, ValueError):
+        messages.error(request, 'Selecciona un alumno válido para el reporte.')
+        return None
+    if alumno is None:
+        messages.error(request, 'El alumno seleccionado no existe.')
+        return None
+    return registros.filter(nino=alumno), alumno.nombre_completo, alumno.pk
+
+
 @login_required
 @admin_required
 def reporte_pagos(request):
@@ -1594,7 +1613,12 @@ def reporte_asistencia(request):
     fecha_inicio, fecha_fin, periodo, etiqueta_mes = rango
     asistencias = Asistencia.objects.filter(
         fecha__range=(fecha_inicio, fecha_fin)
-    ).select_related('nino', 'nino__aula').order_by('fecha', 'nino__apellidos', 'nino__nombres')
+    ).select_related('nino', 'nino__aula')
+    resultado = filtrar_alumno_reporte(request, asistencias)
+    if resultado is None:
+        return redirect('generar_reportes')
+    asistencias, alumno_nombre, alumno_id = resultado
+    asistencias = asistencias.order_by('nino__apellidos', 'nino__nombres', 'fecha')
     
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
@@ -1612,6 +1636,7 @@ def reporte_asistencia(request):
     
     elements.append(Paragraph("Registro Pecosit@s", title_style))
     elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
+    elements.append(Paragraph(f"Alumno: {escape(alumno_nombre)}", styles['Normal']))
     elements.append(Spacer(1, 20))
     
     data = [['Fecha', 'Niño', 'Aula', 'Estado', 'Ingreso', 'Salida']]
@@ -1644,7 +1669,10 @@ def reporte_asistencia(request):
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="asistencia_{periodo}.pdf"'
+    sufijo_alumno = f'_alumno_{alumno_id}' if alumno_id else ''
+    response['Content-Disposition'] = (
+        f'attachment; filename="asistencia_{periodo}{sufijo_alumno}.pdf"'
+    )
     return response
 
 
@@ -1658,7 +1686,14 @@ def reporte_incidencias(request):
     fecha_inicio, fecha_fin, periodo, etiqueta_mes = rango
     incidencias = Incidencia.objects.filter(
         fecha__range=(fecha_inicio, fecha_fin)
-    ).select_related('nino').order_by('-fecha', '-hora')
+    ).select_related('nino')
+    resultado = filtrar_alumno_reporte(request, incidencias)
+    if resultado is None:
+        return redirect('generar_reportes')
+    incidencias, alumno_nombre, alumno_id = resultado
+    incidencias = incidencias.order_by(
+        'nino__apellidos', 'nino__nombres', 'fecha', 'hora',
+    )
     
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
@@ -1676,6 +1711,7 @@ def reporte_incidencias(request):
     
     elements.append(Paragraph("Registro Pecosit@s", title_style))
     elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
+    elements.append(Paragraph(f"Alumno: {escape(alumno_nombre)}", styles['Normal']))
     elements.append(Spacer(1, 20))
     
     data = [['Niño', 'Tipo', 'Fecha', 'Descripción', 'Estado']]
@@ -1705,7 +1741,10 @@ def reporte_incidencias(request):
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="incidencias_{periodo}.pdf"'
+    sufijo_alumno = f'_alumno_{alumno_id}' if alumno_id else ''
+    response['Content-Disposition'] = (
+        f'attachment; filename="incidencias_{periodo}{sufijo_alumno}.pdf"'
+    )
     return response
 
 
@@ -1719,7 +1758,12 @@ def reporte_bitacora(request):
     fecha_inicio, fecha_fin, periodo, etiqueta_mes = rango
     bitacoras = Bitacora.objects.filter(
         fecha__range=(fecha_inicio, fecha_fin)
-    ).select_related('nino').order_by('fecha', 'nino__apellidos', 'nino__nombres')
+    ).select_related('nino')
+    resultado = filtrar_alumno_reporte(request, bitacoras)
+    if resultado is None:
+        return redirect('generar_reportes')
+    bitacoras, alumno_nombre, alumno_id = resultado
+    bitacoras = bitacoras.order_by('nino__apellidos', 'nino__nombres', 'fecha')
     
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
@@ -1737,11 +1781,13 @@ def reporte_bitacora(request):
     
     elements.append(Paragraph("Registro Pecosit@s", title_style))
     elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
+    elements.append(Paragraph(f"Alumno: {escape(alumno_nombre)}", styles['Normal']))
     elements.append(Spacer(1, 20))
     
-    data = [['Niño', 'Alimentación', 'Descanso', 'Estado Ánimo']]
+    data = [['Fecha', 'Alumno', 'Alimentación', 'Descanso', 'Estado Ánimo']]
     for b in bitacoras:
         data.append([
+            b.fecha.strftime('%d/%m/%Y'),
             b.nino.nombre_completo,
             b.alimentacion[:30] if b.alimentacion else '--',
             b.descanso[:30] if b.descanso else '--',
@@ -1765,7 +1811,10 @@ def reporte_bitacora(request):
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="bitacora_{periodo}.pdf"'
+    sufijo_alumno = f'_alumno_{alumno_id}' if alumno_id else ''
+    response['Content-Disposition'] = (
+        f'attachment; filename="bitacora_{periodo}{sufijo_alumno}.pdf"'
+    )
     return response
 
 
