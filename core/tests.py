@@ -253,7 +253,9 @@ class PagoStatusTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Reporte de pagos')
         self.assertContains(response, reverse('reporte_pagos'))
-        self.assertContains(response, 'Día de corte')
+        self.assertContains(response, 'reporte-pagos-mes')
+        self.assertContains(response, 'reporte-pagos-anio')
+        self.assertNotContains(response, 'Día de corte')
         self.assertContains(response, 'Todas las aulas')
 
     def test_reporte_pagos_genera_pdf_para_mes_y_aula(self):
@@ -265,7 +267,6 @@ class PagoStatusTests(TestCase):
             {
                 'mes': hoy.month,
                 'anio': hoy.year,
-                'dia': hoy.day,
                 'aula': self.aula.pk,
             },
         )
@@ -322,6 +323,31 @@ class NinoEditTests(TestCase):
             restricciones='Sin restricciones',
             informacion_medica='Sin observaciones',
         )
+
+    def datos_nino_validos(self):
+        return {
+            'nombres': 'Luis',
+            'apellidos': 'Pérez',
+            'fecha_nacimiento': '2020-01-15',
+            'sexo': 'M',
+            'aula': str(self.aula.pk),
+            'alergias': 'Ninguna',
+            'restricciones': 'Ninguna',
+            'informacion_medica': 'Sin observaciones',
+            'apoderado_1_nombres': 'Carlos Pérez',
+            'apoderado_1_parentesco': 'padre',
+            'apoderado_1_documento': '11111111',
+            'apoderado_1_telefono': '987654321',
+            'apoderado_1_correo': 'carlos@example.com',
+            'apoderado_1_direccion': 'Calle 1',
+            'apoderado_2_nombres': 'María Pérez',
+            'apoderado_2_parentesco': 'padre',
+            'apoderado_2_documento': '22222222',
+            'apoderado_2_telefono': '912345678',
+            'apoderado_2_correo': 'maria@example.com',
+            'apoderado_2_direccion': 'Calle 2',
+            'foto': imagen_subida('foto_nino.jpg', 'JPEG', 'blue'),
+        }
 
     def test_registro_admin_desde_login_crea_usuario_admin(self):
         response = self.client.post(
@@ -407,14 +433,11 @@ class NinoEditTests(TestCase):
         response = self.client.post(
             reverse('registrar_nino'),
             {
+                **self.datos_nino_validos(),
                 'nombres': 'Luis',
-                'apellidos': 'Pérez',
-                'fecha_nacimiento': '2020-01-15',
-                'sexo': 'M',
                 'apoderado_1_nombres': 'Carlos Pérez',
                 'apoderado_1_parentesco': 'padre',
                 'apoderado_1_documento': '1234567-',
-                'apoderado_1_telefono': '987654321',
             },
         )
 
@@ -428,17 +451,28 @@ class NinoEditTests(TestCase):
         response = self.client.post(
             reverse('registrar_nino'),
             {
+                **self.datos_nino_validos(),
                 'nombres': 'Luis',
-                'apellidos': 'Pérez',
-                'fecha_nacimiento': '2020-01-15',
-                'sexo': 'M',
                 'foto': imagen_subida('foto.png', 'PNG', 'blue'),
             },
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'La foto debe estar en formato .jpg.')
+        self.assertContains(response, 'La foto debe estar en formato .jpg o .jpeg.')
         self.assertFalse(Nino.objects.filter(nombres='Luis', apellidos='Pérez').exists())
+
+    def test_registrar_nino_acepta_jpeg_y_guarda_como_jpg(self):
+        self.client.force_login(self.user)
+        datos = self.datos_nino_validos()
+        datos['foto'] = imagen_subida('foto_nino.jpeg', 'JPEG', 'blue')
+
+        response = self.client.post(reverse('registrar_nino'), datos)
+
+        self.assertEqual(response.status_code, 302)
+        nino = Nino.objects.get(nombres='Luis', apellidos='Pérez')
+        self.assertEqual(nino.foto.name, 'fotos_ninos/foto_nino.jpg')
+        with Image.open(nino.foto.path) as foto_guardada:
+            self.assertEqual(foto_guardada.format, 'JPEG')
 
     def test_registrar_nino_rechaza_telefono_de_apoderado_invalido(self):
         self.client.force_login(self.user)
@@ -446,10 +480,8 @@ class NinoEditTests(TestCase):
         response = self.client.post(
             reverse('registrar_nino'),
             {
+                **self.datos_nino_validos(),
                 'nombres': 'Luis',
-                'apellidos': 'Pérez',
-                'fecha_nacimiento': '2020-01-15',
-                'sexo': 'M',
                 'apoderado_1_nombres': 'Carlos Pérez',
                 'apoderado_1_parentesco': 'padre',
                 'apoderado_1_documento': '12345678',
@@ -501,10 +533,10 @@ class NinoEditTests(TestCase):
         response = self.client.post(
             reverse('registrar_nino'),
             {
+                **self.datos_nino_validos(),
                 'nombres': 'Luis',
                 'apellidos': 'Pérez',
                 'fecha_nacimiento': fecha_futura,
-                'sexo': 'M',
             },
         )
 
@@ -557,6 +589,26 @@ class NinoEditTests(TestCase):
         self.assertFalse(os.path.exists(ruta_anterior))
         self.assertTrue(os.path.exists(self.nino.foto.path))
 
+    def test_editar_nino_acepta_jpeg_y_guarda_como_jpg(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('editar_nino', args=[self.nino.id]),
+            {
+                'nombres': 'Ana',
+                'apellidos': 'García',
+                'fecha_nacimiento': '2018-05-10',
+                'sexo': 'F',
+                'foto': imagen_subida('foto_nueva.jpeg', 'JPEG', 'blue'),
+            },
+        )
+
+        self.nino.refresh_from_db()
+        self.assertRedirects(response, reverse('detalle_nino', args=[self.nino.id]))
+        self.assertEqual(self.nino.foto.name, 'fotos_ninos/foto_nueva.jpg')
+        with Image.open(self.nino.foto.path) as foto_guardada:
+            self.assertEqual(foto_guardada.format, 'JPEG')
+
     def test_editar_nino_rechaza_foto_que_no_sea_jpg_y_conserva_la_actual(self):
         self.nino.foto = imagen_subida('foto_actual.jpg', 'JPEG', 'red')
         self.nino.save()
@@ -576,7 +628,7 @@ class NinoEditTests(TestCase):
 
         self.nino.refresh_from_db()
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'La foto debe estar en formato .jpg.')
+        self.assertContains(response, 'La foto debe estar en formato .jpg o .jpeg.')
         self.assertEqual(self.nino.foto.name, 'fotos_ninos/foto_actual.jpg')
         self.assertTrue(os.path.exists(ruta_anterior))
 
@@ -717,30 +769,46 @@ class NinoEditTests(TestCase):
         response = self.client.post(
             reverse('registrar_nino'),
             {
+                **self.datos_nino_validos(),
+                'nombres': 'Luis',
+            },
+        )
+
+        self.assertRedirects(response, reverse('lista_ninos'))
+        nino = Nino.objects.get(nombres='Luis', apellidos='Pérez')
+        self.assertEqual(nino.apoderados.count(), 2)
+        self.assertTrue(nino.apoderados.filter(documento='11111111').exists())
+        self.assertTrue(nino.apoderados.filter(documento='22222222').exists())
+
+    def test_registrar_nino_rechaza_campos_obligatorios_incompletos(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('registrar_nino'),
+            {
                 'nombres': 'Luis',
                 'apellidos': 'Pérez',
                 'fecha_nacimiento': '2020-01-15',
                 'sexo': 'M',
-                'apoderado_1_nombres': 'Carlos Pérez',
-                'apoderado_1_parentesco': 'padre',
-                'apoderado_1_documento': '11111111',
-                'apoderado_1_telefono': '987654321',
-                'apoderado_1_correo': 'carlos@example.com',
-                'apoderado_1_direccion': 'Calle 1',
-                'apoderado_2_nombres': 'María Pérez',
-                'apoderado_2_parentesco': 'otro',
-                'apoderado_2_documento': '22222222',
-                'apoderado_2_telefono': '912345678',
-                'apoderado_2_correo': 'maria@example.com',
-                'apoderado_2_direccion': 'Calle 2',
             },
         )
 
-        nino = Nino.objects.get(nombres='Luis', apellidos='Pérez')
-        self.assertRedirects(response, reverse('lista_ninos'))
-        self.assertEqual(nino.apoderados.count(), 2)
-        self.assertTrue(nino.apoderados.filter(documento='11111111').exists())
-        self.assertTrue(nino.apoderados.filter(documento='22222222').exists())
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Completa todos los campos del niño')
+        self.assertContains(response, 'Completa todos los campos del apoderado 1')
+        self.assertContains(response, 'Completa todos los campos del apoderado 2')
+        self.assertFalse(Nino.objects.filter(nombres='Luis', apellidos='Pérez').exists())
+
+    def test_registrar_nino_tercer_apoderado_opcional_pero_completo_si_se_ingresa(self):
+        self.client.force_login(self.user)
+        datos = self.datos_nino_validos()
+        datos['apoderado_3_nombres'] = 'Ana López'
+
+        response = self.client.post(reverse('registrar_nino'), datos)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Completa todos los campos del apoderado 3')
+        self.assertFalse(Nino.objects.filter(nombres='Luis', apellidos='Pérez').exists())
 
     def test_registrar_nino_puede_agregar_un_tercer_apoderado_desplegable(self):
         self.client.force_login(self.user)
@@ -749,31 +817,37 @@ class NinoEditTests(TestCase):
         self.assertContains(formulario, 'Agregar tercer apoderado')
         self.assertContains(formulario, 'id="tercerApoderado"')
         self.assertContains(formulario, 'name="apoderado_3_nombres"')
+        self.assertContains(
+            formulario,
+            'name="apoderado_3_nombres" placeholder="Ej: Ana López">',
+        )
+        self.assertContains(formulario, 'name="foto" accept=".jpg,.jpeg,image/jpeg" required')
 
         response = self.client.post(
             reverse('registrar_nino'),
             {
+                **self.datos_nino_validos(),
                 'nombres': 'Lucía',
                 'apellidos': 'Ramírez',
-                'fecha_nacimiento': '2021-02-10',
-                'sexo': 'F',
                 'apoderado_1_nombres': 'Carlos Ramírez',
                 'apoderado_1_parentesco': 'padre',
                 'apoderado_1_documento': '11111111',
                 'apoderado_1_telefono': '987654321',
                 'apoderado_2_nombres': 'María Ramírez',
-                'apoderado_2_parentesco': 'madre',
+                'apoderado_2_parentesco': 'padre',
                 'apoderado_2_documento': '22222222',
                 'apoderado_2_telefono': '987654322',
                 'apoderado_3_nombres': 'Ana Ramírez',
                 'apoderado_3_parentesco': 'abuelo',
                 'apoderado_3_documento': '33333333',
                 'apoderado_3_telefono': '987654323',
+                'apoderado_3_correo': 'ana@example.com',
+                'apoderado_3_direccion': 'Calle 3',
             },
         )
 
-        nino = Nino.objects.get(nombres='Lucía', apellidos='Ramírez')
         self.assertRedirects(response, reverse('lista_ninos'))
+        nino = Nino.objects.get(nombres='Lucía', apellidos='Ramírez')
         self.assertEqual(nino.apoderados.count(), 3)
         self.assertTrue(nino.apoderados.filter(documento='33333333', nombres='Ana Ramírez').exists())
 
@@ -986,6 +1060,81 @@ class NinoEditTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertFalse(get_user_model().objects.filter(username='nuevo_usuario').exists())
 
+    def test_crear_usuario_requiere_todos_los_campos(self):
+        self.client.force_login(self.user)
+        datos_validos = {
+            'username': 'nuevo_usuario',
+            'email': 'nuevo@example.com',
+            'password': '12345678',
+            'rol': 'cuidadora',
+            'telefono': '987654321',
+        }
+
+        for campo in datos_validos:
+            with self.subTest(campo=campo):
+                datos = datos_validos.copy()
+                datos[campo] = ''
+
+                response = self.client.post(reverse('crear_usuario'), datos)
+
+                self.assertRedirects(response, reverse('lista_usuarios'))
+                self.assertFalse(
+                    get_user_model().objects.filter(username='nuevo_usuario').exists()
+                )
+
+    def test_crear_usuario_rechaza_correo_y_rol_invalidos(self):
+        self.client.force_login(self.user)
+        datos = {
+            'username': 'nuevo_usuario',
+            'email': 'correo-invalido',
+            'password': '12345678',
+            'rol': 'cuidadora',
+            'telefono': '987654321',
+        }
+
+        response_correo = self.client.post(reverse('crear_usuario'), datos)
+        datos['email'] = 'nuevo@example.com'
+        datos['rol'] = 'rol-invalido'
+        response_rol = self.client.post(reverse('crear_usuario'), datos)
+
+        self.assertRedirects(response_correo, reverse('lista_usuarios'))
+        self.assertRedirects(response_rol, reverse('lista_usuarios'))
+        self.assertFalse(get_user_model().objects.filter(username='nuevo_usuario').exists())
+
+    def test_formulario_nuevo_usuario_marca_todos_los_campos_obligatorios(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse('lista_usuarios'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'name="username" class="form-control" required')
+        self.assertContains(response, 'name="email" class="form-control" required')
+        self.assertContains(response, 'name="password" class="form-control" required minlength="8"')
+        self.assertContains(response, 'name="rol" class="form-control" required')
+        self.assertContains(response, 'name="telefono" class="form-control"')
+        self.assertContains(response, 'pattern="[0-9]{9}"')
+        self.assertContains(response, 'maxlength="9"')
+        self.assertIn('slice(0, 9)" required>', response.content.decode())
+
+    def test_crear_usuario_guarda_cuando_completa_todos_los_campos(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('crear_usuario'),
+            {
+                'username': 'nueva_cuidadora',
+                'email': 'nueva@example.com',
+                'password': '12345678',
+                'rol': 'cuidadora',
+                'telefono': '987654321',
+            },
+        )
+
+        usuario = get_user_model().objects.get(username='nueva_cuidadora')
+        self.assertRedirects(response, reverse('lista_usuarios'))
+        self.assertEqual(usuario.email, 'nueva@example.com')
+        self.assertEqual(usuario.telefono, '987654321')
+
     def test_crear_usuario_rechaza_telefono_con_letras_o_mas_de_nueve_digitos(self):
         self.client.force_login(self.user)
 
@@ -1174,7 +1323,7 @@ class NinoEditTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
-        self.assertIn('attachment; filename="incidencias.pdf"', response['Content-Disposition'])
+        self.assertIn('attachment; filename="incidencias_', response['Content-Disposition'])
         self.assertGreaterEqual(response.content.count(b'/Subtype /Image'), 2)
 
     def test_reporte_bitacora_generates_pdf(self):
@@ -1186,21 +1335,35 @@ class NinoEditTests(TestCase):
         self.assertIn('attachment; filename="bitacora_', response['Content-Disposition'])
         self.assertGreaterEqual(response.content.count(b'/Subtype /Image'), 2)
 
-    def test_reporte_estudiantes_generates_weekly_detail_pdf(self):
+    def test_reportes_operativos_usan_el_mes_seleccionado(self):
+        self.client.force_login(self.user)
+        parametros = {'mes': '9', 'anio': '2026'}
+
+        for nombre, prefijo in (
+            ('reporte_asistencia', 'asistencia_2026-09.pdf'),
+            ('reporte_incidencias', 'incidencias_2026-09.pdf'),
+            ('reporte_bitacora', 'bitacora_2026-09.pdf'),
+        ):
+            with self.subTest(reporte=nombre):
+                response = self.client.get(reverse(nombre), parametros)
+
+                self.assertEqual(response.status_code, 200)
+                self.assertIn(prefijo, response['Content-Disposition'])
+
+    def test_reporte_estudiantes_generates_monthly_detail_pdf(self):
         self.client.force_login(self.user)
         hoy = timezone.localdate()
-        inicio_semana = hoy - timedelta(days=hoy.weekday())
-        semana = hoy.strftime('%G-W%V')
+        inicio_mes = hoy.replace(day=1)
         Asistencia.objects.create(
             nino=self.nino,
-            fecha=inicio_semana,
+            fecha=inicio_mes,
             estado='presente',
             hora_ingreso=time(8, 0),
             usuario_registro=self.user,
         )
         Bitacora.objects.create(
             nino=self.nino,
-            fecha=inicio_semana,
+            fecha=inicio_mes,
             alimentacion='Desayunó bien',
             descanso='Descansó',
             actividades='Pintura',
@@ -1210,25 +1373,28 @@ class NinoEditTests(TestCase):
         Incidencia.objects.create(
             nino=self.nino,
             tipo='enfermedad',
-            fecha=inicio_semana,
+            fecha=inicio_mes,
             descripcion='Se sintió indispuesto',
         )
 
         response = self.client.get(
             reverse('reporte_estudiantes'),
-            {'nino': self.nino.id, 'semana': semana},
+            {'nino': self.nino.id, 'mes': hoy.month, 'anio': hoy.year},
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertTrue(response.content.startswith(b'%PDF'))
-        self.assertIn(f'reporte_estudiante_{self.nino.id}_{inicio_semana}_', response['Content-Disposition'])
+        self.assertIn(
+            f'reporte_estudiante_{self.nino.id}_{hoy.year:04d}-{hoy.month:02d}.pdf',
+            response['Content-Disposition'],
+        )
         self.assertGreaterEqual(response.content.count(b'/Subtype /Image'), 2)
 
-    def test_reporte_estudiantes_rechaza_semana_invalida(self):
+    def test_reporte_estudiantes_rechaza_mes_invalido(self):
         self.client.force_login(self.user)
 
-        response = self.client.get(reverse('reporte_estudiantes'), {'semana': '2026-W99'})
+        response = self.client.get(reverse('reporte_estudiantes'), {'mes': '13'})
 
         self.assertRedirects(response, reverse('generar_reportes'))
 
@@ -1237,7 +1403,7 @@ class NinoEditTests(TestCase):
 
         response = self.client.get(
             reverse('reporte_estudiantes'),
-            {'semana': timezone.localdate().strftime('%G-W%V')},
+            {'mes': timezone.localdate().month, 'anio': timezone.localdate().year},
         )
 
         self.assertRedirects(response, reverse('generar_reportes'))
@@ -1250,6 +1416,10 @@ class NinoEditTests(TestCase):
         self.assertContains(response, 'name="nino"')
         self.assertContains(response, 'required')
         self.assertContains(response, 'Selecciona un estudiante')
+        self.assertContains(response, 'name="mes"')
+        self.assertContains(response, 'name="anio"')
+        self.assertEqual(response.content.decode().count('name="mes"'), 5)
+        self.assertContains(response, 'Generar reporte mensual PDF')
         self.assertNotContains(response, 'Todos los estudiantes')
 
     def test_estadisticas_filtra_los_tres_graficos_por_rango_de_fechas(self):
@@ -1416,8 +1586,10 @@ class NinoEditTests(TestCase):
         response = self.client.get(reverse('asistencia_hoy'))
 
         self.assertContains(response, 'La fecha y hora de ingreso se registran automáticamente')
-        self.assertContains(response, '09:30:15')
-        self.assertContains(response, '15:45:30')
+        self.assertContains(response, '09:30 AM')
+        self.assertContains(response, '03:45 PM')
+        self.assertNotContains(response, '09:30:15')
+        self.assertNotContains(response, '15:45:30')
         self.assertContains(response, timezone.localdate().strftime('%d/%m/%Y'))
         self.assertNotContains(response, 'name="hora_ingreso"')
         self.assertNotContains(response, 'name="hora_salida"')

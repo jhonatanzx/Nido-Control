@@ -50,10 +50,10 @@
                             </td>
                             <td>
                                 {% if asistencia.fecha_hora_ingreso %}
-                                    <span class="badge bg-info">{{ asistencia.fecha_hora_ingreso|date:"H:i:s" }}</span>
+                                    <span class="badge bg-info">{{ asistencia.fecha_hora_ingreso|date:"h:i A" }}</span>
                                     <br><small class="text-muted">{{ asistencia.fecha_hora_ingreso|date:"d/m/Y" }}</small>
                                 {% elif asistencia.hora_ingreso %}
-                                    <span class="badge bg-info">{{ asistencia.hora_ingreso|time:"H:i:s" }}</span>
+                                    <span class="badge bg-info">{{ asistencia.hora_ingreso|time:"h:i A" }}</span>
                                     <br><small class="text-muted">{{ asistencia.fecha|date:"d/m/Y" }}</small>
                                 {% else %}
                                     <span class="text-muted">--:--</span>
@@ -61,10 +61,10 @@
                             </td>
                             <td>
                                 {% if asistencia.fecha_hora_salida %}
-                                    <span class="badge bg-secondary">{{ asistencia.fecha_hora_salida|date:"H:i:s" }}</span>
+                                    <span class="badge bg-secondary">{{ asistencia.fecha_hora_salida|date:"h:i A" }}</span>
                                     <br><small class="text-muted">{{ asistencia.fecha_hora_salida|date:"d/m/Y" }}</small>
                                 {% elif asistencia.hora_salida %}
-                                    <span class="badge bg-secondary">{{ asistencia.hora_salida|time:"H:i:s" }}</span>
+                                    <span class="badge bg-secondary">{{ asistencia.hora_salida|time:"h:i A" }}</span>
                                     <br><small class="text-muted">{{ asistencia.fecha|date:"d/m/Y" }}</small>
                                 {% else %}
                                     <span class="text-muted">--:--</span>
@@ -120,9 +120,9 @@
                                                 <div class="form-text">
                                                     La fecha y hora de ingreso se registran automáticamente al guardar si el estado es Presente o Tardanza.
                                                     {% if asistencia.fecha_hora_ingreso %}
-                                                        Registro actual: {{ asistencia.fecha_hora_ingreso|date:"d/m/Y H:i:s" }}.
+                                                        Registro actual: {{ asistencia.fecha_hora_ingreso|date:"d/m/Y h:i A" }}.
                                                     {% elif asistencia.hora_ingreso %}
-                                                        Registro actual: {{ asistencia.fecha|date:"d/m/Y" }} {{ asistencia.hora_ingreso|time:"H:i:s" }}.
+                                                        Registro actual: {{ asistencia.fecha|date:"d/m/Y" }} {{ asistencia.hora_ingreso|time:"h:i A" }}.
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -154,9 +154,9 @@
                                                 <i class="bi bi-info-circle"></i>
                                                 Ingreso registrado:
                                                 {% if asistencia.fecha_hora_ingreso %}
-                                                    <strong>{{ asistencia.fecha_hora_ingreso|date:"d/m/Y H:i:s" }}</strong>.
+                                                    <strong>{{ asistencia.fecha_hora_ingreso|date:"d/m/Y h:i A" }}</strong>.
                                                 {% else %}
-                                                    <strong>{{ asistencia.fecha|date:"d/m/Y" }} {{ asistencia.hora_ingreso|time:"H:i:s" }}</strong>.
+                                                    <strong>{{ asistencia.fecha|date:"d/m/Y" }} {{ asistencia.hora_ingreso|time:"h:i A" }}</strong>.
                                                 {% endif %}
                                                 La fecha y hora de salida se registrarán automáticamente al guardar.
                                             </div>

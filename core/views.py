@@ -9,6 +9,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.validators import validate_email
+from django.db import transaction
 from django.db.models import Count, Prefetch, Q, Sum
 from django.urls import reverse
 from django.utils import timezone
@@ -570,141 +572,115 @@ def cambiar_estado_nino(request, nino_id):
 @admin_required
 def registrar_nino(request):
     ensure_default_aulas()
+    aulas = Aula.objects.all()
+    contexto = {'aulas': aulas, 'fecha_maxima': timezone.localdate().isoformat()}
     if request.method == 'POST':
-        # Crear un nuevo niño manualmente (sin usar forms para simplificar)
-        nombres = request.POST.get('nombres')
-        apellidos = request.POST.get('apellidos')
-        fecha_nacimiento = request.POST.get('fecha_nacimiento')
-        sexo = request.POST.get('sexo')
-        aula_id = request.POST.get('aula')
-        alergias = request.POST.get('alergias', '')
-        restricciones = request.POST.get('restricciones', '')
-        informacion_medica = request.POST.get('informacion_medica', '')
+        nombres = request.POST.get('nombres', '').strip()
+        apellidos = request.POST.get('apellidos', '').strip()
+        fecha_nacimiento = request.POST.get('fecha_nacimiento', '').strip()
+        sexo = request.POST.get('sexo', '').strip()
+        aula_id = request.POST.get('aula', '').strip()
+        alergias = request.POST.get('alergias', '').strip()
+        restricciones = request.POST.get('restricciones', '').strip()
+        informacion_medica = request.POST.get('informacion_medica', '').strip()
         foto = request.FILES.get('foto')
 
-        if nombres and apellidos and fecha_nacimiento:
-            if fecha_nacimiento_invalida(fecha_nacimiento):
-                messages.error(request, 'La fecha de nacimiento no puede ser posterior a la fecha actual.')
-                return render(
-                    request,
-                    'core/ninos/registrar.html',
-                    {'aulas': Aula.objects.all(), 'fecha_maxima': timezone.localdate().isoformat()},
-                )
+        errores = []
+        campos_nino = {
+            'nombres': nombres,
+            'apellidos': apellidos,
+            'fecha de nacimiento': fecha_nacimiento,
+            'sexo': sexo,
+            'aula': aula_id,
+            'alergias': alergias,
+            'restricciones alimentarias': restricciones,
+            'información médica': informacion_medica,
+        }
+        campos_faltantes = [campo for campo, valor in campos_nino.items() if not valor]
+        if campos_faltantes:
+            errores.append(f'Completa todos los campos del niño: {", ".join(campos_faltantes)}.')
 
-            apoderado_invalido = apoderado_con_dni_invalido(request.POST, cantidad=3)
-            if apoderado_invalido:
-                messages.error(
-                    request,
-                    f'El DNI del apoderado {apoderado_invalido} debe contener exactamente 8 dígitos numéricos.',
-                )
-                return render(
-                    request,
-                    'core/ninos/registrar.html',
-                    {
-                        'aulas': Aula.objects.all(),
-                        'fecha_maxima': timezone.localdate().isoformat(),
-                    },
-                )
+        if fecha_nacimiento and fecha_nacimiento_invalida(fecha_nacimiento):
+            errores.append('La fecha de nacimiento no puede ser posterior a la fecha actual.')
+        if sexo and sexo not in dict(Nino.SEXOS):
+            errores.append('Selecciona un sexo válido.')
+        aula = aulas.filter(pk=aula_id).first() if aula_id else None
+        if aula_id and not aula:
+            errores.append('Selecciona un aula válida.')
 
-            telefono_invalido = apoderado_con_telefono_invalido(request.POST, cantidad=3)
-            if telefono_invalido:
-                messages.error(
-                    request,
-                    f'El teléfono del apoderado {telefono_invalido} debe contener exactamente 9 dígitos numéricos.',
-                )
-                return render(
-                    request,
-                    'core/ninos/registrar.html',
-                    {'aulas': Aula.objects.all(), 'fecha_maxima': timezone.localdate().isoformat()},
-                )
+        if not foto:
+            errores.append('Adjunta una foto del niño en formato JPG.')
+        else:
+            try:
+                validar_foto_jpg(foto)
+            except ValidationError as error:
+                errores.extend(error.messages)
 
-            if foto:
-                try:
-                    validar_foto_jpg(foto)
-                except ValidationError as error:
-                    messages.error(request, error.messages[0])
-                    return render(
-                        request,
-                        'core/ninos/registrar.html',
-                        {'aulas': Aula.objects.all(), 'fecha_maxima': timezone.localdate().isoformat()},
-                    )
+        apoderado_entries = []
+        for index in (1, 2, 3):
+            apoderado_data = {
+                campo: request.POST.get(f'apoderado_{index}_{campo}', '').strip()
+                for campo in ('nombres', 'parentesco', 'documento', 'telefono', 'correo', 'direccion')
+            }
+            if index == 1 and not any(apoderado_data.values()):
+                apoderado_data = {
+                    campo: request.POST.get(f'apoderado_{campo}', '').strip()
+                    for campo in ('nombres', 'parentesco', 'documento', 'telefono', 'correo', 'direccion')
+                }
 
-            nino = Nino(
+            apoderado_obligatorio = index < 3 or any(apoderado_data.values())
+            if not apoderado_obligatorio:
+                continue
+
+            campos_faltantes = [
+                campo for campo, valor in apoderado_data.items()
+                if not valor
+            ]
+            if campos_faltantes:
+                errores.append(
+                    f'Completa todos los campos del apoderado {index}: {", ".join(campos_faltantes)}.'
+                )
+                continue
+
+            if apoderado_data['parentesco'] not in dict(Apoderado.PARENTESCOS):
+                errores.append(f'Selecciona un parentesco válido para el apoderado {index}.')
+            if not re.fullmatch(r'[0-9]{8}', apoderado_data['documento']):
+                errores.append(f'El DNI del apoderado {index} debe contener exactamente 8 dígitos numéricos.')
+            if not re.fullmatch(r'[0-9]{9}', apoderado_data['telefono']):
+                errores.append(f'El teléfono del apoderado {index} debe contener exactamente 9 dígitos numéricos.')
+            try:
+                validate_email(apoderado_data['correo'])
+            except ValidationError:
+                errores.append(f'Ingresa un correo válido para el apoderado {index}.')
+            apoderado_entries.append(apoderado_data)
+
+        if errores:
+            for error in errores:
+                messages.error(request, error)
+            return render(request, 'core/ninos/registrar.html', contexto)
+
+        with transaction.atomic():
+            nino = Nino.objects.create(
                 nombres=nombres,
                 apellidos=apellidos,
                 fecha_nacimiento=fecha_nacimiento,
                 sexo=sexo,
+                aula=aula,
                 alergias=alergias,
                 restricciones=restricciones,
                 informacion_medica=informacion_medica,
-                foto=foto
+                foto=foto,
             )
-            
-            if aula_id:
-                try:
-                    nino.aula = Aula.objects.get(id=aula_id)
-                except Aula.DoesNotExist:
-                    pass
-            
-            nino.save()
-
-            apoderado_entries = []
-            for index in [1, 2, 3]:
-                nombres_apoderado = request.POST.get(f'apoderado_{index}_nombres', '').strip()
-                parentesco_apoderado = request.POST.get(f'apoderado_{index}_parentesco', '').strip()
-                documento_apoderado = request.POST.get(f'apoderado_{index}_documento', '').strip()
-                telefono_apoderado = request.POST.get(f'apoderado_{index}_telefono', '').strip()
-                correo_apoderado = request.POST.get(f'apoderado_{index}_correo', '').strip()
-                direccion_apoderado = request.POST.get(f'apoderado_{index}_direccion', '').strip()
-
-                if not any([nombres_apoderado, parentesco_apoderado, documento_apoderado, telefono_apoderado, correo_apoderado, direccion_apoderado]):
-                    if index == 1:
-                        nombres_apoderado = request.POST.get('apoderado_nombres', '').strip()
-                        parentesco_apoderado = request.POST.get('apoderado_parentesco', '').strip()
-                        documento_apoderado = request.POST.get('apoderado_documento', '').strip()
-                        telefono_apoderado = request.POST.get('apoderado_telefono', '').strip()
-                        correo_apoderado = request.POST.get('apoderado_correo', '').strip()
-                        direccion_apoderado = request.POST.get('apoderado_direccion', '').strip()
-                    else:
-                        continue
-
-                if not any([nombres_apoderado, parentesco_apoderado, documento_apoderado, telefono_apoderado, correo_apoderado, direccion_apoderado]):
-                    continue
-
-                if not (nombres_apoderado and parentesco_apoderado and documento_apoderado and telefono_apoderado):
-                    messages.warning(request, f'Faltan datos del apoderado {index}: nombres, parentesco, documento y teléfono son obligatorios para el retiro seguro.')
-                    continue
-
-                apoderado_entries.append({
-                    'nombres': nombres_apoderado,
-                    'parentesco': parentesco_apoderado,
-                    'documento': documento_apoderado,
-                    'telefono': telefono_apoderado,
-                    'correo': correo_apoderado,
-                    'direccion': direccion_apoderado,
-                })
-
             for apoderado_data in apoderado_entries:
-                Apoderado.objects.create(
-                    nino=nino,
-                    nombres=apoderado_data['nombres'],
-                    parentesco=apoderado_data['parentesco'],
-                    documento=apoderado_data['documento'],
-                    telefono=apoderado_data['telefono'],
-                    correo=apoderado_data['correo'],
-                    direccion=apoderado_data['direccion'],
-                )
+                Apoderado.objects.create(nino=nino, **apoderado_data)
 
-            messages.success(request, f'¡Niño {nino.nombre_completo} registrado exitosamente!')
-            return redirect('lista_ninos')
-        else:
-            messages.error(request, 'Por favor completa todos los campos obligatorios')
-    
-    aulas = Aula.objects.all()
+        messages.success(request, f'¡Niño {nino.nombre_completo} registrado exitosamente!')
+        return redirect('lista_ninos')
+
     return render(
         request,
         'core/ninos/registrar.html',
-        {'aulas': aulas, 'fecha_maxima': timezone.localdate().isoformat()},
+        contexto,
     )
 
 @login_required
@@ -1259,9 +1235,9 @@ def finalizar_incidencia(request, incidencia_id):
 @login_required
 @admin_required
 def generar_reportes(request):
+    hoy = timezone.localdate()
     return render(request, 'core/reportes/index.html', {
         'ninos_reporte': Nino.objects.filter(estado_matricula=True).order_by('apellidos', 'nombres'),
-        'semana_actual': timezone.localdate().strftime('%G-W%V'),
         'meses': [
             (1, 'Enero'), (2, 'Febrero'), (3, 'Marzo'), (4, 'Abril'),
             (5, 'Mayo'), (6, 'Junio'), (7, 'Julio'), (8, 'Agosto'),
@@ -1269,28 +1245,43 @@ def generar_reportes(request):
             (12, 'Diciembre'),
         ],
         'aulas_reporte': Aula.objects.order_by('nombre'),
-        'hoy_reporte': timezone.localdate(),
-        'dias_reporte': range(1, 32),
+        'hoy_reporte': hoy,
     })
+
+
+def rango_mensual_reporte(request):
+    hoy = timezone.localdate()
+    try:
+        anio = int(request.GET.get('anio', hoy.year))
+        mes = int(request.GET.get('mes', hoy.month))
+        fecha_inicio = date(anio, mes, 1)
+        if anio > hoy.year or fecha_inicio > hoy:
+            raise ValueError
+    except (TypeError, ValueError):
+        messages.error(
+            request,
+            'Selecciona un mes y año válidos para el reporte. No se permiten meses futuros.',
+        )
+        return None
+
+    fecha_fin = date(anio, mes, calendar.monthrange(anio, mes)[1])
+    nombres_meses = (
+        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+    )
+    etiqueta_mes = f'{nombres_meses[mes - 1].capitalize()} {anio}'
+    return fecha_inicio, fecha_fin, f'{anio:04d}-{mes:02d}', etiqueta_mes
 
 
 @login_required
 @admin_required
 def reporte_pagos(request):
     hoy = timezone.localdate()
-    try:
-        anio = int(request.GET.get('anio', hoy.year))
-        mes = int(request.GET.get('mes', hoy.month))
-        dia = int(request.GET.get('dia', hoy.day))
-        fecha_corte = date(anio, mes, dia)
-        if anio > hoy.year or fecha_corte > hoy:
-            raise ValueError
-    except (TypeError, ValueError):
-        messages.error(
-            request,
-            'Selecciona una fecha válida para el reporte. No se permiten fechas futuras.',
-        )
+    rango = rango_mensual_reporte(request)
+    if rango is None:
         return redirect('generar_reportes')
+    _, fecha_fin, periodo, etiqueta_mes = rango
+    fecha_corte = min(fecha_fin, hoy)
 
     aula_id = request.GET.get('aula', '').strip()
     ninos = Nino.objects.filter(estado_matricula=True)
@@ -1303,7 +1294,6 @@ def reporte_pagos(request):
         ninos = ninos.filter(aula=aula)
         aula_nombre = aula.nombre
 
-    periodo = fecha_corte.strftime('%Y-%m')
     ninos = ninos.select_related('aula').prefetch_related(
         Prefetch(
             'pago_set',
@@ -1348,8 +1338,9 @@ def reporte_pagos(request):
         spaceAfter=12,
     )
     elements = [
-        Paragraph('NidoControl - Reporte de Pagos', title_style),
-        Paragraph(f'Fecha de corte: {fecha_corte.strftime("%d/%m/%Y")}', styles['Normal']),
+        Paragraph('Registro Pecosit@s', title_style),
+        Paragraph(f'Mes: {etiqueta_mes}', styles['Normal']),
+        Paragraph(f'Estado actualizado al: {fecha_corte.strftime("%d/%m/%Y")}', styles['Normal']),
         Paragraph(f'Aula: {escape(aula_nombre)}', styles['Normal']),
         Spacer(1, 8),
         Paragraph(
@@ -1395,26 +1386,17 @@ def reporte_pagos(request):
     doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="pagos_{fecha_corte.isoformat()}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="pagos_{periodo}.pdf"'
     return response
 
 
 @login_required
 @admin_required
 def reporte_estudiantes(request):
-    semana = request.GET.get('semana', '').strip()
-    if not semana:
-        semana = timezone.localdate().strftime('%G-W%V')
-    if not re.fullmatch(r'\d{4}-W\d{2}', semana):
-        messages.error(request, 'Selecciona una semana válida para generar el reporte.')
+    rango = rango_mensual_reporte(request)
+    if rango is None:
         return redirect('generar_reportes')
-
-    try:
-        fecha_inicio = datetime.strptime(f'{semana}-1', '%G-W%V-%u').date()
-    except ValueError:
-        messages.error(request, 'Selecciona una semana válida para generar el reporte.')
-        return redirect('generar_reportes')
-    fecha_fin = fecha_inicio + timedelta(days=6)
+    fecha_inicio, fecha_fin, periodo, etiqueta_mes = rango
 
     nino_id = request.GET.get('nino', '').strip()
     if not nino_id or not nino_id.isdecimal():
@@ -1496,9 +1478,10 @@ def reporte_estudiantes(request):
         header = Table(
             [[
                 [
-                    Paragraph('Mi semana en NidoControl', title_style),
+                    Paragraph('Registro Pecosit@s', title_style),
                     Paragraph(
-                        f'Ficha semanal · {fecha_inicio.strftime("%d/%m/%Y")} al {fecha_fin.strftime("%d/%m/%Y")}',
+                        f'Ficha mensual · {etiqueta_mes} · '
+                        f'{fecha_inicio.strftime("%d/%m/%Y")} al {fecha_fin.strftime("%d/%m/%Y")}',
                         subtitle_style,
                     ),
                 ],
@@ -1550,8 +1533,8 @@ def reporte_estudiantes(request):
             [[
                 asistencia.fecha.strftime('%d/%m/%Y'),
                 asistencia.get_estado_display(),
-                asistencia.hora_ingreso.strftime('%H:%M') if asistencia.hora_ingreso else '--:--',
-                asistencia.hora_salida.strftime('%H:%M') if asistencia.hora_salida else '--:--',
+                asistencia.hora_ingreso.strftime('%I:%M %p') if asistencia.hora_ingreso else '--:--',
+                asistencia.hora_salida.strftime('%I:%M %p') if asistencia.hora_salida else '--:--',
                 asistencia.motivo_ausencia,
             ] for asistencia in asistencias] or [['Sin registros', '', '', '', '']],
             [65, 75, 55, 55, 283],
@@ -1596,7 +1579,7 @@ def reporte_estudiantes(request):
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = (
-        f'attachment; filename="reporte_estudiante_{nino_id}_{fecha_inicio}_{fecha_fin}.pdf"'
+        f'attachment; filename="reporte_estudiante_{nino_id}_{periodo}.pdf"'
     )
     return response
 
@@ -1604,9 +1587,14 @@ def reporte_estudiantes(request):
 @login_required
 @admin_required
 def reporte_asistencia(request):
-    """Genera reporte de asistencia en PDF"""
-    hoy = timezone.now().date()
-    asistencias = Asistencia.objects.filter(fecha=hoy).select_related('nino')
+    """Genera reporte mensual de asistencia en PDF"""
+    rango = rango_mensual_reporte(request)
+    if rango is None:
+        return redirect('generar_reportes')
+    fecha_inicio, fecha_fin, periodo, etiqueta_mes = rango
+    asistencias = Asistencia.objects.filter(
+        fecha__range=(fecha_inicio, fecha_fin)
+    ).select_related('nino', 'nino__aula').order_by('fecha', 'nino__apellidos', 'nino__nombres')
     
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
@@ -1622,18 +1610,19 @@ def reporte_asistencia(request):
         alignment=1
     )
     
-    elements.append(Paragraph("NidoControl - Reporte de Asistencia", title_style))
-    elements.append(Paragraph(f"Fecha: {hoy.strftime('%d/%m/%Y')}", styles['Normal']))
+    elements.append(Paragraph("Registro Pecosit@s", title_style))
+    elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
     elements.append(Spacer(1, 20))
     
-    data = [['Niño', 'Aula', 'Estado', 'Ingreso', 'Salida']]
+    data = [['Fecha', 'Niño', 'Aula', 'Estado', 'Ingreso', 'Salida']]
     for a in asistencias:
         data.append([
+            a.fecha.strftime('%d/%m/%Y'),
             a.nino.nombre_completo,
             a.nino.aula.nombre if a.nino.aula else 'Sin aula',
             a.get_estado_display(),
-            str(a.hora_ingreso) if a.hora_ingreso else '--:--',
-            str(a.hora_salida) if a.hora_salida else '--:--',
+            a.hora_ingreso.strftime('%I:%M %p') if a.hora_ingreso else '--:--',
+            a.hora_salida.strftime('%I:%M %p') if a.hora_salida else '--:--',
         ])
     
     if len(data) > 1:
@@ -1649,21 +1638,27 @@ def reporte_asistencia(request):
         ]))
         elements.append(table)
     else:
-        elements.append(Paragraph("No hay registros de asistencia para hoy.", styles['Normal']))
+        elements.append(Paragraph("No hay registros de asistencia para este mes.", styles['Normal']))
     
     doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="asistencia_{hoy}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="asistencia_{periodo}.pdf"'
     return response
 
 
 @login_required
 @admin_required
 def reporte_incidencias(request):
-    """Genera reporte de incidencias en PDF"""
-    incidencias = Incidencia.objects.all().order_by('-fecha')[:50]
+    """Genera reporte mensual de incidencias en PDF"""
+    rango = rango_mensual_reporte(request)
+    if rango is None:
+        return redirect('generar_reportes')
+    fecha_inicio, fecha_fin, periodo, etiqueta_mes = rango
+    incidencias = Incidencia.objects.filter(
+        fecha__range=(fecha_inicio, fecha_fin)
+    ).select_related('nino').order_by('-fecha', '-hora')
     
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
@@ -1679,7 +1674,8 @@ def reporte_incidencias(request):
         alignment=1
     )
     
-    elements.append(Paragraph("NidoControl - Reporte de Incidencias", title_style))
+    elements.append(Paragraph("Registro Pecosit@s", title_style))
+    elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
     elements.append(Spacer(1, 20))
     
     data = [['Niño', 'Tipo', 'Fecha', 'Descripción', 'Estado']]
@@ -1703,22 +1699,27 @@ def reporte_incidencias(request):
         ]))
         elements.append(table)
     else:
-        elements.append(Paragraph("No hay incidencias registradas.", styles['Normal']))
+        elements.append(Paragraph("No hay incidencias registradas para este mes.", styles['Normal']))
     
     doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="incidencias.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="incidencias_{periodo}.pdf"'
     return response
 
 
 @login_required
 @admin_required
 def reporte_bitacora(request):
-    """Genera reporte de bitácora en PDF"""
-    hoy = timezone.now().date()
-    bitacoras = Bitacora.objects.filter(fecha=hoy).select_related('nino')
+    """Genera reporte mensual de bitácora en PDF"""
+    rango = rango_mensual_reporte(request)
+    if rango is None:
+        return redirect('generar_reportes')
+    fecha_inicio, fecha_fin, periodo, etiqueta_mes = rango
+    bitacoras = Bitacora.objects.filter(
+        fecha__range=(fecha_inicio, fecha_fin)
+    ).select_related('nino').order_by('fecha', 'nino__apellidos', 'nino__nombres')
     
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100)
@@ -1734,8 +1735,8 @@ def reporte_bitacora(request):
         alignment=1
     )
     
-    elements.append(Paragraph("NidoControl - Reporte de Bitácora", title_style))
-    elements.append(Paragraph(f"Fecha: {hoy.strftime('%d/%m/%Y')}", styles['Normal']))
+    elements.append(Paragraph("Registro Pecosit@s", title_style))
+    elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
     elements.append(Spacer(1, 20))
     
     data = [['Niño', 'Alimentación', 'Descanso', 'Estado Ánimo']]
@@ -1758,13 +1759,13 @@ def reporte_bitacora(request):
         ]))
         elements.append(table)
     else:
-        elements.append(Paragraph("No hay registros de bitácora para hoy.", styles['Normal']))
+        elements.append(Paragraph("No hay registros de bitácora para este mes.", styles['Normal']))
     
     doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
     buffer.seek(0)
     
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="bitacora_{hoy}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="bitacora_{periodo}.pdf"'
     return response
 
 
@@ -2003,18 +2004,28 @@ def lista_usuarios(request):
 def crear_usuario(request):
     """Crear nuevo usuario"""
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email', '')
-        password = request.POST.get('password')
-        rol = request.POST.get('rol', 'cuidadora')
-        telefono = request.POST.get('telefono', '')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+        rol = request.POST.get('rol', '').strip()
+        telefono = request.POST.get('telefono', '').strip()
 
-        if telefono_usuario_invalido(telefono):
-            messages.error(request, 'El teléfono debe contener solo números y un máximo de 9 dígitos.')
+        if not all((username, email, password.strip(), rol, telefono)):
+            messages.error(request, 'Por favor completa todos los campos obligatorios.')
             return redirect('lista_usuarios')
 
-        if not username or not password:
-            messages.error(request, 'Por favor completa los campos obligatorios')
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, 'Ingresa un correo electrónico válido.')
+            return redirect('lista_usuarios')
+
+        if rol not in dict(Usuario.ROLES):
+            messages.error(request, 'Selecciona un rol válido.')
+            return redirect('lista_usuarios')
+
+        if not re.fullmatch(r'[0-9]{9}', telefono):
+            messages.error(request, 'El teléfono debe contener exactamente 9 dígitos numéricos.')
             return redirect('lista_usuarios')
 
         if len(password) < 8:

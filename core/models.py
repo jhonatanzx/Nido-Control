@@ -10,8 +10,8 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 
 
 def validar_foto_jpg(foto):
-    if Path(foto.name).suffix.lower() != '.jpg':
-        raise ValidationError('La foto debe estar en formato .jpg.')
+    if Path(foto.name).suffix.lower() not in ('.jpg', '.jpeg'):
+        raise ValidationError('La foto debe estar en formato .jpg o .jpeg.')
 
     try:
         foto.seek(0)

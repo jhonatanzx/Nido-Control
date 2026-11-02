@@ -114,7 +114,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control">
+                        <input type="email" name="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Contraseña</label>
@@ -123,14 +123,15 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Rol</label>
-                        <select name="rol" class="form-control">
+                        <select name="rol" class="form-control" required>
+                            <option value="" selected disabled>Selecciona un rol</option>
                             <option value="cuidadora">Cuidadora</option>
                             <option value="admin">Administrador</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Teléfono</label>
-                        <input type="tel" name="telefono" class="form-control" inputmode="numeric" maxlength="9" pattern="[0-9]{0,9}" title="Ingrese solo números, con un máximo de 9 dígitos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
+                        <input type="tel" name="telefono" class="form-control" inputmode="numeric" minlength="9" maxlength="9" pattern="[0-9]{9}" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)" required>
                     </div>
                 </div>
                 <div class="modal-footer">
