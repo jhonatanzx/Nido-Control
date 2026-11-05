@@ -954,13 +954,14 @@ class NinoEditTests(TestCase):
         self.assertEqual(registro_response.status_code, 302)
         self.assertRedirects(registro_response, reverse('dashboard'))
 
-    def test_cuidadora_tiene_acceso_a_entrega_segura_bitacora_e_incidencias(self):
+    def test_cuidadora_puede_registrar_bitacora_e_incidencias_de_su_aula(self):
         cuidadora = get_user_model().objects.create_user(
             username='cuidadora_acceso',
             password='123456',
             rol='cuidadora',
             is_staff=False,
             is_superuser=False,
+            aula=self.aula,
         )
         apoderado = Apoderado.objects.create(
             nino=self.nino,
@@ -973,6 +974,11 @@ class NinoEditTests(TestCase):
             nino=self.nino,
             fecha=timezone.localdate(),
             estado='presente',
+        )
+        incidencia = Incidencia.objects.create(
+            nino=self.nino,
+            tipo='accidente',
+            descripcion='Caída leve durante el juego',
         )
         self.client.force_login(cuidadora)
 
@@ -988,19 +994,22 @@ class NinoEditTests(TestCase):
         entrega_segura = self.client.get(reverse('entrega_segura'))
         self.assertEqual(entrega_segura.status_code, 200)
         self.assertContains(entrega_segura, 'Entrega segura de niños')
-        self.assertContains(entrega_segura, 'DNI de quien recoge')
+        self.assertNotContains(entrega_segura, 'DNI de quien recoge')
+        self.assertContains(entrega_segura, 'Solo lectura')
         self.assertContains(entrega_segura, 'aria-current="page"')
         entrega = self.client.post(
             reverse('registrar_entrega', args=[self.nino.pk]),
             {'documento': apoderado.documento},
         )
-        self.assertRedirects(entrega, reverse('entrega_segura'))
-        self.assertTrue(RegistroEntrega.objects.filter(nino=self.nino).exists())
+        self.assertRedirects(entrega, reverse('dashboard'))
+        self.assertFalse(RegistroEntrega.objects.filter(nino=self.nino).exists())
 
         bitacora_lista = self.client.get(reverse('bitacora_hoy'))
         self.assertEqual(bitacora_lista.status_code, 200)
         self.assertContains(bitacora_lista, 'href="/bitacora/" aria-current="page"')
         bitacora = Bitacora.objects.get(nino=self.nino, fecha=timezone.localdate())
+        self.assertContains(bitacora_lista, 'Registrar')
+        self.assertContains(bitacora_lista, reverse('registrar_bitacora', args=[bitacora.pk]))
         actualizacion = self.client.post(
             reverse('registrar_bitacora', args=[bitacora.pk]),
             {'actividades': 'Pintura'},
@@ -1013,9 +1022,11 @@ class NinoEditTests(TestCase):
         formulario_incidencia = self.client.get(reverse('registrar_incidencia'))
         self.assertEqual(lista_incidencias.status_code, 200)
         self.assertContains(lista_incidencias, 'href="/incidencias/" aria-current="page"')
+        self.assertContains(lista_incidencias, reverse('registrar_incidencia'))
+        self.assertNotContains(lista_incidencias, reverse('finalizar_incidencia', args=[incidencia.pk]))
         self.assertEqual(formulario_incidencia.status_code, 200)
-        self.assertContains(formulario_incidencia, 'href="/incidencias/" aria-current="page"')
-        self.client.post(
+        self.assertContains(formulario_incidencia, self.nino.nombre_completo)
+        registro_incidencia = self.client.post(
             reverse('registrar_incidencia'),
             {
                 'nino': self.nino.pk,
@@ -1023,15 +1034,147 @@ class NinoEditTests(TestCase):
                 'descripcion': 'Caída leve durante el juego',
             },
         )
-        incidencia = Incidencia.objects.get(nino=self.nino)
+        self.assertRedirects(registro_incidencia, reverse('lista_incidencias'))
+        self.assertEqual(Incidencia.objects.count(), 2)
         detalle = self.client.get(reverse('detalle_incidencia', args=[incidencia.pk]))
         self.assertEqual(detalle.status_code, 200)
+        self.assertNotContains(detalle, reverse('finalizar_incidencia', args=[incidencia.pk]))
         finalizacion = self.client.post(
             reverse('finalizar_incidencia', args=[incidencia.pk]),
         )
-        self.assertRedirects(finalizacion, reverse('lista_incidencias'))
+        self.assertRedirects(finalizacion, reverse('dashboard'))
         incidencia.refresh_from_db()
-        self.assertEqual(incidencia.estado, 'cerrado')
+        self.assertNotEqual(incidencia.estado, 'cerrado')
+
+        lista_ninos = self.client.get(reverse('lista_ninos'))
+        self.assertContains(lista_ninos, self.nino.nombre_completo)
+        self.assertNotContains(lista_ninos, reverse('registrar_nino'))
+        self.assertNotContains(lista_ninos, reverse('editar_nino', args=[self.nino.pk]))
+        detalle_nino = self.client.get(reverse('detalle_nino', args=[self.nino.pk]))
+        self.assertNotContains(detalle_nino, reverse('editar_nino', args=[self.nino.pk]))
+
+    def test_cuidadora_no_puede_registrar_bitacora_ni_incidencia_fuera_de_su_aula(self):
+        otra_aula = Aula.objects.create(nombre='Aula 2', capacidad=12)
+        otro_nino = Nino.objects.create(
+            nombres='Luis',
+            apellidos='Pérez',
+            fecha_nacimiento='2020-01-15',
+            sexo='M',
+            aula=otra_aula,
+        )
+        bitacora_ajena = Bitacora.objects.create(
+            nino=otro_nino,
+            fecha=timezone.localdate(),
+        )
+        cuidadora = get_user_model().objects.create_user(
+            username='cuidadora_aula_restringida',
+            password='123456',
+            rol='cuidadora',
+            aula=self.aula,
+        )
+        self.client.force_login(cuidadora)
+
+        respuesta_bitacora = self.client.post(
+            reverse('registrar_bitacora', args=[bitacora_ajena.pk]),
+            {'actividades': 'Debe rechazarse'},
+        )
+        respuesta_incidencia = self.client.post(
+            reverse('registrar_incidencia'),
+            {
+                'nino': otro_nino.pk,
+                'tipo': 'accidente',
+                'descripcion': 'No autorizada',
+            },
+        )
+
+        self.assertEqual(respuesta_bitacora.status_code, 404)
+        self.assertEqual(respuesta_incidencia.status_code, 404)
+        bitacora_ajena.refresh_from_db()
+        self.assertEqual(bitacora_ajena.actividades, '')
+        self.assertFalse(Incidencia.objects.filter(nino=otro_nino).exists())
+
+    def test_cuidadora_solo_edita_asistencia_de_su_aula(self):
+        otra_aula = Aula.objects.create(nombre='Aula 2', capacidad=12)
+        otro_nino = Nino.objects.create(
+            nombres='Luis',
+            apellidos='Pérez',
+            fecha_nacimiento='2020-01-15',
+            sexo='M',
+            aula=otra_aula,
+        )
+        asistencia_propia = Asistencia.objects.create(
+            nino=self.nino,
+            fecha=timezone.localdate(),
+            estado='ausente',
+        )
+        cuidadora = get_user_model().objects.create_user(
+            username='cuidadora_pollitos',
+            password='123456',
+            rol='cuidadora',
+            aula=self.aula,
+        )
+        self.client.force_login(cuidadora)
+
+        pagina = self.client.get(reverse('asistencia_hoy'))
+
+        self.assertContains(pagina, self.nino.nombre_completo)
+        self.assertContains(pagina, otro_nino.nombre_completo)
+        self.assertContains(pagina, 'Solo lectura')
+        self.assertContains(pagina, 'Sin registro')
+        self.assertFalse(
+            Asistencia.objects.filter(nino=otro_nino, fecha=timezone.localdate()).exists()
+        )
+
+        registro_propio = self.client.post(
+            reverse('registrar_asistencia', args=[asistencia_propia.pk]),
+            {'estado': 'presente'},
+        )
+        self.assertRedirects(registro_propio, reverse('asistencia_hoy'))
+        asistencia_propia.refresh_from_db()
+        self.assertEqual(asistencia_propia.estado, 'presente')
+        salida_propia = self.client.post(
+            reverse('registrar_salida', args=[asistencia_propia.pk]),
+        )
+        self.assertRedirects(salida_propia, reverse('asistencia_hoy'))
+        asistencia_propia.refresh_from_db()
+        self.assertIsNotNone(asistencia_propia.hora_salida)
+
+        asistencia_ajena = Asistencia.objects.create(
+            nino=otro_nino,
+            fecha=timezone.localdate(),
+            estado='ausente',
+        )
+        pagina = self.client.get(reverse('asistencia_hoy'))
+        self.assertNotContains(
+            pagina,
+            reverse('registrar_asistencia', args=[asistencia_ajena.pk]),
+        )
+        registro_ajeno = self.client.post(
+            reverse('registrar_asistencia', args=[asistencia_ajena.pk]),
+            {'estado': 'presente'},
+        )
+        self.assertEqual(registro_ajeno.status_code, 404)
+        asistencia_ajena.refresh_from_db()
+        self.assertEqual(asistencia_ajena.estado, 'ausente')
+        salida_ajena = self.client.post(
+            reverse('registrar_salida', args=[asistencia_ajena.pk]),
+        )
+        self.assertEqual(salida_ajena.status_code, 404)
+
+        cuidadora_sin_aula = get_user_model().objects.create_user(
+            username='cuidadora_sin_aula',
+            password='123456',
+            rol='cuidadora',
+        )
+        self.client.force_login(cuidadora_sin_aula)
+        sin_aula = self.client.post(
+            reverse('registrar_asistencia', args=[asistencia_propia.pk]),
+            {'estado': 'presente'},
+        )
+        self.assertEqual(sin_aula.status_code, 404)
+        asistencia_propia.refresh_from_db()
+        self.assertEqual(asistencia_propia.estado, 'presente')
+        self.assertEqual(asistencia_propia.usuario_registro, cuidadora)
 
     def test_admin_puede_desactivar_y_reactivar_matricula_desde_lista_de_ninos(self):
         nino = Nino.objects.create(
@@ -1292,6 +1435,7 @@ class NinoEditTests(TestCase):
                 'password': '12345678',
                 'rol': 'cuidadora',
                 'telefono': '987654321',
+                'aula': str(self.aula.pk),
             },
         )
 
@@ -1299,6 +1443,78 @@ class NinoEditTests(TestCase):
         self.assertRedirects(response, reverse('lista_usuarios'))
         self.assertEqual(usuario.email, 'nueva@example.com')
         self.assertEqual(usuario.telefono, '987654321')
+        self.assertEqual(usuario.aula, self.aula)
+
+    def test_lista_usuarios_muestra_aula_asignada(self):
+        cuidadora = get_user_model().objects.create_user(
+            username='cuidadora_aula',
+            password='12345678',
+            rol='cuidadora',
+            aula=self.aula,
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse('lista_usuarios'))
+
+        self.assertContains(response, cuidadora.username)
+        self.assertContains(response, self.aula.nombre)
+        self.assertContains(response, 'Aula asignada')
+
+    def test_editar_usuario_actualiza_aula_asignada_sin_restringir_funcionalidad(self):
+        otra_aula = Aula.objects.create(
+            nombre='Aula 2',
+            capacidad=10,
+            descripcion='Segunda aula',
+        )
+        cuidadora = get_user_model().objects.create_user(
+            username='cuidadora_editar',
+            password='12345678',
+            rol='cuidadora',
+            aula=self.aula,
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('editar_usuario', args=[cuidadora.pk]),
+            {
+                'username': cuidadora.username,
+                'email': cuidadora.email,
+                'rol': 'cuidadora',
+                'telefono': '',
+                'aula': str(otra_aula.pk),
+            },
+        )
+
+        cuidadora.refresh_from_db()
+        self.assertRedirects(response, reverse('lista_usuarios'))
+        self.assertEqual(cuidadora.aula, otra_aula)
+
+    def test_editar_usuario_rechaza_aula_invalida(self):
+        cuidadora = get_user_model().objects.create_user(
+            username='cuidadora_invalida',
+            password='12345678',
+            rol='cuidadora',
+            aula=self.aula,
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse('editar_usuario', args=[cuidadora.pk]),
+            {
+                'username': cuidadora.username,
+                'email': cuidadora.email,
+                'rol': 'cuidadora',
+                'telefono': '',
+                'aula': 'no-es-un-id',
+            },
+        )
+
+        cuidadora.refresh_from_db()
+        self.assertRedirects(
+            response,
+            reverse('editar_usuario', args=[cuidadora.pk]),
+        )
+        self.assertEqual(cuidadora.aula, self.aula)
 
     def test_crear_usuario_rechaza_telefono_con_letras_o_mas_de_nueve_digitos(self):
         self.client.force_login(self.user)
@@ -1836,7 +2052,9 @@ class NinoEditTests(TestCase):
 
         response = self.client.get(reverse('bitacora_hoy'))
 
-        self.assertContains(response, 'Desayuno')
+        self.assertContains(response, 'Registrar')
+        self.assertTrue(Bitacora.objects.filter(nino=self.nino, fecha=hoy).exists())
+        self.assertContains(response, 'Refrigerio')
         self.assertContains(response, 'Comió 30 % de la porción')
         self.assertContains(response, 'Comió 50 % de la porción')
         self.assertContains(response, 'Comió al 100 %')

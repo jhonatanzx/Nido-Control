@@ -33,6 +33,17 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label" for="usuario-aula">Aula asignada</label>
+                        <select id="usuario-aula" name="aula" class="form-select">
+                            <option value="">Sin aula asignada</option>
+                            {% for aula in aulas %}
+                                <option value="{{ aula.id }}" {% if usuario.aula_id == aula.id %}selected{% endif %}>{{ aula.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-muted">Este dato organiza la asignación y no limita el acceso a otras aulas.</small>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Teléfono</label>
                         <input type="tel" name="telefono" value="{{ usuario.telefono|default:'' }}" class="form-control" inputmode="numeric" maxlength="9" pattern="[0-9]{0,9}" title="Ingrese solo números, con un máximo de 9 dígitos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                     </div>

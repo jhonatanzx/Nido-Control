@@ -3,8 +3,8 @@ from .models import *
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'rol', 'estado']
-    list_filter = ['rol', 'estado']
+    list_display = ['username', 'email', 'rol', 'aula', 'estado']
+    list_filter = ['rol', 'aula', 'estado']
     search_fields = ['username', 'email']
 
 @admin.register(Aula)

@@ -14,9 +14,11 @@
                 <a href="{% url 'lista_ninos' %}?estado=inactivos" class="btn btn-outline-primary">Ver matrículas inactivas</a>
             {% endif %}
         {% endif %}
-        <a href="{% url 'registrar_nino' %}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Registrar Niño
-        </a>
+        {% if puede_gestionar_estado %}
+            <a href="{% url 'registrar_nino' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Registrar Niño
+            </a>
+        {% endif %}
     </div>
 </div>
 
@@ -44,8 +46,8 @@
                             <td>{% if nino.estado_matricula %}<span class="badge bg-success">Activo</span>{% else %}<span class="badge bg-danger">Inactivo</span>{% endif %}</td>
                             <td>
                                 <a href="{% url 'detalle_nino' nino.id %}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
-                                <a href="{% url 'editar_nino' nino.id %}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
                                 {% if puede_gestionar_estado %}
+                                    <a href="{% url 'editar_nino' nino.id %}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
                                     <form method="post" action="{% url 'cambiar_estado_nino' nino.id %}" class="d-inline">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-sm {% if nino.estado_matricula %}btn-secondary{% else %}btn-success{% endif %}">
@@ -67,9 +69,11 @@
             <div class="text-center py-5">
                 <i class="bi bi-people display-1 text-muted"></i>
                 <p class="text-muted mt-3">No hay niños registrados</p>
-                <a href="{% url 'registrar_nino' %}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Registrar primer niño
-                </a>
+                {% if puede_gestionar_estado %}
+                    <a href="{% url 'registrar_nino' %}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Registrar primer niño
+                    </a>
+                {% endif %}
             </div>
         {% endif %}
     </div>

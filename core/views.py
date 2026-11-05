@@ -347,11 +347,12 @@ def entrega_segura(request):
 
     return render(request, 'core/entrega_segura.html', {
         'ninos_para_entrega': ninos_para_entrega,
+        'puede_registrar_entrega': es_administrador(request.user),
     })
 
 
 @login_required
-@cuidadora_required
+@admin_required
 def registrar_entrega(request, nino_id):
     nino = get_object_or_404(Nino, id=nino_id, estado_matricula=True)
     hoy = timezone.now().date()
@@ -712,7 +713,15 @@ def registrar_nino(request):
 @cuidadora_required
 def detalle_nino(request, nino_id):
     nino = get_object_or_404(Nino, id=nino_id)
-    return render(request, 'core/ninos/detalle.html', {'nino': nino, 'nino_id': nino.id})
+    return render(
+        request,
+        'core/ninos/detalle.html',
+        {
+            'nino': nino,
+            'nino_id': nino.id,
+            'puede_editar_nino': es_administrador(request.user),
+        },
+    )
 
 @login_required
 @admin_required
@@ -856,31 +865,91 @@ def editar_nino(request, nino_id):
 @cuidadora_required
 def asistencia_hoy(request):
     hoy = timezone.localdate()
-    ninos = Nino.objects.filter(estado_matricula=True)
-    
+    es_admin = es_administrador(request.user)
+    ninos = list(
+        Nino.objects.filter(estado_matricula=True).select_related('aula')
+    )
+
     for nino in ninos:
-        if not Asistencia.objects.filter(nino=nino, fecha=hoy).exists():
-            Asistencia.objects.create(nino=nino, fecha=hoy, estado='ausente')
-    
-    asistencias = Asistencia.objects.filter(fecha=hoy).select_related('nino')
-    
+        puede_registrar = es_admin or (
+            request.user.aula_id is not None
+            and nino.aula_id == request.user.aula_id
+        )
+        if puede_registrar:
+            Asistencia.objects.get_or_create(
+                nino=nino,
+                fecha=hoy,
+                defaults={'estado': 'ausente'},
+            )
+
+    nino_ids = {nino.id for nino in ninos}
+    asistencias_existentes = list(
+        Asistencia.objects.filter(fecha=hoy).select_related('nino', 'nino__aula')
+    )
+    asistencias_por_nino = {
+        asistencia.nino_id: asistencia for asistencia in asistencias_existentes
+    }
+    asistencias = []
+    for nino in ninos:
+        asistencia = asistencias_por_nino.get(nino.id)
+        if asistencia is None:
+            estado = (
+                'ausente'
+                if es_admin
+                or (
+                    request.user.aula_id is not None
+                    and nino.aula_id == request.user.aula_id
+                )
+                else 'sin_registro'
+            )
+            asistencia = Asistencia(nino=nino, fecha=hoy, estado=estado)
+        asistencia.puede_registrar_asistencia = es_admin or (
+            request.user.aula_id is not None
+            and nino.aula_id == request.user.aula_id
+        )
+        asistencias.append(asistencia)
+    for asistencia in asistencias_existentes:
+        if asistencia.nino_id not in nino_ids:
+            asistencia.puede_registrar_asistencia = es_admin or (
+                request.user.aula_id is not None
+                and asistencia.nino.aula_id == request.user.aula_id
+            )
+            asistencias.append(asistencia)
+
     context = {
         'asistencias': asistencias,
         'hoy': hoy,
-        'total': ninos.count(),
-        'presentes': asistencias.filter(estado='presente').count(),
-        'ausentes': asistencias.filter(estado='ausente').count(),
-        'tardanzas': asistencias.filter(estado='tardanza').count(),
+        'total': len(ninos),
+        'presentes': sum(asistencia.estado == 'presente' for asistencia in asistencias),
+        'ausentes': sum(asistencia.estado == 'ausente' for asistencia in asistencias),
+        'tardanzas': sum(asistencia.estado == 'tardanza' for asistencia in asistencias),
     }
     return render(request, 'core/asistencia/hoy.html', context)
+
+
+def _asistencia_editable_por_usuario(request, asistencia_id):
+    asistencias = Asistencia.objects.all()
+    if not es_administrador(request.user):
+        if request.user.aula_id is None:
+            asistencias = asistencias.none()
+        else:
+            asistencias = asistencias.filter(
+                nino__aula_id=request.user.aula_id,
+                fecha=timezone.localdate(),
+            )
+    return get_object_or_404(asistencias, id=asistencia_id)
+
 
 @login_required
 @cuidadora_required
 def registrar_asistencia(request, asistencia_id):
-    asistencia = get_object_or_404(Asistencia, id=asistencia_id)
+    asistencia = _asistencia_editable_por_usuario(request, asistencia_id)
     
     if request.method == 'POST':
         estado = request.POST.get('estado')
+        if estado not in dict(Asistencia.ESTADOS):
+            messages.error(request, 'Selecciona un estado de asistencia válido.')
+            return redirect('asistencia_hoy')
         motivo = request.POST.get('motivo_ausencia', '')
         
         asistencia.estado = estado
@@ -901,7 +970,7 @@ def registrar_asistencia(request, asistencia_id):
 @login_required
 @cuidadora_required
 def registrar_salida(request, asistencia_id):
-    asistencia = get_object_or_404(Asistencia, id=asistencia_id)
+    asistencia = _asistencia_editable_por_usuario(request, asistencia_id)
     
     if request.method == 'POST':
         if not asistencia.fecha_hora_ingreso and not asistencia.hora_ingreso:
@@ -951,9 +1020,13 @@ def bitacora_hoy(request):
     )
     if incluye_hoy:
         ninos_activos = Nino.objects.filter(estado_matricula=True)
+        if not es_administrador(request.user):
+            if request.user.aula_id is None:
+                ninos_activos = ninos_activos.none()
+            else:
+                ninos_activos = ninos_activos.filter(aula_id=request.user.aula_id)
         for nino in ninos_activos:
-            if not Bitacora.objects.filter(nino=nino, fecha=hoy).exists():
-                Bitacora.objects.create(nino=nino, fecha=hoy)
+            Bitacora.objects.get_or_create(nino=nino, fecha=hoy)
 
     bitacoras = Bitacora.objects.select_related('nino', 'nino__aula')
     if fecha_desde:
@@ -997,6 +1070,10 @@ def bitacora_hoy(request):
         for menu in menus_desayuno:
             menus_por_fecha.setdefault(menu.fecha, []).append(menu)
         for bitacora in bitacoras:
+            bitacora.puede_gestionar = es_administrador(request.user) or (
+                request.user.aula_id is not None
+                and bitacora.nino.aula_id == request.user.aula_id
+            )
             bitacora.menus_desayuno = menus_por_fecha.get(bitacora.fecha, [])
             lineas_alimentacion = bitacora.alimentacion.splitlines()
             bitacora.desayunos_seleccionados = [
@@ -1048,7 +1125,13 @@ def bitacora_hoy(request):
 @login_required
 @cuidadora_required
 def registrar_bitacora(request, bitacora_id):
-    bitacora = get_object_or_404(Bitacora, id=bitacora_id)
+    bitacoras = Bitacora.objects.select_related('nino')
+    if not es_administrador(request.user):
+        if request.user.aula_id is None:
+            bitacoras = bitacoras.none()
+        else:
+            bitacoras = bitacoras.filter(nino__aula_id=request.user.aula_id)
+    bitacora = get_object_or_404(bitacoras, id=bitacora_id)
     
     if request.method == 'POST':
         menu_desayuno_id = request.POST.get('menu_desayuno', '').strip()
@@ -1206,11 +1289,27 @@ def eliminar_menu_diario(request, menu_id):
 @cuidadora_required
 def lista_incidencias(request):
     incidencias = Incidencia.objects.all().order_by('-fecha', '-hora')
-    return render(request, 'core/incidencias/lista.html', {'incidencias': incidencias})
+    return render(
+        request,
+        'core/incidencias/lista.html',
+        {
+            'incidencias': incidencias,
+            'puede_gestionar_incidencias': es_administrador(request.user),
+            'puede_registrar_incidencia': es_administrador(request.user)
+            or (es_cuidadora(request.user) and request.user.aula_id is not None),
+        },
+    )
 
 @login_required
 @cuidadora_required
 def registrar_incidencia(request):
+    ninos = Nino.objects.filter(estado_matricula=True)
+    if not es_administrador(request.user):
+        if request.user.aula_id is None:
+            ninos = ninos.none()
+        else:
+            ninos = ninos.filter(aula_id=request.user.aula_id)
+
     if request.method == 'POST':
         nino_id = request.POST.get('nino')
         tipo = request.POST.get('tipo')
@@ -1219,7 +1318,7 @@ def registrar_incidencia(request):
         comunicacion_apoderado = request.POST.get('comunicacion_apoderado') == 'on'
         
         if nino_id and tipo and descripcion:
-            nino = get_object_or_404(Nino, id=nino_id)
+            nino = get_object_or_404(ninos, id=nino_id)
             incidencia = Incidencia(
                 nino=nino,
                 tipo=tipo,
@@ -1234,17 +1333,31 @@ def registrar_incidencia(request):
         else:
             messages.error(request, 'Por favor completa todos los campos obligatorios')
     
-    ninos = Nino.objects.filter(estado_matricula=True)
-    return render(request, 'core/incidencias/registrar.html', {'ninos': ninos})
+    return render(
+        request,
+        'core/incidencias/registrar.html',
+        {
+            'ninos': ninos,
+            'puede_registrar_incidencia': es_administrador(request.user)
+            or (es_cuidadora(request.user) and request.user.aula_id is not None),
+        },
+    )
 
 @login_required
 @cuidadora_required
 def detalle_incidencia(request, incidencia_id):
     incidencia = get_object_or_404(Incidencia, id=incidencia_id)
-    return render(request, 'core/incidencias/detalle.html', {'incidencia': incidencia})
+    return render(
+        request,
+        'core/incidencias/detalle.html',
+        {
+            'incidencia': incidencia,
+            'puede_gestionar_incidencias': es_administrador(request.user),
+        },
+    )
 
 @login_required
-@cuidadora_required
+@admin_required
 def finalizar_incidencia(request, incidencia_id):
     incidencia = get_object_or_404(Incidencia, id=incidencia_id)
 
@@ -2102,8 +2215,13 @@ def eliminar_aula(request, aula_id):
 @admin_required
 def lista_usuarios(request):
     """Lista de usuarios"""
-    usuarios = Usuario.objects.all().order_by('-date_joined')
-    return render(request, 'core/configuracion/usuarios.html', {'usuarios': usuarios})
+    usuarios = Usuario.objects.select_related('aula').all().order_by('-date_joined')
+    aulas = Aula.objects.order_by('nombre')
+    return render(
+        request,
+        'core/configuracion/usuarios.html',
+        {'usuarios': usuarios, 'aulas': aulas},
+    )
 
 
 @login_required
@@ -2116,6 +2234,7 @@ def crear_usuario(request):
         password = request.POST.get('password', '')
         rol = request.POST.get('rol', '').strip()
         telefono = request.POST.get('telefono', '').strip()
+        aula_id = request.POST.get('aula', '').strip()
 
         if not all((username, email, password.strip(), rol, telefono)):
             messages.error(request, 'Por favor completa todos los campos obligatorios.')
@@ -2130,6 +2249,19 @@ def crear_usuario(request):
         if rol not in dict(Usuario.ROLES):
             messages.error(request, 'Selecciona un rol válido.')
             return redirect('lista_usuarios')
+
+        aula = None
+        if aula_id:
+            aula = (
+                Aula.objects.filter(pk=int(aula_id)).first()
+                if aula_id.isdecimal()
+                else None
+            )
+            if aula is None:
+                messages.error(request, 'Selecciona un aula válida.')
+                return redirect('lista_usuarios')
+        if rol == 'admin':
+            aula = None
 
         if not re.fullmatch(r'[0-9]{9}', telefono):
             messages.error(request, 'El teléfono debe contener exactamente 9 dígitos numéricos.')
@@ -2148,6 +2280,7 @@ def crear_usuario(request):
             email=email,
             password=password,
             rol=rol,
+            aula=aula,
             telefono=telefono
         )
         if rol == 'admin':
@@ -2175,6 +2308,7 @@ def editar_usuario(request, usuario_id):
         rol = request.POST.get('rol', usuario.rol)
         telefono = request.POST.get('telefono', '').strip()
         password = request.POST.get('password', '').strip()
+        aula_id = request.POST.get('aula', '').strip()
 
         if telefono_usuario_invalido(telefono):
             messages.error(request, 'El teléfono debe contener solo números y un máximo de 9 dígitos.')
@@ -2192,9 +2326,21 @@ def editar_usuario(request, usuario_id):
             messages.error(request, 'La contraseña debe tener al menos 8 caracteres.')
             return redirect('editar_usuario', usuario_id=usuario.id)
 
+        aula = None
+        if aula_id:
+            aula = (
+                Aula.objects.filter(pk=int(aula_id)).first()
+                if aula_id.isdecimal()
+                else None
+            )
+            if aula is None:
+                messages.error(request, 'Selecciona un aula válida.')
+                return redirect('editar_usuario', usuario_id=usuario.id)
+
         usuario.username = username
         usuario.email = email
         usuario.rol = rol
+        usuario.aula = aula if rol == 'cuidadora' else None
         usuario.telefono = telefono
         if rol == 'admin':
             usuario.is_staff = True
@@ -2209,7 +2355,11 @@ def editar_usuario(request, usuario_id):
         messages.success(request, f'Usuario "{usuario.username}" actualizado correctamente')
         return redirect('lista_usuarios')
 
-    return render(request, 'core/configuracion/editar_usuario.html', {'usuario': usuario})
+    return render(
+        request,
+        'core/configuracion/editar_usuario.html',
+        {'usuario': usuario, 'aulas': Aula.objects.order_by('nombre')},
+    )
 
 
 @login_required

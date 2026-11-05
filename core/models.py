@@ -31,6 +31,13 @@ class Usuario(AbstractUser):
         ('cuidadora', 'Cuidadora'),
     ]
     rol = models.CharField(max_length=20, choices=ROLES, default='cuidadora')
+    aula = models.ForeignKey(
+        'Aula',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='cuidadoras',
+    )
     telefono = models.CharField(max_length=15, blank=True)
     direccion = models.TextField(blank=True)
     estado = models.BooleanField(default=True)

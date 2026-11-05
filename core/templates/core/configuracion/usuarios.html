@@ -21,6 +21,7 @@
                             <th>Usuario</th>
                             <th>Email</th>
                             <th>Rol</th>
+                            <th>Aula asignada</th>
                             <th>Teléfono</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -41,6 +42,7 @@
                                     <span class="badge bg-info">Cuidadora</span>
                                 {% endif %}
                             </td>
+                            <td>{% if usuario.rol == 'cuidadora' %}{{ usuario.aula.nombre|default:"Sin aula" }}{% else %}-{% endif %}</td>
                             <td>{{ usuario.telefono|default:"-" }}</td>
                             <td>
                                 {% if usuario.estado %}
@@ -128,6 +130,16 @@
                             <option value="cuidadora">Cuidadora</option>
                             <option value="admin">Administrador</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="nuevo-usuario-aula">Aula asignada</label>
+                        <select id="nuevo-usuario-aula" name="aula" class="form-select">
+                            <option value="">Sin aula asignada</option>
+                            {% for aula in aulas %}
+                                <option value="{{ aula.id }}">{{ aula.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-muted">Este dato organiza la asignación y no limita el acceso a otras aulas.</small>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Teléfono</label>

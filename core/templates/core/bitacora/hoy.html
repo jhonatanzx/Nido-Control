@@ -73,11 +73,16 @@
                             <td>{{ bitacora.descanso|default:"--"|truncatechars:30 }}</td>
                             <td>{% if bitacora.estado_animo %}<span class="badge bg-info">{{ bitacora.get_estado_animo_display }}</span>{% else %}<span class="text-muted">--</span>{% endif %}</td>
                             <td>
+                                {% if bitacora.puede_gestionar %}
                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalBitacora{{ bitacora.id }}">
                                     <i class="bi bi-pencil"></i> Registrar
                                 </button>
+                                {% else %}
+                                    <span class="text-muted">Solo lectura</span>
+                                {% endif %}
                             </td>
                         </tr>
+                        {% if bitacora.puede_gestionar %}
                         <div class="modal fade" id="modalBitacora{{ bitacora.id }}" tabindex="-1">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -174,6 +179,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>

@@ -11,6 +11,11 @@
                 <i class="bi bi-exclamation-triangle"></i> Registrar Nueva Incidencia
             </div>
             <div class="card-body">
+                {% if not puede_registrar_incidencia %}
+                    <div class="alert alert-warning">Tu usuario no tiene un aula asignada para registrar incidencias.</div>
+                {% elif not ninos %}
+                    <div class="alert alert-info">No hay niños activos en tu aula para registrar una incidencia.</div>
+                {% else %}
                 <form method="post">
                     {% csrf_token %}
                     
@@ -63,6 +68,7 @@
                         </a>
                     </div>
                 </form>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -32,6 +32,7 @@
                                         </ul>
                                     </div>
                                     {% if not nino.entrega_hoy %}
+                                        {% if puede_registrar_entrega %}
                                         <form method="post" action="{% url 'registrar_entrega' nino.id %}" class="row g-2 align-items-end">
                                             {% csrf_token %}
                                             <div class="col-sm-7">
@@ -42,6 +43,9 @@
                                                 <button type="submit" class="btn btn-success w-100"><i class="bi bi-check2-circle"></i> Finalizar entrega</button>
                                             </div>
                                         </form>
+                                        {% else %}
+                                            <span class="text-muted">Solo lectura</span>
+                                        {% endif %}
                                     {% else %}
                                         <div class="alert alert-success mb-0 py-2 small"><i class="bi bi-check-circle"></i> Recogido por <strong>{{ nino.entrega_hoy.nombre_persona }}</strong> · DNI {{ nino.entrega_hoy.documento_verificado }} a las {{ nino.entrega_hoy.hora|time:"H:i" }}</div>
                                     {% endif %}

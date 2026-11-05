@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2">
-                    {% if incidencia.estado != 'cerrado' %}
+                    {% if puede_gestionar_incidencias and incidencia.estado != 'cerrado' %}
                         <form method="post" action="{% url 'finalizar_incidencia' incidencia.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-success">
