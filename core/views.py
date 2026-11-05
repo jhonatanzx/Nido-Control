@@ -307,18 +307,6 @@ def dashboard(request):
         })
     asistencia_semanal.reverse()
 
-    entregas_hoy = RegistroEntrega.objects.filter(fecha=hoy).select_related(
-        'nino', 'apoderado', 'persona_entrega'
-    )
-    ninos_para_entrega = Nino.objects.filter(
-        estado_matricula=True,
-        asistencia__fecha=hoy,
-        asistencia__estado__in=['presente', 'tardanza'],
-    ).prefetch_related('apoderados', 'autorizados').distinct().order_by('apellidos', 'nombres')
-    entregas_por_nino = {entrega.nino_id: entrega for entrega in entregas_hoy}
-    for nino in ninos_para_entrega:
-        nino.entrega_hoy = entregas_por_nino.get(nino.id)
-    
     horario_atencion = {
         'dias': 'Lunes a viernes',
         'inicio': '8:00 a. m.',
@@ -334,11 +322,33 @@ def dashboard(request):
         'bitacoras_hoy': bitacoras_hoy,
         'asistencia_semanal': asistencia_semanal,
         'hoy': hoy,
-        'ninos_para_entrega': ninos_para_entrega,
-        'entregas_hoy': entregas_hoy,
         'horario_atencion': horario_atencion,
     }
     return render(request, 'core/dashboard.html', context)
+
+
+@login_required
+@cuidadora_required
+def entrega_segura(request):
+    hoy = timezone.now().date()
+    entregas_hoy = RegistroEntrega.objects.filter(fecha=hoy).select_related(
+        'nino', 'apoderado', 'persona_entrega'
+    )
+    ninos_para_entrega = Nino.objects.filter(
+        estado_matricula=True,
+        asistencia__fecha=hoy,
+        asistencia__estado__in=['presente', 'tardanza'],
+    ).select_related('aula').prefetch_related(
+        'apoderados', 'autorizados'
+    ).distinct().order_by('apellidos', 'nombres')
+    entregas_por_nino = {entrega.nino_id: entrega for entrega in entregas_hoy}
+    for nino in ninos_para_entrega:
+        nino.entrega_hoy = entregas_por_nino.get(nino.id)
+
+    return render(request, 'core/entrega_segura.html', {
+        'ninos_para_entrega': ninos_para_entrega,
+    })
+
 
 @login_required
 @cuidadora_required
@@ -349,19 +359,19 @@ def registrar_entrega(request, nino_id):
     if request.method == 'POST':
         if RegistroEntrega.objects.filter(nino=nino, fecha=hoy).exists():
             messages.error(request, f'{nino.nombre_completo} ya fue entregado hoy')
-            return redirect('dashboard')
+            return redirect('entrega_segura')
 
         asistencia = Asistencia.objects.filter(
             nino=nino, fecha=hoy, estado__in=['presente', 'tardanza']
         ).first()
         if not asistencia:
             messages.error(request, 'No se puede entregar un niño sin asistencia registrada hoy')
-            return redirect('dashboard')
+            return redirect('entrega_segura')
 
         documento = request.POST.get('documento', '').strip()
         if not re.fullmatch(r'[0-9]{8}', documento):
             messages.error(request, 'El DNI de quien recoge debe contener exactamente 8 dígitos numéricos.')
-            return redirect('dashboard')
+            return redirect('entrega_segura')
 
         apoderado = Apoderado.objects.filter(
             nino=nino, documento=documento, estado=True
@@ -373,7 +383,7 @@ def registrar_entrega(request, nino_id):
 
         if not persona:
             messages.error(request, 'DNI no coincide con una persona autorizada. El niño no fue entregado')
-            return redirect('dashboard')
+            return redirect('entrega_segura')
 
         RegistroEntrega.objects.create(
             nino=nino,
@@ -386,7 +396,7 @@ def registrar_entrega(request, nino_id):
         )
         messages.success(request, f'Entrega de {nino.nombre_completo} finalizada con éxito')
 
-    return redirect('dashboard')
+    return redirect('entrega_segura')
 
 @login_required
 @cuidadora_required
@@ -451,8 +461,6 @@ def lista_pagos(request):
         )
         if 'dia' in request.GET:
             messages.error(request, 'Selecciona un día válido para el mes elegido.')
-    fecha_corte = date(anio_seleccionado, mes_seleccionado, dia_seleccionado)
-
     ninos = Nino.objects.filter(estado_matricula=True)
 
     if aula_seleccionada == 'sin-aula':
@@ -475,10 +483,6 @@ def lista_pagos(request):
         nino.esta_al_dia = bool(
             nino.pago_del_mes
             and nino.pago_del_mes.estado == 'pagado'
-            and (
-                nino.pago_del_mes.fecha_pago is None
-                or nino.pago_del_mes.fecha_pago <= fecha_corte
-            )
         )
 
     return render(
@@ -515,6 +519,9 @@ def cambiar_estado_pago(request, nino_id):
     dia = request.POST.get('dia', '').strip()
     estado = request.POST.get('estado', '')
     aula = request.POST.get('aula', '').strip()
+    fecha_pago_texto = request.POST.get('fecha_pago', '').strip()
+    fecha_inicio_texto = request.POST.get('fecha_inicio', '').strip()
+    fecha_termino_texto = request.POST.get('fecha_termino', '').strip()
 
     try:
         fecha_periodo = date.fromisoformat(f'{periodo}-01')
@@ -529,12 +536,44 @@ def cambiar_estado_pago(request, nino_id):
         messages.error(request, 'Selecciona un estado de pago válido.')
         return redirect('lista_pagos')
 
+    try:
+        fecha_pago = date.fromisoformat(fecha_pago_texto) if fecha_pago_texto else None
+        fecha_inicio = date.fromisoformat(fecha_inicio_texto) if fecha_inicio_texto else None
+        fecha_termino = date.fromisoformat(fecha_termino_texto) if fecha_termino_texto else None
+        if any(
+            fecha is not None and fecha.isoformat() != fecha_texto
+            for fecha, fecha_texto in (
+                (fecha_pago, fecha_pago_texto),
+                (fecha_inicio, fecha_inicio_texto),
+                (fecha_termino, fecha_termino_texto),
+            )
+        ):
+            raise ValueError
+    except ValueError:
+        messages.error(request, 'Ingresa fechas válidas para el pago y su período.')
+        return redirect('lista_pagos')
+
+    if bool(fecha_inicio) != bool(fecha_termino):
+        messages.error(request, 'Ingresa tanto la fecha de inicio como la fecha de término del período.')
+        return redirect('lista_pagos')
+    if fecha_inicio and fecha_termino and fecha_inicio > fecha_termino:
+        messages.error(request, 'La fecha de inicio no puede ser posterior a la fecha de término.')
+        return redirect('lista_pagos')
+    if estado == 'pagado':
+        if not fecha_pago:
+            messages.error(request, 'Ingresa manualmente la fecha en que se realizó el pago.')
+            return redirect('lista_pagos')
+        if not fecha_inicio or not fecha_termino:
+            messages.error(request, 'Ingresa las fechas de inicio y término del período pagado.')
+            return redirect('lista_pagos')
+
     pago = Pago.objects.filter(nino=nino, periodo=periodo).order_by('-pk').first()
-    fecha_pago = timezone.localdate() if estado == 'pagado' else None
     if pago:
         pago.estado = estado
-        pago.fecha_pago = fecha_pago
-        pago.save(update_fields=['estado', 'fecha_pago'])
+        pago.fecha_pago = fecha_pago if estado == 'pagado' else None
+        pago.fecha_inicio = fecha_inicio
+        pago.fecha_termino = fecha_termino
+        pago.save(update_fields=['estado', 'fecha_pago', 'fecha_inicio', 'fecha_termino'])
     else:
         Pago.objects.create(
             nino=nino,
@@ -542,7 +581,9 @@ def cambiar_estado_pago(request, nino_id):
             periodo=periodo,
             monto=0,
             estado=estado,
-            fecha_pago=fecha_pago,
+            fecha_pago=fecha_pago if estado == 'pagado' else None,
+            fecha_inicio=fecha_inicio,
+            fecha_termino=fecha_termino,
         )
 
     estado_mensaje = 'al día' if estado == 'pagado' else 'con deuda'
@@ -586,20 +627,6 @@ def registrar_nino(request):
         foto = request.FILES.get('foto')
 
         errores = []
-        campos_nino = {
-            'nombres': nombres,
-            'apellidos': apellidos,
-            'fecha de nacimiento': fecha_nacimiento,
-            'sexo': sexo,
-            'aula': aula_id,
-            'alergias': alergias,
-            'restricciones alimentarias': restricciones,
-            'información médica': informacion_medica,
-        }
-        campos_faltantes = [campo for campo, valor in campos_nino.items() if not valor]
-        if campos_faltantes:
-            errores.append(f'Completa todos los campos del niño: {", ".join(campos_faltantes)}.')
-
         if fecha_nacimiento and fecha_nacimiento_invalida(fecha_nacimiento):
             errores.append('La fecha de nacimiento no puede ser posterior a la fecha actual.')
         if sexo and sexo not in dict(Nino.SEXOS):
@@ -608,9 +635,7 @@ def registrar_nino(request):
         if aula_id and not aula:
             errores.append('Selecciona un aula válida.')
 
-        if not foto:
-            errores.append('Adjunta una foto del niño en formato JPG.')
-        else:
+        if foto:
             try:
                 validar_foto_jpg(foto)
             except ValidationError as error:
@@ -628,30 +653,23 @@ def registrar_nino(request):
                     for campo in ('nombres', 'parentesco', 'documento', 'telefono', 'correo', 'direccion')
                 }
 
-            apoderado_obligatorio = index < 3 or any(apoderado_data.values())
-            if not apoderado_obligatorio:
+            if not any(apoderado_data.values()):
                 continue
 
-            campos_faltantes = [
-                campo for campo, valor in apoderado_data.items()
-                if not valor
-            ]
-            if campos_faltantes:
-                errores.append(
-                    f'Completa todos los campos del apoderado {index}: {", ".join(campos_faltantes)}.'
-                )
-                continue
-
-            if apoderado_data['parentesco'] not in dict(Apoderado.PARENTESCOS):
+            if (
+                apoderado_data['parentesco']
+                and apoderado_data['parentesco'] not in dict(Apoderado.PARENTESCOS)
+            ):
                 errores.append(f'Selecciona un parentesco válido para el apoderado {index}.')
-            if not re.fullmatch(r'[0-9]{8}', apoderado_data['documento']):
+            if apoderado_data['documento'] and not re.fullmatch(r'[0-9]{8}', apoderado_data['documento']):
                 errores.append(f'El DNI del apoderado {index} debe contener exactamente 8 dígitos numéricos.')
-            if not re.fullmatch(r'[0-9]{9}', apoderado_data['telefono']):
+            if apoderado_data['telefono'] and not re.fullmatch(r'[0-9]{9}', apoderado_data['telefono']):
                 errores.append(f'El teléfono del apoderado {index} debe contener exactamente 9 dígitos numéricos.')
-            try:
-                validate_email(apoderado_data['correo'])
-            except ValidationError:
-                errores.append(f'Ingresa un correo válido para el apoderado {index}.')
+            if apoderado_data['correo']:
+                try:
+                    validate_email(apoderado_data['correo'])
+                except ValidationError:
+                    errores.append(f'Ingresa un correo válido para el apoderado {index}.')
             apoderado_entries.append(apoderado_data)
 
         if errores:
@@ -663,13 +681,20 @@ def registrar_nino(request):
             nino = Nino.objects.create(
                 nombres=nombres,
                 apellidos=apellidos,
-                fecha_nacimiento=fecha_nacimiento,
+                fecha_nacimiento=date.fromisoformat(fecha_nacimiento) if fecha_nacimiento else None,
                 sexo=sexo,
                 aula=aula,
                 alergias=alergias,
                 restricciones=restricciones,
                 informacion_medica=informacion_medica,
                 foto=foto,
+            )
+            Pago.objects.create(
+                nino=nino,
+                concepto='Mensualidad',
+                periodo=timezone.localdate().strftime('%Y-%m'),
+                monto=0,
+                estado='pendiente',
             )
             for apoderado_data in apoderado_entries:
                 Apoderado.objects.create(nino=nino, **apoderado_data)
@@ -893,7 +918,7 @@ def registrar_salida(request, asistencia_id):
     return redirect('asistencia_hoy')
 
 @login_required
-@admin_required
+@cuidadora_required
 def bitacora_hoy(request):
     hoy = timezone.localdate()
     if 'fecha_desde' not in request.GET and 'fecha_hasta' not in request.GET:
@@ -1021,7 +1046,7 @@ def bitacora_hoy(request):
     return render(request, 'core/bitacora/hoy.html', context)
 
 @login_required
-@admin_required
+@cuidadora_required
 def registrar_bitacora(request, bitacora_id):
     bitacora = get_object_or_404(Bitacora, id=bitacora_id)
     
@@ -1178,13 +1203,13 @@ def eliminar_menu_diario(request, menu_id):
 
 
 @login_required
-@admin_required
+@cuidadora_required
 def lista_incidencias(request):
     incidencias = Incidencia.objects.all().order_by('-fecha', '-hora')
     return render(request, 'core/incidencias/lista.html', {'incidencias': incidencias})
 
 @login_required
-@admin_required
+@cuidadora_required
 def registrar_incidencia(request):
     if request.method == 'POST':
         nino_id = request.POST.get('nino')
@@ -1213,13 +1238,13 @@ def registrar_incidencia(request):
     return render(request, 'core/incidencias/registrar.html', {'ninos': ninos})
 
 @login_required
-@admin_required
+@cuidadora_required
 def detalle_incidencia(request, incidencia_id):
     incidencia = get_object_or_404(Incidencia, id=incidencia_id)
     return render(request, 'core/incidencias/detalle.html', {'incidencia': incidencia})
 
 @login_required
-@admin_required
+@cuidadora_required
 def finalizar_incidencia(request, incidencia_id):
     incidencia = get_object_or_404(Incidencia, id=incidencia_id)
 
@@ -1321,21 +1346,51 @@ def reporte_pagos(request):
         )
     ).order_by('apellidos', 'nombres')
 
-    data = [['Niño', 'Aula', 'Fecha de pago', 'Estado']]
+    styles = getSampleStyleSheet()
+    header_cell_style = ParagraphStyle(
+        'PaymentReportHeaderCell',
+        parent=styles['BodyText'],
+        fontName='Helvetica-Bold',
+        fontSize=8,
+        leading=9,
+        textColor=colors.white,
+        alignment=1,
+        wordWrap='CJK',
+        splitLongWords=1,
+    )
+    body_cell_style = ParagraphStyle(
+        'PaymentReportBodyCell',
+        parent=styles['BodyText'],
+        fontSize=8,
+        leading=10,
+        wordWrap='CJK',
+        splitLongWords=1,
+    )
+    encabezados = [
+        'Niño', 'Aula', 'Periodo de pago', 'Fecha de inicio',
+        'Fecha de término', 'Fecha de pago', 'Estado',
+    ]
+    data = [[Paragraph(escape(text), header_cell_style) for text in encabezados]]
     estados = []
     for nino in ninos:
         pago = nino.pagos_del_mes[0] if nino.pagos_del_mes else None
         al_dia = bool(
             pago
             and pago.estado == 'pagado'
-            and (pago.fecha_pago is None or pago.fecha_pago <= fecha_corte)
         )
         estados.append(al_dia)
-        data.append([
-            Paragraph(escape(nino.nombre_completo), getSampleStyleSheet()['BodyText']),
-            Paragraph(escape(nino.aula.nombre if nino.aula else 'Sin aula'), getSampleStyleSheet()['BodyText']),
+        valores = [
+            nino.nombre_completo,
+            nino.aula.nombre if nino.aula else 'Sin aula',
+            etiqueta_mes,
+            pago.fecha_inicio.strftime('%d/%m/%Y') if pago and pago.fecha_inicio else '—',
+            pago.fecha_termino.strftime('%d/%m/%Y') if pago and pago.fecha_termino else '—',
             pago.fecha_pago.strftime('%d/%m/%Y') if pago and pago.fecha_pago else '—',
             'Al día' if al_dia else 'Debe',
+        ]
+        data.append([
+            Paragraph(escape(str(valor)), body_cell_style)
+            for valor in valores
         ])
 
     buffer = BytesIO()
@@ -1347,7 +1402,6 @@ def reporte_pagos(request):
         topMargin=125,
         bottomMargin=36,
     )
-    styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
         'PaymentReportTitle',
         parent=styles['Heading1'],
@@ -1369,19 +1423,22 @@ def reporte_pagos(request):
         Spacer(1, 12),
     ]
 
-    table = Table(data, colWidths=[190, 125, 105, 90], repeatRows=1)
+    table = Table(
+        data,
+        colWidths=[94, 66, 74, 72, 72, 72, 73],
+        repeatRows=1,
+    )
     table_styles = [
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#315F83')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 9),
         ('ALIGN', (2, 1), (-1, -1), 'CENTER'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#CBD5E1')),
-        ('LEFTPADDING', (0, 0), (-1, -1), 6),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
-        ('TOPPADDING', (0, 0), (-1, -1), 6),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+        ('LEFTPADDING', (0, 0), (-1, -1), 4),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
     ]
     for row_index, al_dia in enumerate(estados, start=1):
         table_styles.append((
@@ -1392,8 +1449,8 @@ def reporte_pagos(request):
         ))
         table_styles.append((
             'TEXTCOLOR',
-            (3, row_index),
-            (3, row_index),
+            (6, row_index),
+            (6, row_index),
             colors.HexColor('#198754' if al_dia else '#DC3545'),
         ))
     table.setStyle(TableStyle(table_styles))
@@ -1524,7 +1581,8 @@ def reporte_estudiantes(request):
                 Paragraph(
                     f'<b>{escape(nino.nombre_completo)}</b><br/>'
                     f'Aula: {escape(nino.aula.nombre if nino.aula else "Sin aula")} '
-                    f' · Edad: {nino.edad} años · Nacimiento: {nino.fecha_nacimiento.strftime("%d/%m/%Y")}',
+                    f' · Edad: {f"{nino.edad} años" if nino.edad is not None else "Sin dato"}'
+                    f' · Nacimiento: {nino.fecha_nacimiento.strftime("%d/%m/%Y") if nino.fecha_nacimiento else "Sin dato"}',
                     styles['BodyText'],
                 ),
                 Paragraph(

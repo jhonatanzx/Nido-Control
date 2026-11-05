@@ -11,29 +11,30 @@
                 <i class="bi bi-person-plus"></i> Registrar Nuevo Niño
             </div>
             <div class="card-body">
-                <p class="text-muted">Completa todos los campos del niño y de los dos primeros apoderados. Si no tiene alergias, restricciones o información médica, escribe “Ninguna”. El tercer apoderado es opcional.</p>
+                <p class="text-muted">Todos los campos son opcionales. Puedes completar la información disponible y agregar una foto JPG si la tienes. Al guardar, se creará automáticamente el estado de pago pendiente del mes actual.</p>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="id_nombres" class="form-label">Nombres</label>
-                            <input type="text" class="form-control" id="id_nombres" name="nombres" required>
+                            <input type="text" class="form-control" id="id_nombres" name="nombres">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="id_apellidos" class="form-label">Apellidos</label>
-                            <input type="text" class="form-control" id="id_apellidos" name="apellidos" required>
+                            <input type="text" class="form-control" id="id_apellidos" name="apellidos">
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="id_fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento" max="{{ fecha_maxima }}" required>
+                            <input type="date" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento" max="{{ fecha_maxima }}">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="id_sexo" class="form-label">Sexo</label>
-                            <select class="form-control" id="id_sexo" name="sexo" required>
+                            <select class="form-control" id="id_sexo" name="sexo">
+                                <option value="" selected>Seleccione</option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Femenino</option>
                             </select>
@@ -42,8 +43,8 @@
                     
                     <div class="mb-3">
                         <label for="id_aula" class="form-label">Aula</label>
-                        <select class="form-control" id="id_aula" name="aula" required>
-                            <option value="" selected disabled>Seleccione un aula</option>
+                        <select class="form-control" id="id_aula" name="aula">
+                            <option value="" selected>Seleccione un aula</option>
                             {% for aula in aulas %}
                                 <option value="{{ aula.id }}">{{ aula.nombre }}{% if aula.descripcion %} - {{ aula.descripcion }}{% endif %}</option>
                             {% endfor %}
@@ -52,17 +53,17 @@
                     
                     <div class="mb-3">
                         <label for="id_alergias" class="form-label">Alergias</label>
-                        <textarea class="form-control" id="id_alergias" name="alergias" rows="2" required></textarea>
+                        <textarea class="form-control" id="id_alergias" name="alergias" rows="2"></textarea>
                     </div>
                     
                     <div class="mb-3">
                         <label for="id_restricciones" class="form-label">Restricciones Alimentarias</label>
-                        <textarea class="form-control" id="id_restricciones" name="restricciones" rows="2" required></textarea>
+                        <textarea class="form-control" id="id_restricciones" name="restricciones" rows="2"></textarea>
                     </div>
                     
                     <div class="mb-3">
                         <label for="id_informacion_medica" class="form-label">Información Médica</label>
-                        <textarea class="form-control" id="id_informacion_medica" name="informacion_medica" rows="2" required></textarea>
+                        <textarea class="form-control" id="id_informacion_medica" name="informacion_medica" rows="2"></textarea>
                     </div>
                     
                     <div class="mb-4 mt-4 border rounded p-3 bg-light">
@@ -72,12 +73,12 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_1_nombres" class="form-label">Nombres y apellidos</label>
-                                    <input type="text" class="form-control" id="id_apoderado_1_nombres" name="apoderado_1_nombres" placeholder="Ej: María López" required>
+                                    <input type="text" class="form-control" id="id_apoderado_1_nombres" name="apoderado_1_nombres" placeholder="Ej: María López">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_1_parentesco" class="form-label">Parentesco</label>
-                                    <select class="form-control" id="id_apoderado_1_parentesco" name="apoderado_1_parentesco" required>
-                                        <option value="" selected disabled>Seleccione</option>
+                                    <select class="form-control" id="id_apoderado_1_parentesco" name="apoderado_1_parentesco">
+                                        <option value="" selected>Seleccione</option>
                                         <option value="padre">Padre/Madre</option>
                                         <option value="abuelo">Abuelo/Abuela</option>
                                         <option value="tio">Tío/Tía</option>
@@ -90,22 +91,22 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_1_documento" class="form-label">DNI (8 dígitos)</label>
-                                    <input type="text" class="form-control" id="id_apoderado_1_documento" name="apoderado_1_documento" placeholder="12345678" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" title="Ingrese exactamente 8 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)" required>
+                                    <input type="text" class="form-control" id="id_apoderado_1_documento" name="apoderado_1_documento" placeholder="12345678" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" title="Ingrese exactamente 8 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_1_telefono" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="id_apoderado_1_telefono" name="apoderado_1_telefono" placeholder="9 dígitos" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)" required>
+                                    <input type="text" class="form-control" id="id_apoderado_1_telefono" name="apoderado_1_telefono" placeholder="9 dígitos" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_1_correo" class="form-label">Correo</label>
-                                    <input type="email" class="form-control" id="id_apoderado_1_correo" name="apoderado_1_correo" placeholder="ejemplo@correo.com" required>
+                                    <input type="email" class="form-control" id="id_apoderado_1_correo" name="apoderado_1_correo" placeholder="ejemplo@correo.com">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_1_direccion" class="form-label">Dirección</label>
-                                    <input type="text" class="form-control" id="id_apoderado_1_direccion" name="apoderado_1_direccion" placeholder="Calle, número, comuna" required>
+                                    <input type="text" class="form-control" id="id_apoderado_1_direccion" name="apoderado_1_direccion" placeholder="Calle, número, comuna">
                                 </div>
                             </div>
                         </div>
@@ -115,12 +116,12 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_2_nombres" class="form-label">Nombres y apellidos</label>
-                                    <input type="text" class="form-control" id="id_apoderado_2_nombres" name="apoderado_2_nombres" placeholder="Ej: Juan López" required>
+                                    <input type="text" class="form-control" id="id_apoderado_2_nombres" name="apoderado_2_nombres" placeholder="Ej: Juan López">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_2_parentesco" class="form-label">Parentesco</label>
-                                    <select class="form-control" id="id_apoderado_2_parentesco" name="apoderado_2_parentesco" required>
-                                        <option value="" selected disabled>Seleccione</option>
+                                    <select class="form-control" id="id_apoderado_2_parentesco" name="apoderado_2_parentesco">
+                                        <option value="" selected>Seleccione</option>
                                         <option value="padre">Padre/Madre</option>
                                         <option value="abuelo">Abuelo/Abuela</option>
                                         <option value="tio">Tío/Tía</option>
@@ -133,22 +134,22 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_2_documento" class="form-label">DNI (8 dígitos)</label>
-                                    <input type="text" class="form-control" id="id_apoderado_2_documento" name="apoderado_2_documento" placeholder="12345678" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" title="Ingrese exactamente 8 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)" required>
+                                    <input type="text" class="form-control" id="id_apoderado_2_documento" name="apoderado_2_documento" placeholder="12345678" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" title="Ingrese exactamente 8 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_2_telefono" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="id_apoderado_2_telefono" name="apoderado_2_telefono" placeholder="9 dígitos" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)" required>
+                                    <input type="text" class="form-control" id="id_apoderado_2_telefono" name="apoderado_2_telefono" placeholder="9 dígitos" inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9" title="Ingrese exactamente 9 dígitos numéricos." oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_2_correo" class="form-label">Correo</label>
-                                    <input type="email" class="form-control" id="id_apoderado_2_correo" name="apoderado_2_correo" placeholder="ejemplo@correo.com" required>
+                                    <input type="email" class="form-control" id="id_apoderado_2_correo" name="apoderado_2_correo" placeholder="ejemplo@correo.com">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="id_apoderado_2_direccion" class="form-label">Dirección</label>
-                                    <input type="text" class="form-control" id="id_apoderado_2_direccion" name="apoderado_2_direccion" placeholder="Calle, número, comuna" required>
+                                    <input type="text" class="form-control" id="id_apoderado_2_direccion" name="apoderado_2_direccion" placeholder="Calle, número, comuna">
                                 </div>
                             </div>
                         </div>
@@ -200,7 +201,7 @@
 
                     <div class="mb-3">
                         <label for="id_foto" class="form-label">Foto</label>
-                        <input type="file" class="form-control" id="id_foto" name="foto" accept=".jpg,.jpeg,image/jpeg" required>
+                        <input type="file" class="form-control" id="id_foto" name="foto" accept=".jpg,.jpeg,image/jpeg">
                         <small class="form-text text-muted">Solo se permiten imágenes con formato .jpg o .jpeg.</small>
                     </div>
                     

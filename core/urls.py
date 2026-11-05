@@ -7,6 +7,7 @@ urlpatterns = [
     path('registro-admin/', views.registro_admin, name='registro_admin'),
     path('logout/', views.logout_view, name='logout'),
     path('', views.dashboard, name='dashboard'),
+    path('entrega-segura/', views.entrega_segura, name='entrega_segura'),
     path('entregas/<int:nino_id>/registrar/', views.registrar_entrega, name='registrar_entrega'),
     
     # Niños

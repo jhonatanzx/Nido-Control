@@ -6,7 +6,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1><i class="bi bi-cash-coin text-primary"></i> Pago mensual</h1>
-        <p class="text-muted mb-0">Marca cada mensualidad como al día o pendiente, sin registrar montos.</p>
+        <p class="text-muted mb-0">Registra el estado y captura manualmente las fechas del período y del pago.</p>
     </div>
 </div>
 
@@ -61,6 +61,8 @@
                         <tr>
                             <th>Niño</th>
                             <th>Aula</th>
+                            <th>Fecha de inicio</th>
+                            <th>Fecha de término</th>
                             <th>Fecha de pago</th>
                             <th>Estado</th>
                             <th>Acción</th>
@@ -71,6 +73,8 @@
                             <tr>
                                 <td><strong>{{ nino.nombre_completo }}</strong></td>
                                 <td>{{ nino.aula.nombre|default:"Sin aula" }}</td>
+                                <td>{{ nino.pago_del_mes.fecha_inicio|date:"d/m/Y"|default:"—" }}</td>
+                                <td>{{ nino.pago_del_mes.fecha_termino|date:"d/m/Y"|default:"—" }}</td>
                                 <td>{{ nino.pago_del_mes.fecha_pago|date:"d/m/Y"|default:"—" }}</td>
                                 <td>
                                     {% if nino.esta_al_dia %}
@@ -80,18 +84,18 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <form method="post" action="{% url 'cambiar_estado_pago' nino.id %}" class="d-inline-flex gap-2">
+                                    <form method="post" action="{% url 'cambiar_estado_pago' nino.id %}" class="d-inline-flex flex-wrap gap-2">
                                         {% csrf_token %}
                                         <input type="hidden" name="periodo" value="{{ periodo }}">
                                         <input type="hidden" name="dia" value="{{ dia_seleccionado }}">
                                         <input type="hidden" name="aula" value="{{ aula_seleccionada }}">
-                                        {% if nino.esta_al_dia %}
-                                            <input type="hidden" name="estado" value="pendiente">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Marcar debe</button>
-                                        {% else %}
-                                            <input type="hidden" name="estado" value="pagado">
-                                            <button type="submit" class="btn btn-sm btn-success">Registrar pago</button>
-                                        {% endif %}
+                                        <input type="date" name="fecha_inicio" class="form-control form-control-sm" aria-label="Fecha de inicio del período" title="Fecha de inicio del período" value="{{ nino.pago_del_mes.fecha_inicio|date:'Y-m-d' }}">
+                                        <input type="date" name="fecha_termino" class="form-control form-control-sm" aria-label="Fecha de término del período" title="Fecha de término del período" value="{{ nino.pago_del_mes.fecha_termino|date:'Y-m-d' }}">
+                                        <input type="date" name="fecha_pago" class="form-control form-control-sm" aria-label="Fecha de pago" title="Fecha de pago" value="{{ nino.pago_del_mes.fecha_pago|date:'Y-m-d' }}">
+                                        <button type="submit" name="estado" value="pagado" class="btn btn-sm btn-success">
+                                            {% if nino.esta_al_dia %}Actualizar pago{% else %}Registrar pago{% endif %}
+                                        </button>
+                                        <button type="submit" name="estado" value="pendiente" class="btn btn-sm btn-outline-danger">Marcar debe</button>
                                     </form>
                                 </td>
                             </tr>

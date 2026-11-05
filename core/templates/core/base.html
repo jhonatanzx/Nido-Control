@@ -7,8 +7,8 @@
     <title>NidoControl - {% block title %}Inicio{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=19">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -23,29 +23,32 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                        <a class="nav-link{% if request.resolver_match.url_name == 'dashboard' %} active{% endif %}" href="{% url 'dashboard' %}" data-nav-section="dashboard"{% if request.resolver_match.url_name == 'dashboard' %} aria-current="page"{% endif %}><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'lista_ninos' %}"><i class="bi bi-people"></i> Niños</a>
+                        <a class="nav-link{% if request.resolver_match.url_name == 'lista_ninos' or request.resolver_match.url_name == 'registrar_nino' or request.resolver_match.url_name == 'detalle_nino' or request.resolver_match.url_name == 'editar_nino' %} active{% endif %}" href="{% url 'lista_ninos' %}"{% if request.resolver_match.url_name == 'lista_ninos' or request.resolver_match.url_name == 'registrar_nino' or request.resolver_match.url_name == 'detalle_nino' or request.resolver_match.url_name == 'editar_nino' %} aria-current="page"{% endif %}><i class="bi bi-people"></i><span>Niños</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'asistencia_hoy' %}"><i class="bi bi-check-circle"></i> Asistencia</a>
+                        <a class="nav-link{% if request.resolver_match.url_name == 'asistencia_hoy' or request.resolver_match.url_name == 'registrar_asistencia' or request.resolver_match.url_name == 'registrar_salida' %} active{% endif %}" href="{% url 'asistencia_hoy' %}"{% if request.resolver_match.url_name == 'asistencia_hoy' or request.resolver_match.url_name == 'registrar_asistencia' or request.resolver_match.url_name == 'registrar_salida' %} aria-current="page"{% endif %}><i class="bi bi-check-circle"></i><span>Asistencia</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.resolver_match.url_name == 'entrega_segura' %} active{% endif %}" href="{% url 'entrega_segura' %}"{% if request.resolver_match.url_name == 'entrega_segura' %} aria-current="page"{% endif %}><i class="bi bi-shield-check"></i><span>Entrega segura</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.resolver_match.url_name == 'bitacora_hoy' or request.resolver_match.url_name == 'registrar_bitacora' %} active{% endif %}" href="{% url 'bitacora_hoy' %}"{% if request.resolver_match.url_name == 'bitacora_hoy' or request.resolver_match.url_name == 'registrar_bitacora' %} aria-current="page"{% endif %}><i class="bi bi-journal"></i><span>Bitácora</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.resolver_match.url_name == 'lista_incidencias' or request.resolver_match.url_name == 'registrar_incidencia' or request.resolver_match.url_name == 'detalle_incidencia' or request.resolver_match.url_name == 'finalizar_incidencia' %} active{% endif %}" href="{% url 'lista_incidencias' %}"{% if request.resolver_match.url_name == 'lista_incidencias' or request.resolver_match.url_name == 'registrar_incidencia' or request.resolver_match.url_name == 'detalle_incidencia' or request.resolver_match.url_name == 'finalizar_incidencia' %} aria-current="page"{% endif %}><i class="bi bi-exclamation-triangle"></i><span>Incidencias</span></a>
                     </li>
                     {% if user.rol == 'admin' or user.is_superuser %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'bitacora_hoy' %}"><i class="bi bi-journal"></i> Bitácora</a>
+                        <a class="nav-link{% if request.resolver_match.url_name == 'generar_reportes' or request.resolver_match.url_name == 'reporte_pagos' or request.resolver_match.url_name == 'reporte_estudiantes' or request.resolver_match.url_name == 'reporte_asistencia' or request.resolver_match.url_name == 'reporte_incidencias' or request.resolver_match.url_name == 'reporte_bitacora' %} active{% endif %}" href="{% url 'generar_reportes' %}"{% if request.resolver_match.url_name == 'generar_reportes' or request.resolver_match.url_name == 'reporte_pagos' or request.resolver_match.url_name == 'reporte_estudiantes' or request.resolver_match.url_name == 'reporte_asistencia' or request.resolver_match.url_name == 'reporte_incidencias' or request.resolver_match.url_name == 'reporte_bitacora' %} aria-current="page"{% endif %}><i class="bi bi-file-pdf"></i><span>Reportes</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'lista_incidencias' %}"><i class="bi bi-exclamation-triangle"></i> Incidencias</a>
+                        <a class="nav-link{% if request.resolver_match.url_name == 'estadisticas' %} active{% endif %}" href="{% url 'estadisticas' %}"{% if request.resolver_match.url_name == 'estadisticas' %} aria-current="page"{% endif %}><i class="bi bi-graph-up-arrow"></i><span>Estadísticas</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'generar_reportes' %}"><i class="bi bi-file-pdf"></i> Reportes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'estadisticas' %}"><i class="bi bi-graph-up-arrow"></i> Estadísticas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'lista_pagos' %}"><i class="bi bi-cash-coin"></i> Pagos</a>
+                        <a class="nav-link{% if request.resolver_match.url_name == 'lista_pagos' or request.resolver_match.url_name == 'cambiar_estado_pago' %} active{% endif %}" href="{% url 'lista_pagos' %}"{% if request.resolver_match.url_name == 'lista_pagos' or request.resolver_match.url_name == 'cambiar_estado_pago' %} aria-current="page"{% endif %}><i class="bi bi-cash-coin"></i><span>Pagos</span></a>
                     </li>
                     {% endif %}
                 </ul>

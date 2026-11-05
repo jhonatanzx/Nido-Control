@@ -51,10 +51,10 @@ class Nino(models.Model):
         ('M', 'Masculino'),
         ('F', 'Femenino'),
     ]
-    nombres = models.CharField(max_length=50)
-    apellidos = models.CharField(max_length=50)
-    fecha_nacimiento = models.DateField()
-    sexo = models.CharField(max_length=1, choices=SEXOS)
+    nombres = models.CharField(max_length=50, blank=True)
+    apellidos = models.CharField(max_length=50, blank=True)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    sexo = models.CharField(max_length=1, choices=SEXOS, blank=True)
     aula = models.ForeignKey(Aula, on_delete=models.SET_NULL, null=True, blank=True)
     alergias = models.TextField(blank=True)
     restricciones = models.TextField(blank=True)
@@ -101,6 +101,8 @@ class Nino(models.Model):
     def edad(self):
         from datetime import date
         today = date.today()
+        if not self.fecha_nacimiento:
+            return None
         return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
     
     @property
@@ -119,10 +121,10 @@ class Apoderado(models.Model):
         ('otro', 'Otro'),
     ]
     nino = models.ForeignKey(Nino, on_delete=models.CASCADE, related_name='apoderados')
-    nombres = models.CharField(max_length=100)
-    parentesco = models.CharField(max_length=20, choices=PARENTESCOS)
-    documento = models.CharField(max_length=20)
-    telefono = models.CharField(max_length=15)
+    nombres = models.CharField(max_length=100, blank=True)
+    parentesco = models.CharField(max_length=20, choices=PARENTESCOS, blank=True)
+    documento = models.CharField(max_length=20, blank=True)
+    telefono = models.CharField(max_length=15, blank=True)
     correo = models.EmailField(blank=True)
     direccion = models.TextField(blank=True)
     estado = models.BooleanField(default=True)
@@ -258,6 +260,8 @@ class Pago(models.Model):
     periodo = models.CharField(max_length=50)
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_pago = models.DateField(null=True, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_termino = models.DateField(null=True, blank=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
     observaciones = models.TextField(blank=True)
     

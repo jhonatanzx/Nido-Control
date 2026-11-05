@@ -26,7 +26,7 @@
                 <p><strong>ID:</strong> {{ nino.id }}</p>
                 <p><strong>Nombre:</strong> {{ nino.nombre_completo }}</p>
                 <p><strong>Fecha de nacimiento:</strong> {{ nino.fecha_nacimiento }}</p>
-                <p><strong>Edad:</strong> {{ nino.edad }} años</p>
+                <p><strong>Edad:</strong> {% if nino.edad is not None %}{{ nino.edad }} años{% else %}Sin dato{% endif %}</p>
                 <p><strong>Sexo:</strong> {{ nino.get_sexo_display }}</p>
                 <p><strong>Aula:</strong> {{ nino.aula.nombre|default:"Sin asignar" }}</p>
                 <p><strong>Alergias:</strong> {{ nino.alergias|default:"Ninguna" }}</p>

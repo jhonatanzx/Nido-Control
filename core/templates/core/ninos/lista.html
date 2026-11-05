@@ -20,11 +20,11 @@
     </div>
 </div>
 
-<div class="card shadow-sm">
+<div class="card shadow-sm children-list-card">
     <div class="card-body">
         {% if ninos %}
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover children-list-table">
                     <thead>
                         <tr><th>Foto</th><th>Nombres</th><th>Edad</th><th>Aula</th><th>Estado</th><th>Acciones</th></tr>
                     </thead>
@@ -39,7 +39,7 @@
                                 {% endif %}
                             </td>
                             <td><strong>{{ nino.nombre_completo }}</strong></td>
-                            <td>{{ nino.edad }} años</td>
+                            <td>{% if nino.edad is not None %}{{ nino.edad }} años{% else %}Sin dato{% endif %}</td>
                             <td>{{ nino.aula.nombre|default:"Sin asignar" }}</td>
                             <td>{% if nino.estado_matricula %}<span class="badge bg-success">Activo</span>{% else %}<span class="badge bg-danger">Inactivo</span>{% endif %}</td>
                             <td>

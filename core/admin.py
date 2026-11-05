@@ -62,5 +62,8 @@ class IncidenciaAdmin(admin.ModelAdmin):
 
 @admin.register(Pago)
 class PagoAdmin(admin.ModelAdmin):
-    list_display = ['nino', 'concepto', 'periodo', 'monto', 'estado']
+    list_display = [
+        'nino', 'concepto', 'periodo', 'fecha_inicio', 'fecha_termino',
+        'fecha_pago', 'monto', 'estado',
+    ]
     list_filter = ['estado', 'periodo']
