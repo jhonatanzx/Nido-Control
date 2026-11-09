@@ -283,11 +283,14 @@ body {
 .login-illustration {
     display: block;
     width: 100%;
-    max-height: 230px;
-    margin: -0.5rem auto 1.5rem;
-    border-radius: 16px;
-    object-fit: cover;
+    max-width: 420px;
+    max-height: 260px;
+    margin: 0 auto 1rem;
+    border-radius: 20px;
+    object-fit: contain;
     object-position: center;
+    background: transparent;
+    filter: drop-shadow(0 8px 12px rgba(30, 64, 175, 0.10));
 }
 
 .login-card .logo {
@@ -1059,11 +1062,12 @@ main.container {
 .dashboard-hero > .col-12::after {
     position: absolute;
     right: 3%;
-    bottom: -30%;
+    top: 0;
+    bottom: 0;
     width: min(31%, 300px);
     min-width: 185px;
-    aspect-ratio: 1;
-    background: url("../images/encabezado-bebes.png") center / contain no-repeat;
+    aspect-ratio: auto;
+    background: url("../images/dashboard-bebes.png") center / contain no-repeat;
     content: "";
     opacity: 0.88;
     pointer-events: none;
@@ -1287,6 +1291,13 @@ body.dark-mode .stat-card {
     background: #272c42 !important;
 }
 
+body.dark-mode .dashboard-stats .stat-card:hover,
+body.dark-mode .dashboard-stats .stat-card:focus-visible {
+    border-color: #626b8a;
+    background: #343a53 !important;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+
 body.dark-mode .stat-card .stat-label,
 body.dark-mode .stat-card .stat-card-chevron {
     color: #c1c6dc !important;
@@ -1335,11 +1346,14 @@ body.dark-mode .footer {
     }
 
     .dashboard-hero > .col-12::after {
-        right: -0.75rem;
-        bottom: -1rem;
-        width: 38%;
-        min-width: 120px;
-        opacity: 0.3;
+        top: auto;
+        right: 1rem;
+        bottom: 0;
+        width: min(38%, 160px);
+        min-width: 105px;
+        height: auto;
+        aspect-ratio: 297 / 222;
+        opacity: 0.5;
     }
 
     .dashboard-hero h1,
@@ -1621,4 +1635,27 @@ body:not(.dark-mode) .dashboard-stats .stat-card .stat-label,
 body:not(.dark-mode) .dashboard-stats .stat-card .stat-icon,
 body:not(.dark-mode) .dashboard-stats .stat-card .stat-card-chevron {
     color: #263246 !important;
+}
+
+body:not(.dark-mode) .dashboard-stats .stat-card.primary .stat-number {
+    color: #8055db !important;
+}
+
+body:not(.dark-mode) .dashboard-stats .stat-card.success .stat-number {
+    color: #12aa9d !important;
+}
+
+body:not(.dark-mode) .dashboard-stats .stat-card.danger .stat-number {
+    color: #e85c83 !important;
+}
+
+body:not(.dark-mode) .dashboard-stats .stat-card.warning .stat-number {
+    color: #e8a12b !important;
+}
+
+body:not(.dark-mode) .dashboard-stats .stat-card:hover,
+body:not(.dark-mode) .dashboard-stats .stat-card:focus-visible {
+    border-color: #c78fc0;
+    background: linear-gradient(125deg, #b3e4ed 0%, #93c8dd 100%) !important;
+    box-shadow: 0 10px 24px rgba(62, 93, 125, 0.24);
 }

@@ -31,6 +31,63 @@ class ReportHeaderTests(TestCase):
         self.assertTrue(all(image_bottom > A4[1] - 125 for image_bottom in image_bottoms))
 
 
+class CuidadoraScopeTests(TestCase):
+    def setUp(self):
+        self.aula = Aula.objects.create(nombre='Aula Sol', capacidad=12)
+        self.otra_aula = Aula.objects.create(nombre='Aula Luna', capacidad=12)
+        self.cuidadora = get_user_model().objects.create_user(
+            username='cuidadora_scope',
+            password='123456',
+            rol='cuidadora',
+            aula=self.aula,
+        )
+        self.nino_de_aula = Nino.objects.create(
+            nombres='Ana',
+            apellidos='García',
+            fecha_nacimiento='2020-05-10',
+            sexo='F',
+            aula=self.aula,
+        )
+        self.nino_otro_aula = Nino.objects.create(
+            nombres='Mateo',
+            apellidos='Rojas',
+            fecha_nacimiento='2021-03-20',
+            sexo='M',
+            aula=self.otra_aula,
+        )
+
+    def test_cuidadora_solo_ve_los_ninos_de_su_aula(self):
+        self.client.force_login(self.cuidadora)
+
+        response = self.client.get(reverse('lista_ninos'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Ana García')
+        self.assertNotContains(response, 'Mateo Rojas')
+
+        response_detalle = self.client.get(reverse('detalle_nino', args=[self.nino_otro_aula.pk]))
+        self.assertEqual(response_detalle.status_code, 404)
+
+    def test_cuidadora_solo_ve_asistencias_de_su_aula(self):
+        Asistencia.objects.create(
+            nino=self.nino_de_aula,
+            fecha=timezone.localdate(),
+            estado='presente',
+        )
+        Asistencia.objects.create(
+            nino=self.nino_otro_aula,
+            fecha=timezone.localdate(),
+            estado='ausente',
+        )
+
+        self.client.force_login(self.cuidadora)
+        response = self.client.get(reverse('asistencia_hoy'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Ana García')
+        self.assertNotContains(response, 'Mateo Rojas')
+
+
 class PagoStatusTests(TestCase):
     def setUp(self):
         self.admin = get_user_model().objects.create_superuser(

@@ -128,6 +128,19 @@ def es_cuidadora(user):
     return user.is_authenticated and getattr(user, 'rol', '') == 'cuidadora'
 
 
+def ninos_accesibles_por_usuario(user, queryset=None):
+    if queryset is None:
+        queryset = Nino.objects.filter(estado_matricula=True)
+
+    if es_administrador(user):
+        return queryset
+    if not es_cuidadora(user):
+        return queryset.none()
+    if user.aula_id is None:
+        return queryset.none()
+    return queryset.filter(aula_id=user.aula_id)
+
+
 def admin_required(view_func):
     @wraps(view_func)
     def _wrapped(request, *args, **kwargs):
@@ -221,16 +234,61 @@ def logout_view(request):
 def dashboard(request):
     ensure_default_aulas()
     hoy = timezone.now().date()
-    
-    total_ninos = Nino.objects.filter(estado_matricula=True).count()
-    presentes = Asistencia.objects.filter(fecha=hoy, estado__in=['presente', 'tardanza']).count()
-    ausentes = Asistencia.objects.filter(fecha=hoy, estado='ausente').count()
-    incidencias_hoy = Incidencia.objects.filter(fecha=hoy).count()
-    bitacoras_hoy = Bitacora.objects.filter(fecha=hoy).count()
+
+    if es_administrador(request.user):
+        ninos_disponibles = Nino.objects.filter(estado_matricula=True).select_related('aula')
+        aulas_base = Aula.objects.order_by('nombre')
+        total_ninos = ninos_disponibles.count()
+        presentes = Asistencia.objects.filter(fecha=hoy, estado__in=['presente', 'tardanza']).count()
+        ausentes = Asistencia.objects.filter(fecha=hoy, estado='ausente').count()
+        incidencias_hoy = Incidencia.objects.filter(fecha=hoy).count()
+        bitacoras_hoy = Bitacora.objects.filter(fecha=hoy).count()
+    elif es_cuidadora(request.user):
+        if request.user.aula_id is None:
+            ninos_disponibles = Nino.objects.none()
+            aulas_base = Aula.objects.none()
+            total_ninos = 0
+            presentes = 0
+            ausentes = 0
+            incidencias_hoy = 0
+            bitacoras_hoy = 0
+        else:
+            ninos_disponibles = ninos_accesibles_por_usuario(
+                request.user,
+                Nino.objects.filter(estado_matricula=True).select_related('aula')
+            )
+            aulas_base = Aula.objects.filter(pk=request.user.aula_id)
+            total_ninos = ninos_disponibles.count()
+            presentes = Asistencia.objects.filter(
+                fecha=hoy,
+                estado__in=['presente', 'tardanza'],
+                nino__aula_id=request.user.aula_id,
+            ).count()
+            ausentes = Asistencia.objects.filter(
+                fecha=hoy,
+                estado='ausente',
+                nino__aula_id=request.user.aula_id,
+            ).count()
+            incidencias_hoy = Incidencia.objects.filter(
+                fecha=hoy,
+                nino__aula_id=request.user.aula_id,
+            ).count()
+            bitacoras_hoy = Bitacora.objects.filter(
+                fecha=hoy,
+                nino__aula_id=request.user.aula_id,
+            ).count()
+    else:
+        ninos_disponibles = Nino.objects.none()
+        aulas_base = Aula.objects.none()
+        total_ninos = 0
+        presentes = 0
+        ausentes = 0
+        incidencias_hoy = 0
+        bitacoras_hoy = 0
 
     grupos_salones = []
     grupos_por_aula = {}
-    for aula in Aula.objects.order_by('nombre'):
+    for aula in aulas_base:
         grupo = {
             'id': f'aula-{aula.id}',
             'nombre': aula.nombre,
@@ -243,9 +301,7 @@ def dashboard(request):
         grupos_salones.append(grupo)
         grupos_por_aula[aula.id] = grupo
 
-    ninos_activos = Nino.objects.filter(estado_matricula=True).select_related('aula').order_by(
-        'apellidos', 'nombres'
-    )
+    ninos_activos = ninos_disponibles.order_by('apellidos', 'nombres')
     for nino in ninos_activos:
         grupo = grupos_por_aula.get(nino.aula_id)
         if grupo is None:
@@ -263,9 +319,9 @@ def dashboard(request):
         grupo['total_ninos'] += 1
         grupo['ninos'].append(nino)
 
-    asistencias_hoy = Asistencia.objects.filter(
-        fecha=hoy
-    ).select_related('nino', 'nino__aula').order_by('nino__apellidos', 'nino__nombres')
+    asistencias_hoy = Asistencia.objects.filter(fecha=hoy).select_related('nino', 'nino__aula').order_by('nino__apellidos', 'nino__nombres')
+    if not es_administrador(request.user) and es_cuidadora(request.user) and request.user.aula_id is not None:
+        asistencias_hoy = asistencias_hoy.filter(nino__aula_id=request.user.aula_id)
     for asistencia in asistencias_hoy:
         grupo = grupos_por_aula.get(asistencia.nino.aula_id)
         if grupo is None:
@@ -279,6 +335,8 @@ def dashboard(request):
     incidencias_del_dia = Incidencia.objects.filter(fecha=hoy).select_related(
         'nino', 'nino__aula'
     ).order_by('hora')
+    if not es_administrador(request.user) and es_cuidadora(request.user) and request.user.aula_id is not None:
+        incidencias_del_dia = incidencias_del_dia.filter(nino__aula_id=request.user.aula_id)
     for incidencia in incidencias_del_dia:
         grupo = grupos_por_aula.get(incidencia.nino.aula_id)
         if grupo is None:
@@ -294,7 +352,7 @@ def dashboard(request):
             if grupo not in grupos_salones:
                 grupos_salones.append(grupo)
         grupo['incidencias'].append(incidencia)
-    
+
     asistencia_semanal = []
     for i in range(7):
         fecha = hoy - timedelta(days=i)
@@ -334,13 +392,16 @@ def entrega_segura(request):
     entregas_hoy = RegistroEntrega.objects.filter(fecha=hoy).select_related(
         'nino', 'apoderado', 'persona_entrega'
     )
-    ninos_para_entrega = Nino.objects.filter(
-        estado_matricula=True,
-        asistencia__fecha=hoy,
-        asistencia__estado__in=['presente', 'tardanza'],
-    ).select_related('aula').prefetch_related(
-        'apoderados', 'autorizados'
-    ).distinct().order_by('apellidos', 'nombres')
+    ninos_para_entrega = ninos_accesibles_por_usuario(
+        request.user,
+        Nino.objects.filter(
+            estado_matricula=True,
+            asistencia__fecha=hoy,
+            asistencia__estado__in=['presente', 'tardanza'],
+        ).select_related('aula').prefetch_related(
+            'apoderados', 'autorizados'
+        ).distinct(),
+    ).order_by('apellidos', 'nombres')
     entregas_por_nino = {entrega.nino_id: entrega for entrega in entregas_hoy}
     for nino in ninos_para_entrega:
         nino.entrega_hoy = entregas_por_nino.get(nino.id)
@@ -406,8 +467,10 @@ def lista_ninos(request):
     mostrar_inactivos = (
         puede_gestionar_estado and request.GET.get('estado') == 'inactivos'
     )
-    ninos = Nino.objects.filter(estado_matricula=not mostrar_inactivos)
-    ninos = ninos.order_by('apellidos', 'nombres')
+    ninos = ninos_accesibles_por_usuario(
+        request.user,
+        Nino.objects.filter(estado_matricula=not mostrar_inactivos),
+    ).order_by('apellidos', 'nombres')
     return render(
         request,
         'core/ninos/lista.html',
@@ -712,7 +775,10 @@ def registrar_nino(request):
 @login_required
 @cuidadora_required
 def detalle_nino(request, nino_id):
-    nino = get_object_or_404(Nino, id=nino_id)
+    nino = get_object_or_404(
+        ninos_accesibles_por_usuario(request.user, Nino.objects.filter(pk=nino_id)),
+        pk=nino_id,
+    )
     return render(
         request,
         'core/ninos/detalle.html',
@@ -867,7 +933,10 @@ def asistencia_hoy(request):
     hoy = timezone.localdate()
     es_admin = es_administrador(request.user)
     ninos = list(
-        Nino.objects.filter(estado_matricula=True).select_related('aula')
+        ninos_accesibles_por_usuario(
+            request.user,
+            Nino.objects.filter(estado_matricula=True).select_related('aula'),
+        )
     )
 
     for nino in ninos:
@@ -883,9 +952,13 @@ def asistencia_hoy(request):
             )
 
     nino_ids = {nino.id for nino in ninos}
-    asistencias_existentes = list(
-        Asistencia.objects.filter(fecha=hoy).select_related('nino', 'nino__aula')
-    )
+    asistencias_existentes = Asistencia.objects.filter(fecha=hoy).select_related('nino', 'nino__aula')
+    if not es_admin:
+        if request.user.aula_id is None:
+            asistencias_existentes = asistencias_existentes.none()
+        else:
+            asistencias_existentes = asistencias_existentes.filter(nino__aula_id=request.user.aula_id)
+    asistencias_existentes = list(asistencias_existentes)
     asistencias_por_nino = {
         asistencia.nino_id: asistencia for asistencia in asistencias_existentes
     }
@@ -1029,6 +1102,11 @@ def bitacora_hoy(request):
             Bitacora.objects.get_or_create(nino=nino, fecha=hoy)
 
     bitacoras = Bitacora.objects.select_related('nino', 'nino__aula')
+    if not es_administrador(request.user):
+        if request.user.aula_id is None:
+            bitacoras = bitacoras.none()
+        else:
+            bitacoras = bitacoras.filter(nino__aula_id=request.user.aula_id)
     if fecha_desde:
         bitacoras = bitacoras.filter(fecha__gte=fecha_desde)
     if fecha_hasta:
@@ -1103,7 +1181,15 @@ def bitacora_hoy(request):
             bitacora.opciones_descanso = opciones_descanso
 
     aulas = Aula.objects.all().order_by('nombre')
-    ninos = Nino.objects.all().order_by('apellidos', 'nombres')
+    if not es_administrador(request.user):
+        if request.user.aula_id is None:
+            aulas = Aula.objects.none()
+            ninos = Nino.objects.none()
+        else:
+            aulas = aulas.filter(pk=request.user.aula_id)
+            ninos = ninos_accesibles_por_usuario(request.user, Nino.objects.all()).order_by('apellidos', 'nombres')
+    else:
+        ninos = Nino.objects.all().order_by('apellidos', 'nombres')
 
     context = {
         'bitacoras': bitacoras,
@@ -1288,7 +1374,12 @@ def eliminar_menu_diario(request, menu_id):
 @login_required
 @cuidadora_required
 def lista_incidencias(request):
-    incidencias = Incidencia.objects.all().order_by('-fecha', '-hora')
+    incidencias = Incidencia.objects.select_related('nino', 'nino__aula').order_by('-fecha', '-hora')
+    if not es_administrador(request.user):
+        if request.user.aula_id is None:
+            incidencias = incidencias.none()
+        else:
+            incidencias = incidencias.filter(nino__aula_id=request.user.aula_id)
     return render(
         request,
         'core/incidencias/lista.html',
@@ -1346,7 +1437,11 @@ def registrar_incidencia(request):
 @login_required
 @cuidadora_required
 def detalle_incidencia(request, incidencia_id):
-    incidencia = get_object_or_404(Incidencia, id=incidencia_id)
+    incidencia = get_object_or_404(Incidencia.objects.select_related('nino', 'nino__aula'), id=incidencia_id)
+    if not es_administrador(request.user):
+        if request.user.aula_id is None or incidencia.nino.aula_id != request.user.aula_id:
+            messages.error(request, 'No puedes ver incidencias de otra aula.')
+            return redirect('lista_incidencias')
     return render(
         request,
         'core/incidencias/detalle.html',
