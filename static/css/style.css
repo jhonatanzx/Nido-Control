@@ -286,10 +286,10 @@ body {
     max-width: 420px;
     max-height: 260px;
     margin: 0 auto 1rem;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     object-fit: contain;
     object-position: center;
-    background: transparent;
+    background: #fff;
     filter: drop-shadow(0 8px 12px rgba(30, 64, 175, 0.10));
 }
 
