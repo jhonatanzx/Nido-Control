@@ -1,0 +1,91 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row fade-in dashboard-hero">
+    <div class="col-12">
+        <h1 class="h3 mb-2">
+            <i class="bi bi-speedometer2 text-primary"></i> Panel de Control
+        </h1>
+        <p class="text-muted">
+            <i class="bi bi-calendar3"></i> 
+            Bienvenido, <strong>{{ user.username }}</strong>. Hoy es {{ hoy|date:"d/m/Y" }}
+        </p>
+        <div class="alert alert-light border d-inline-flex align-items-center gap-2 mb-0">
+            <i class="bi bi-clock-history text-primary"></i>
+            <span><strong>Horario de atención:</strong> {{ horario_atencion.dias }} · {{ horario_atencion.inicio }} a {{ horario_atencion.fin }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4 align-items-start dashboard-stats">
+    <div class="col-12 col-sm-6 col-xl-3 fade-in delay-1">
+        <button type="button" id="dashboard-toggle-matriculados" class="stat-card stat-card-trigger primary" data-bs-toggle="collapse" data-bs-target="#dashboard-details-matriculados" aria-expanded="false" aria-controls="dashboard-details-matriculados">
+            <span class="stat-number">{{ total_ninos }}</span>
+            <span class="stat-label"><i class="bi bi-people"></i> Niños Matriculados</span>
+            <i class="stat-icon bi bi-people"></i>
+            <i class="bi bi-chevron-down stat-card-chevron" aria-hidden="true"></i>
+        </button>
+        {% include 'core/includes/dashboard_stat_details.html' with category='matriculados' %}
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3 fade-in delay-2">
+        <button type="button" id="dashboard-toggle-presentes" class="stat-card stat-card-trigger success" data-bs-toggle="collapse" data-bs-target="#dashboard-details-presentes" aria-expanded="false" aria-controls="dashboard-details-presentes">
+            <span class="stat-number">{{ presentes }}</span>
+            <span class="stat-label"><i class="bi bi-check-circle"></i> Presentes Hoy</span>
+            <i class="stat-icon bi bi-check-circle"></i>
+            <i class="bi bi-chevron-down stat-card-chevron" aria-hidden="true"></i>
+        </button>
+        {% include 'core/includes/dashboard_stat_details.html' with category='presentes' %}
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3 fade-in delay-3">
+        <button type="button" id="dashboard-toggle-ausentes" class="stat-card stat-card-trigger danger" data-bs-toggle="collapse" data-bs-target="#dashboard-details-ausentes" aria-expanded="false" aria-controls="dashboard-details-ausentes">
+            <span class="stat-number">{{ ausentes }}</span>
+            <span class="stat-label"><i class="bi bi-x-circle"></i> Ausentes Hoy</span>
+            <i class="stat-icon bi bi-x-circle"></i>
+            <i class="bi bi-chevron-down stat-card-chevron" aria-hidden="true"></i>
+        </button>
+        {% include 'core/includes/dashboard_stat_details.html' with category='ausentes' %}
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3 fade-in delay-4">
+        <button type="button" id="dashboard-toggle-incidencias" class="stat-card stat-card-trigger warning" data-bs-toggle="collapse" data-bs-target="#dashboard-details-incidencias" aria-expanded="false" aria-controls="dashboard-details-incidencias">
+            <span class="stat-number">{{ incidencias_hoy }}</span>
+            <span class="stat-label"><i class="bi bi-exclamation-triangle"></i> Incidencias Hoy</span>
+            <i class="stat-icon bi bi-exclamation-triangle"></i>
+            <i class="bi bi-chevron-down stat-card-chevron" aria-hidden="true"></i>
+        </button>
+        {% include 'core/includes/dashboard_stat_details.html' with category='incidencias' %}
+    </div>
+</div>
+
+<div class="row fade-in">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-info-circle"></i> Información del Sistema
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="text-primary">
+                            <i class="bi bi-house-heart"></i> NidoControl
+                        </h5>
+                        <p class="mb-1">
+                            <strong>Gestión sencilla, cuidado organizado y entrega segura.</strong>
+                        </p>
+                        <p class="text-muted small mb-0">
+                            <i class="bi bi-code-square"></i> Versión 1.1.0
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle"></i> Sistema Activo
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

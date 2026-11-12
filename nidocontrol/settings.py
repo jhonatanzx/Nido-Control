@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'core',
+    "django_binary_builder",
 ]
 
 MIDDLEWARE = [
@@ -95,4 +96,12 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
+}
+
+DJANGO_BINARY_BUILDER = {
+    "NAME": "NidoControl",
+    "VERSION": "1.0.0",
+    "PUBLISHER": "Equipo de Desarrollo NidoControl",
+    "EXECUTABLE_NAME": "NidoControl",
+    "ICON": BASE_DIR / "static" / "icono.ico",
 }

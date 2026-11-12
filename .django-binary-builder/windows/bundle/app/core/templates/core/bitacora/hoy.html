@@ -1,0 +1,221 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Bitácora Hoy{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-journal text-info"></i> Bitácora del día</h1>
+    <span class="badge bg-primary fs-6">{{ hoy|date:"d/m/Y" }}</span>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header"><i class="bi bi-funnel"></i> Filtros analíticos</div>
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-6 col-lg-3">
+                <label for="fechaDesde" class="form-label">Desde</label>
+                <input type="date" id="fechaDesde" name="fecha_desde" class="form-control" value="{{ filtros.fecha_desde }}">
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="fechaHasta" class="form-label">Hasta</label>
+                <input type="date" id="fechaHasta" name="fecha_hasta" class="form-control" value="{{ filtros.fecha_hasta }}">
+            </div>
+            <div class="col-md-6 col-lg-2">
+                <label for="filtroNino" class="form-label">Niño</label>
+                <select id="filtroNino" name="nino" class="form-select">
+                    <option value="">Todos</option>
+                    {% for nino in ninos %}
+                        <option value="{{ nino.id }}" {% if filtros.nino == nino.id|stringformat:"s" %}selected{% endif %}>{{ nino.nombre_completo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 col-lg-2">
+                <label for="filtroAula" class="form-label">Aula</label>
+                <select id="filtroAula" name="aula" class="form-select">
+                    <option value="">Todas</option>
+                    {% for aula in aulas %}
+                        <option value="{{ aula.id }}" {% if filtros.aula == aula.id|stringformat:"s" %}selected{% endif %}>{{ aula.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 col-lg-2">
+                <label for="filtroEstadoAnimo" class="form-label">Estado de ánimo</label>
+                <select id="filtroEstadoAnimo" name="estado_animo" class="form-select">
+                    <option value="">Todos</option>
+                    {% for valor, etiqueta in estados_animo %}
+                        <option value="{{ valor }}" {% if filtros.estado_animo == valor %}selected{% endif %}>{{ etiqueta }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Aplicar filtros</button>
+                <a href="{% url 'bitacora_hoy' %}" class="btn btn-outline-secondary">Limpiar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header"><i class="bi bi-list-check"></i> Registro de Actividades</div>
+    <div class="card-body">
+        {% if bitacoras %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr><th>Niño</th><th>Alimentación</th><th>Descanso</th><th>Estado Ánimo</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for bitacora in bitacoras %}
+                        <tr>
+                            <td><strong>{{ bitacora.nino.nombre_completo }}</strong></td>
+                            <td>{{ bitacora.alimentacion|default:"--"|truncatechars:30 }}</td>
+                            <td>{{ bitacora.descanso|default:"--"|truncatechars:30 }}</td>
+                            <td>{% if bitacora.estado_animo %}<span class="badge bg-info">{{ bitacora.get_estado_animo_display }}</span>{% else %}<span class="text-muted">--</span>{% endif %}</td>
+                            <td>
+                                {% if bitacora.puede_gestionar %}
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalBitacora{{ bitacora.id }}">
+                                    <i class="bi bi-pencil"></i> Registrar
+                                </button>
+                                {% else %}
+                                    <span class="text-muted">Solo lectura</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if bitacora.puede_gestionar %}
+                        <div class="modal fade" id="modalBitacora{{ bitacora.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <form method="post" action="{% url 'registrar_bitacora' bitacora.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Bitácora - {{ bitacora.nino.nombre_completo }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Refrigerio</label>
+                                                    {% if bitacora.menu_desayuno_seleccionado_id %}
+                                                        <input type="hidden" name="menu_desayuno" value="{{ bitacora.menu_desayuno_seleccionado_id }}">
+                                                    {% endif %}
+                                                    {% if bitacora.menus_desayuno %}
+                                                        <small class="d-block text-muted mb-2">
+                                                            Menú de hoy: {{ bitacora.menus_desayuno.0.descripcion|truncatechars:100 }}
+                                                        </small>
+                                                    {% endif %}
+                                                    <div class="dropdown desayuno-dropdown mt-2">
+                                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                                            <span class="desayuno-resumen">Sin selección</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu w-100 p-2">
+                                                        {% for opcion in opciones_desayuno %}
+                                                            <li>
+                                                                <label class="dropdown-item form-check mb-0">
+                                                                    <input class="form-check-input me-2" type="checkbox" name="desayuno" value="{{ opcion }}" {% if opcion in bitacora.desayunos_seleccionados %}checked{% endif %}>
+                                                                    <span class="form-check-label">{{ opcion }}</span>
+                                                                </label>
+                                                            </li>
+                                                        {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Descanso</label>
+                                                    <div class="dropdown descanso-dropdown">
+                                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                                            <span class="descanso-resumen">Sin selección</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu w-100 p-2">
+                                                        {% for opcion in bitacora.opciones_descanso %}
+                                                            <li>
+                                                                <label class="dropdown-item form-check mb-0">
+                                                                    <input class="form-check-input me-2" type="checkbox" name="descanso" value="{{ opcion.valor }}" {% if opcion.seleccionado %}checked{% endif %}>
+                                                                    <span class="form-check-label">{{ opcion.valor }}</span>
+                                                                </label>
+                                                            </li>
+                                                        {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                    <small class="form-text">Selecciona una o varias opciones:</small>
+                                                    <div class="form-check mt-2">
+                                                        <input class="form-check-input descanso-otro-toggle" type="checkbox" name="descanso_otro_activar" value="on">
+                                                        <label class="form-check-label">Otro (especificar)</label>
+                                                    </div>
+                                                    <input type="text" name="descanso_otro" class="form-control descanso-otro-input mt-2" placeholder="Escribe otra opción de descanso" maxlength="500" hidden>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Actividades</label>
+                                                    <textarea name="actividades" class="form-control" rows="2">{{ bitacora.actividades }}</textarea>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Higiene</label>
+                                                    <textarea name="higiene" class="form-control" rows="2">{{ bitacora.higiene }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Estado de Ánimo</label>
+                                                <select name="estado_animo" class="form-control">
+                                                    <option value="">-- Seleccionar --</option>
+                                                    <option value="tranquilo" {% if bitacora.estado_animo == 'tranquilo' %}selected{% endif %}>Tranquilo</option>
+                                                    <option value="alegre" {% if bitacora.estado_animo == 'alegre' %}selected{% endif %}>Alegre</option>
+                                                    <option value="cansado" {% if bitacora.estado_animo == 'cansado' %}selected{% endif %}>Cansado</option>
+                                                    <option value="irritable" {% if bitacora.estado_animo == 'irritable' %}selected{% endif %}>Irritable</option>
+                                                    <option value="otro" {% if bitacora.estado_animo == 'otro' %}selected{% endif %}>Otro</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Observaciones</label>
+                                                <textarea name="observaciones" class="form-control" rows="2">{{ bitacora.observaciones }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No hay registros que coincidan con los filtros seleccionados.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('.desayuno-dropdown, .descanso-dropdown').forEach(function(dropdown) {
+        const resumen = dropdown.querySelector('.desayuno-resumen, .descanso-resumen');
+        const actualizarResumen = function() {
+            const seleccionadas = Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(function(opcion) { return opcion.value; });
+            resumen.textContent = seleccionadas.length ? seleccionadas.join(', ') : 'Sin selección';
+        };
+
+        dropdown.addEventListener('change', actualizarResumen);
+        actualizarResumen();
+    });
+
+    document.querySelectorAll('.descanso-otro-toggle').forEach(function(toggle) {
+        const input = toggle.closest('.mb-3').querySelector('.descanso-otro-input');
+        const actualizarCampo = function() {
+            input.hidden = !toggle.checked;
+            input.required = toggle.checked;
+            if (!toggle.checked) input.value = '';
+        };
+        toggle.addEventListener('change', actualizarCampo);
+        actualizarCampo();
+    });
+</script>
+{% endblock %}

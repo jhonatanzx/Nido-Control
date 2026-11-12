@@ -1,0 +1,45 @@
+<div class="collapse dashboard-stat-details mt-3" id="dashboard-details-{{ category }}" aria-labelledby="dashboard-toggle-{{ category }}">
+    <div class="card card-body dashboard-stat-details-body">
+        <h2 class="h6 mb-3">
+            {% if category == 'matriculados' %}Niños matriculados
+            {% elif category == 'presentes' %}Presentes hoy
+            {% elif category == 'ausentes' %}Ausentes hoy
+            {% else %}Incidencias hoy{% endif %}
+        </h2>
+
+        {% for salon in grupos_salones %}
+            <section class="dashboard-stat-group">
+                <h3 class="dashboard-stat-group-title">{{ salon.nombre }}</h3>
+                <ul class="dashboard-stat-list">
+                    {% if category == 'matriculados' %}
+                        {% for nino in salon.ninos %}
+                            <li><a href="{% url 'detalle_nino' nino.id %}">{{ nino.nombre_completo }}</a></li>
+                        {% empty %}
+                            <li class="text-muted">Sin niños matriculados.</li>
+                        {% endfor %}
+                    {% elif category == 'presentes' %}
+                        {% for detalle in salon.presentes %}
+                            <li><a href="{% url 'detalle_nino' detalle.nino.id %}">{{ detalle.nino.nombre_completo }}</a></li>
+                        {% empty %}
+                            <li class="text-muted">Sin presentes registrados.</li>
+                        {% endfor %}
+                    {% elif category == 'ausentes' %}
+                        {% for detalle in salon.ausentes %}
+                            <li><a href="{% url 'detalle_nino' detalle.nino.id %}">{{ detalle.nino.nombre_completo }}</a></li>
+                        {% empty %}
+                            <li class="text-muted">Sin ausencias registradas.</li>
+                        {% endfor %}
+                    {% else %}
+                        {% for incidencia in salon.incidencias %}
+                            <li><a href="{% url 'detalle_nino' incidencia.nino.id %}">{{ incidencia.nino.nombre_completo }}</a></li>
+                        {% empty %}
+                            <li class="text-muted">Sin incidencias registradas.</li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </section>
+        {% empty %}
+            <p class="small text-muted mb-0">No hay salones registrados.</p>
+        {% endfor %}
+    </div>
+</div>

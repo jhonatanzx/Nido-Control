@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h1 class="mb-4"><i class="bi bi-person-circle text-primary"></i> Mi Perfil</h1>
+        
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <i class="bi bi-pencil"></i> Información Personal
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">Nombre de Usuario</label>
+                                <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nombres</label>
+                                <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Apellidos</label>
+                                <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" value="{{ user.email }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Teléfono</label>
+                                <input type="text" name="telefono" class="form-control" value="{{ user.telefono }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Dirección</label>
+                                <textarea name="direccion" class="form-control" rows="2">{{ user.direccion }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Guardar Cambios
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <i class="bi bi-shield-lock"></i> Información de la Cuenta
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Rol:</strong> 
+                            {% if user.rol == 'admin' %}
+                                <span class="badge bg-danger">Administrador</span>
+                            {% else %}
+                                <span class="badge bg-info">Cuidadora</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Estado:</strong> 
+                            {% if user.estado %}
+                                <span class="badge bg-success">Activo</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Inactivo</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Último acceso:</strong><br>
+                            {{ user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}
+                        </p>
+                        <p><strong>Fecha de registro:</strong><br>
+                            {{ user.date_joined|date:"d/m/Y" }}
+                        </p>
+                        <hr>
+                        <a href="{% url 'cambiar_password' %}" class="btn btn-warning w-100">
+                            <i class="bi bi-key"></i> Cambiar Contraseña
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'configuracion' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a Configuración
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
