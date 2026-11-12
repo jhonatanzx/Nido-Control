@@ -87,6 +87,29 @@ class CuidadoraScopeTests(TestCase):
         self.assertContains(response, 'Ana García')
         self.assertNotContains(response, 'Mateo Rojas')
 
+    def test_cuidadora_no_puede_entregar_nino_de_otra_aula(self):
+        apoderado = Apoderado.objects.create(
+            nino=self.nino_otro_aula,
+            nombres='Carlos Rojas',
+            parentesco='padre',
+            documento='12345678',
+            telefono='987654321',
+        )
+        Asistencia.objects.create(
+            nino=self.nino_otro_aula,
+            fecha=timezone.localdate(),
+            estado='presente',
+        )
+        self.client.force_login(self.cuidadora)
+
+        response = self.client.post(
+            reverse('registrar_entrega', args=[self.nino_otro_aula.pk]),
+            {'documento': apoderado.documento},
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(RegistroEntrega.objects.filter(nino=self.nino_otro_aula).exists())
+
 
 class PagoStatusTests(TestCase):
     def setUp(self):
@@ -1051,15 +1074,17 @@ class NinoEditTests(TestCase):
         entrega_segura = self.client.get(reverse('entrega_segura'))
         self.assertEqual(entrega_segura.status_code, 200)
         self.assertContains(entrega_segura, 'Entrega segura de niños')
-        self.assertNotContains(entrega_segura, 'DNI de quien recoge')
-        self.assertContains(entrega_segura, 'Solo lectura')
+        self.assertContains(entrega_segura, 'DNI de quien recoge')
+        self.assertNotContains(entrega_segura, 'Solo lectura')
         self.assertContains(entrega_segura, 'aria-current="page"')
         entrega = self.client.post(
             reverse('registrar_entrega', args=[self.nino.pk]),
             {'documento': apoderado.documento},
         )
-        self.assertRedirects(entrega, reverse('dashboard'))
-        self.assertFalse(RegistroEntrega.objects.filter(nino=self.nino).exists())
+        self.assertRedirects(entrega, reverse('entrega_segura'))
+        registro = RegistroEntrega.objects.get(nino=self.nino)
+        self.assertEqual(registro.apoderado, apoderado)
+        self.assertEqual(registro.usuario_verifica, cuidadora)
 
         bitacora_lista = self.client.get(reverse('bitacora_hoy'))
         self.assertEqual(bitacora_lista.status_code, 200)

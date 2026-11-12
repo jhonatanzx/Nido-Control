@@ -408,14 +408,20 @@ def entrega_segura(request):
 
     return render(request, 'core/entrega_segura.html', {
         'ninos_para_entrega': ninos_para_entrega,
-        'puede_registrar_entrega': es_administrador(request.user),
+        'puede_registrar_entrega': es_administrador(request.user) or es_cuidadora(request.user),
     })
 
 
 @login_required
-@admin_required
+@cuidadora_required
 def registrar_entrega(request, nino_id):
-    nino = get_object_or_404(Nino, id=nino_id, estado_matricula=True)
+    nino = get_object_or_404(
+        ninos_accesibles_por_usuario(
+            request.user,
+            Nino.objects.filter(estado_matricula=True),
+        ),
+        id=nino_id,
+    )
     hoy = timezone.now().date()
 
     if request.method == 'POST':
@@ -1619,7 +1625,7 @@ def reporte_pagos(request):
         spaceAfter=12,
     )
     elements = [
-        Paragraph('Registro Pecosit@s', title_style),
+        Paragraph('Reporte de pagos', title_style),
         Paragraph(f'Mes: {etiqueta_mes}', styles['Normal']),
         Paragraph(f'Estado actualizado al: {fecha_corte.strftime("%d/%m/%Y")}', styles['Normal']),
         Paragraph(f'Aula: {escape(aula_nombre)}', styles['Normal']),
@@ -1762,7 +1768,7 @@ def reporte_estudiantes(request):
         header = Table(
             [[
                 [
-                    Paragraph('Registro Pecosit@s', title_style),
+                    Paragraph('Reporte detallado por estudiante', title_style),
                     Paragraph(
                         f'Ficha mensual · {etiqueta_mes} · '
                         f'{fecha_inicio.strftime("%d/%m/%Y")} al {fecha_fin.strftime("%d/%m/%Y")}',
@@ -1900,7 +1906,7 @@ def reporte_asistencia(request):
         alignment=1
     )
     
-    elements.append(Paragraph("Registro Pecosit@s", title_style))
+    elements.append(Paragraph("Reporte de Asistencia", title_style))
     elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
     elements.append(Paragraph(f"Alumno: {escape(alumno_nombre)}", styles['Normal']))
     elements.append(Spacer(1, 20))
@@ -1975,7 +1981,7 @@ def reporte_incidencias(request):
         alignment=1
     )
     
-    elements.append(Paragraph("Registro Pecosit@s", title_style))
+    elements.append(Paragraph("Reporte de Incidencias", title_style))
     elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
     elements.append(Paragraph(f"Alumno: {escape(alumno_nombre)}", styles['Normal']))
     elements.append(Spacer(1, 20))
@@ -2045,7 +2051,7 @@ def reporte_bitacora(request):
         alignment=1
     )
     
-    elements.append(Paragraph("Registro Pecosit@s", title_style))
+    elements.append(Paragraph("Reporte de Bitácora", title_style))
     elements.append(Paragraph(f"Mes: {etiqueta_mes}", styles['Normal']))
     elements.append(Paragraph(f"Alumno: {escape(alumno_nombre)}", styles['Normal']))
     elements.append(Spacer(1, 20))
