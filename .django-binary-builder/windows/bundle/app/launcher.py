@@ -23,11 +23,11 @@ from importlib import import_module
 from pathlib import Path
 from urllib.parse import urlsplit
 
-APP_NAME = "Nido-Control"
-PUBLISHER = "Tu Nombre"
+APP_NAME = "NidoControl"
+PUBLISHER = "Equipo de Desarrollo NidoControl"
 SETTINGS_MODULE = "nidocontrol.settings"
 WSGI_APPLICATION = "nidocontrol.wsgi.application"
-APP_ICON = ""
+APP_ICON = "static/icono.ico"
 
 ENVIRONMENT_FILENAME = ".env"
 DATA_DIR_ENVIRONMENT_VARIABLE = "DJANGO_BINARY_DATA_DIR"

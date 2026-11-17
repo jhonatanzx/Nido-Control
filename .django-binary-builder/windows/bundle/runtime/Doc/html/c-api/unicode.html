@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>Unicode Objects and Codecs &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicode Objects and Codecs &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -150,6 +150,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -183,7 +184,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Python/C API Reference Manual</a> &#187;</li>
@@ -280,6 +281,28 @@ that deal with Unicode objects take and return <a class="reference internal" hre
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.3.</span></p>
 </div>
+<p>The structure of a particular object can be determined using the following
+macros.
+The macros cannot fail; their behavior is undefined if their argument
+is not a Python Unicode object.</p>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.PyUnicode_IS_COMPACT">
+<span class="sig-name descname"><span class="n"><span class="pre">PyUnicode_IS_COMPACT</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">o</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.PyUnicode_IS_COMPACT" title="Link to this definition">¶</a><br /></dt>
+<dd><p>True if <em>o</em> uses the <a class="reference internal" href="#c.PyCompactUnicodeObject" title="PyCompactUnicodeObject"><code class="xref c c-struct docutils literal notranslate"><span class="pre">PyCompactUnicodeObject</span></code></a> structure.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.PyUnicode_IS_COMPACT_ASCII">
+<span class="sig-name descname"><span class="n"><span class="pre">PyUnicode_IS_COMPACT_ASCII</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">o</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.PyUnicode_IS_COMPACT_ASCII" title="Link to this definition">¶</a><br /></dt>
+<dd><p>True if <em>o</em> uses the <a class="reference internal" href="#c.PyASCIIObject" title="PyASCIIObject"><code class="xref c c-struct docutils literal notranslate"><span class="pre">PyASCIIObject</span></code></a> structure.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.3.</span></p>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <p>The following APIs are C macros and static inlined functions for fast checks and
@@ -2244,6 +2267,7 @@ Previously, this could be called to check if
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -2280,7 +2304,7 @@ Previously, this could be called to check if
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Python/C API Reference Manual</a> &#187;</li>
@@ -2326,13 +2350,13 @@ Previously, this could be called to check if
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

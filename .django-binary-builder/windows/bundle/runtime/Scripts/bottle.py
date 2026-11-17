@@ -1,4 +1,4 @@
-#!C:\Users\LAB-03\Documents\Nido-Control\.django-binary-builder\windows\bundle\runtime\python.exe
+#!C:\Users\hp\Documents\Nido-Control\.django-binary-builder\windows\bundle\runtime\python.exe
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 """

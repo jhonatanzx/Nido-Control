@@ -8,29 +8,29 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://docs.python.org/3/howto/remote_debugging.html" />
 <meta property="og:site_name" content="Python documentation" />
-<meta property="og:description" content="This protocol enables external tools to attach to a running CPython process and execute Python code remotely. Most platforms require elevated privileges to attach to another Python process. Permiss..." />
+<meta property="og:description" content="This protocol enables external tools to attach to a running CPython process and execute Python code remotely. Most platforms require elevated privileges to attach to another Python process. Disabli..." />
 <meta property="og:image" content="_static/og-image.png" />
 <meta property="og:image:alt" content="Python documentation" />
-<meta name="description" content="This protocol enables external tools to attach to a running CPython process and execute Python code remotely. Most platforms require elevated privileges to attach to another Python process. Permiss..." />
+<meta name="description" content="This protocol enables external tools to attach to a running CPython process and execute Python code remotely. Most platforms require elevated privileges to attach to another Python process. Disabli..." />
 <meta name="theme-color" content="#3776ab">
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>Remote debugging attachment protocol &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote debugging attachment protocol &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -99,7 +99,10 @@
   <div>
     <h3><a href="../contents.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Remote debugging attachment protocol</a></li>
+<li><a class="reference internal" href="#">Remote debugging attachment protocol</a><ul>
+<li><a class="reference internal" href="#disabling-remote-debugging">Disabling remote debugging</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#permission-requirements">Permission requirements</a></li>
 <li><a class="reference internal" href="#locating-the-pyruntime-structure">Locating the PyRuntime structure</a></li>
 <li><a class="reference internal" href="#reading-py-debugoffsets">Reading _Py_DebugOffsets</a></li>
@@ -128,6 +131,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -161,7 +165,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Python HOWTOs</a> &#187;</li>
@@ -200,6 +204,16 @@
 <p>This protocol enables external tools to attach to a running CPython process and
 execute Python code remotely.</p>
 <p>Most platforms require elevated privileges to attach to another Python process.</p>
+<section id="disabling-remote-debugging">
+<h2>Disabling remote debugging<a class="headerlink" href="#disabling-remote-debugging" title="Link to this heading">¶</a></h2>
+<p>To disable remote debugging support, use any of the following:</p>
+<ul class="simple">
+<li><p>Set the <span class="target" id="index-0"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHON_DISABLE_REMOTE_DEBUG"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHON_DISABLE_REMOTE_DEBUG</span></code></a> environment variable to <code class="docutils literal notranslate"><span class="pre">1</span></code> before
+starting the interpreter.</p></li>
+<li><p>Use the <a class="reference internal" href="../using/cmdline.html#cmdoption-X"><code class="xref std std-option docutils literal notranslate"><span class="pre">-X</span> <span class="pre">disable_remote_debug</span></code></a> command-line option.</p></li>
+<li><p>Compile Python with the <a class="reference internal" href="../using/configure.html#cmdoption-without-remote-debug"><code class="xref std std-option docutils literal notranslate"><span class="pre">--without-remote-debug</span></code></a> build flag.</p></li>
+</ul>
+</section>
 </section>
 <section id="permission-requirements">
 <span id="id1"></span><h1>Permission requirements<a class="headerlink" href="#permission-requirements" title="Link to this heading">¶</a></h1>
@@ -753,7 +767,10 @@ evaluation point.</p></li>
   <div>
     <h3><a href="../contents.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Remote debugging attachment protocol</a></li>
+<li><a class="reference internal" href="#">Remote debugging attachment protocol</a><ul>
+<li><a class="reference internal" href="#disabling-remote-debugging">Disabling remote debugging</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#permission-requirements">Permission requirements</a></li>
 <li><a class="reference internal" href="#locating-the-pyruntime-structure">Locating the PyRuntime structure</a></li>
 <li><a class="reference internal" href="#reading-py-debugoffsets">Reading _Py_DebugOffsets</a></li>
@@ -782,6 +799,7 @@ evaluation point.</p></li>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -818,7 +836,7 @@ evaluation point.</p></li>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Python HOWTOs</a> &#187;</li>
@@ -863,13 +881,13 @@ evaluation point.</p></li>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

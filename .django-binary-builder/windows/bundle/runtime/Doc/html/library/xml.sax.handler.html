@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>xml.sax.handler — Base classes for SAX handlers &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xml.sax.handler — Base classes for SAX handlers &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -129,6 +129,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -162,7 +163,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -209,7 +210,7 @@ Handler implementations should inherit from the base classes provided in the
 module <a class="reference internal" href="#module-xml.sax.handler" title="xml.sax.handler: Base classes for SAX event handlers."><code class="xref py py-mod docutils literal notranslate"><span class="pre">xml.sax.handler</span></code></a>, so that all methods get default implementations.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="xml.sax.handler.ContentHandler">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">ContentHandler</span></span><a class="headerlink" href="#xml.sax.handler.ContentHandler" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">ContentHandler</span></span><a class="headerlink" href="#xml.sax.handler.ContentHandler" title="Link to this definition">¶</a></dt>
 <dd><p>This is the main callback interface in SAX, and the one most important to
 applications. The order of events in this interface mirrors the order of the
 information in the document.</p>
@@ -217,7 +218,7 @@ information in the document.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xml.sax.handler.DTDHandler">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">DTDHandler</span></span><a class="headerlink" href="#xml.sax.handler.DTDHandler" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">DTDHandler</span></span><a class="headerlink" href="#xml.sax.handler.DTDHandler" title="Link to this definition">¶</a></dt>
 <dd><p>Handle DTD events.</p>
 <p>This interface specifies only those DTD events required for basic parsing
 (unparsed entities and attributes).</p>
@@ -225,7 +226,7 @@ information in the document.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xml.sax.handler.EntityResolver">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">EntityResolver</span></span><a class="headerlink" href="#xml.sax.handler.EntityResolver" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">EntityResolver</span></span><a class="headerlink" href="#xml.sax.handler.EntityResolver" title="Link to this definition">¶</a></dt>
 <dd><p>Basic interface for resolving entities. If you create an object implementing
 this interface, then register the object with your Parser, the parser will call
 the method in your object to resolve all external entities.</p>
@@ -233,7 +234,7 @@ the method in your object to resolve all external entities.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xml.sax.handler.ErrorHandler">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">ErrorHandler</span></span><a class="headerlink" href="#xml.sax.handler.ErrorHandler" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">ErrorHandler</span></span><a class="headerlink" href="#xml.sax.handler.ErrorHandler" title="Link to this definition">¶</a></dt>
 <dd><p>Interface used by the parser to present error and warning messages to the
 application.  The methods of this object control whether errors are immediately
 converted to exceptions or are handled in some other way.</p>
@@ -241,7 +242,7 @@ converted to exceptions or are handled in some other way.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xml.sax.handler.LexicalHandler">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">LexicalHandler</span></span><a class="headerlink" href="#xml.sax.handler.LexicalHandler" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xml.sax.handler.</span></span><span class="sig-name descname"><span class="pre">LexicalHandler</span></span><a class="headerlink" href="#xml.sax.handler.LexicalHandler" title="Link to this definition">¶</a></dt>
 <dd><p>Interface used by the parser to represent low frequency events which may not
 be of interest to many applications.</p>
 </dd></dl>
@@ -718,6 +719,7 @@ the characters handler.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -754,7 +756,7 @@ the characters handler.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -800,13 +802,13 @@ the characters handler.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

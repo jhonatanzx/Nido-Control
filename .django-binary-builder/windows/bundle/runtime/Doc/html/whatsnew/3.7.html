@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>What’s New In Python 3.7 &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What’s New In Python 3.7 &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -256,6 +256,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -289,7 +290,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s New in Python</a> &#187;</li>
@@ -814,7 +815,7 @@ new ABC for access to, opening, and reading <em>resources</em> inside packages.
 Resources are roughly similar to files inside packages, but they needn’t
 be actual files on the physical file system.  Module loaders can provide a
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_resource_reader()</span></code> function which returns
-a <a class="reference internal" href="../library/importlib.html#importlib.abc.ResourceReader" title="importlib.abc.ResourceReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.abc.ResourceReader</span></code></a> instance to support this
+a <code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.abc.ResourceReader</span></code> instance to support this
 new API.  Built-in file path loaders and zip file loaders both support this.</p>
 <p>Contributed by Barry Warsaw and Brett Cannon in <a class="reference external" href="https://bugs.python.org/issue?&#64;action=redirect&amp;bpo=32248">bpo-32248</a>.</p>
 <div class="admonition seealso">
@@ -1161,7 +1162,7 @@ window are shown and hidden in the Options menu.
 </section>
 <section id="importlib">
 <h3>importlib<a class="headerlink" href="#importlib" title="Link to this heading">¶</a></h3>
-<p>The <a class="reference internal" href="../library/importlib.html#importlib.abc.ResourceReader" title="importlib.abc.ResourceReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.abc.ResourceReader</span></code></a> ABC was introduced to
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.abc.ResourceReader</span></code> ABC was introduced to
 support the loading of resources from packages.  See also
 <a class="reference internal" href="#whatsnew37-importlib-resources"><span class="std std-ref">importlib.resources</span></a>.
 (Contributed by Barry Warsaw, Brett Cannon in <a class="reference external" href="https://bugs.python.org/issue?&#64;action=redirect&amp;bpo=32248">bpo-32248</a>.)</p>
@@ -1939,7 +1940,7 @@ and
 both deprecated in Python 3.4 now emit <a class="reference internal" href="../library/exceptions.html#DeprecationWarning" title="DeprecationWarning"><code class="xref py py-exc docutils literal notranslate"><span class="pre">DeprecationWarning</span></code></a>.
 (Contributed by Matthias Bussonnier in <a class="reference external" href="https://bugs.python.org/issue?&#64;action=redirect&amp;bpo=29576">bpo-29576</a>.)</p>
 <p>The <a class="reference internal" href="../library/importlib.html#importlib.abc.ResourceLoader" title="importlib.abc.ResourceLoader"><code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.abc.ResourceLoader</span></code></a> ABC has been deprecated in
-favour of <a class="reference internal" href="../library/importlib.html#importlib.abc.ResourceReader" title="importlib.abc.ResourceReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.abc.ResourceReader</span></code></a>.</p>
+favour of <code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.abc.ResourceReader</span></code>.</p>
 </section>
 <section id="id7">
 <h3>locale<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
@@ -2594,6 +2595,7 @@ is 4300 digits in string form.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -2630,7 +2632,7 @@ is 4300 digits in string form.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >What’s New in Python</a> &#187;</li>
@@ -2675,13 +2677,13 @@ is 4300 digits in string form.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

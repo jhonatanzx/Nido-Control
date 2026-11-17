@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>tkinter — Python interface to Tcl/Tk &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tkinter — Python interface to Tcl/Tk &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -148,6 +148,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -181,7 +182,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -349,7 +350,7 @@ the modern themed widget set and API:</p>
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="tkinter.Tk">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tkinter.</span></span><span class="sig-name descname"><span class="pre">Tk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screenName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">className</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Tk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useTk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tkinter.Tk" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tkinter.</span></span><span class="sig-name descname"><span class="pre">Tk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screenName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">className</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Tk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useTk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tkinter.Tk" title="Link to this definition">¶</a></dt>
 <dd><p>Construct a toplevel Tk widget, which is usually the main window of an
 application, and initialize a Tcl interpreter for this widget.  Each
 instance has its own associated Tcl interpreter.</p>
@@ -399,12 +400,12 @@ attribute.</p>
 <dt class="sig sig-object py" id="tkinter.Tk.master">
 <span class="sig-name descname"><span class="pre">master</span></span><a class="headerlink" href="#tkinter.Tk.master" title="Link to this definition">¶</a></dt>
 <dd><p>The widget object that contains this widget.  For <a class="reference internal" href="#tkinter.Tk" title="tkinter.Tk"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tk</span></code></a>, the
-<em>master</em> is <a class="reference internal" href="constants.html#None" title="None"><code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code></a> because it is the main window.  The terms
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">master</span></code> is <a class="reference internal" href="constants.html#None" title="None"><code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code></a> because it is the main window.  The terms
 <em>master</em> and <em>parent</em> are similar and sometimes used interchangeably
 as argument names; however, calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">winfo_parent()</span></code> returns a
-string of the widget name whereas <a class="reference internal" href="#tkinter.Tk.master" title="tkinter.Tk.master"><code class="xref py py-attr docutils literal notranslate"><span class="pre">master</span></code></a> returns the object.
+string of the widget name whereas <code class="xref py py-attr docutils literal notranslate"><span class="pre">master</span></code> returns the object.
 <em>parent</em>/<em>child</em> reflects the tree-like relationship while
-<em>master</em>/<em>slave</em> reflects the container structure.</p>
+<em>master</em> (or <em>container</em>)/<em>content</em> reflects the container structure.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -794,14 +795,14 @@ their values.  This is meant only as an example.</p>
 <section id="the-packer">
 <h3>The Packer<a class="headerlink" href="#the-packer" title="Link to this heading">¶</a></h3>
 <p id="index-2">The packer is one of Tk’s geometry-management mechanisms.    Geometry managers
-are used to specify the relative positioning of widgets within their container -
-their mutual <em>master</em>.  In contrast to the more cumbersome <em>placer</em> (which is
+are used to specify the relative positioning of widgets within their container.
+In contrast to the more cumbersome <em>placer</em> (which is
 used less commonly, and we do not cover here), the packer takes qualitative
 relationship specification - <em>above</em>, <em>to the left of</em>, <em>filling</em>, etc - and
 works everything out to determine the exact placement coordinates for you.</p>
-<p>The size of any <em>master</em> widget is determined by the size of the “slave widgets”
-inside.  The packer is used to control where slave widgets appear inside the
-master into which they are packed.  You can pack widgets into frames, and frames
+<p>The size of any container widget is determined by the size of the “content widgets”
+inside.  The packer is used to control where content widgets appear inside the
+container into which they are packed.  You can pack widgets into frames, and frames
 into other frames, in order to achieve the kind of layout you desire.
 Additionally, the arrangement is dynamically adjusted to accommodate incremental
 changes to the configuration, once it is packed.</p>
@@ -824,15 +825,15 @@ the main application window is resized.  Here are some examples:</p>
 <p>For more extensive information on the packer and the options that it can take,
 see the man pages and page 183 of John Ousterhout’s book.</p>
 <dl class="simple">
-<dt>anchor</dt><dd><p>Anchor type.  Denotes where the packer is to place each slave in its parcel.</p>
+<dt>anchor</dt><dd><p>Anchor type.  Denotes where the packer is to place each content in its parcel.</p>
 </dd>
 <dt>expand</dt><dd><p>Boolean, <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
 </dd>
 <dt>fill</dt><dd><p>Legal values: <code class="docutils literal notranslate"><span class="pre">'x'</span></code>, <code class="docutils literal notranslate"><span class="pre">'y'</span></code>, <code class="docutils literal notranslate"><span class="pre">'both'</span></code>, <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p>
 </dd>
-<dt>ipadx and ipady</dt><dd><p>A distance - designating internal padding on each side of the slave widget.</p>
+<dt>ipadx and ipady</dt><dd><p>A distance - designating internal padding on each side of the content.</p>
 </dd>
-<dt>padx and pady</dt><dd><p>A distance - designating external padding on each side of the slave widget.</p>
+<dt>padx and pady</dt><dd><p>A distance - designating external padding on each side of the content.</p>
 </dd>
 <dt>side</dt><dd><p>Legal values are: <code class="docutils literal notranslate"><span class="pre">'left'</span></code>, <code class="docutils literal notranslate"><span class="pre">'right'</span></code>, <code class="docutils literal notranslate"><span class="pre">'top'</span></code>, <code class="docutils literal notranslate"><span class="pre">'bottom'</span></code>.</p>
 </dd>
@@ -898,8 +899,8 @@ been implemented as methods on the <code class="xref py py-class docutils litera
 subclassed from the <code class="xref py py-class docutils literal notranslate"><span class="pre">Wm</span></code> class, and so can call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Wm</span></code> methods
 directly.</p>
 <p>To get at the toplevel window that contains a given widget, you can often just
-refer to the widget’s master.  Of course if the widget has been packed inside of
-a frame, the master won’t represent a toplevel window.  To get at the toplevel
+refer to the widget’s <code class="xref py py-attr docutils literal notranslate"><span class="pre">master</span></code>.  Of course if the widget has been packed inside of
+a frame, the <code class="xref py py-attr docutils literal notranslate"><span class="pre">master</span></code> won’t represent a toplevel window.  To get at the toplevel
 window that contains an arbitrary widget, you can call the <code class="xref py py-meth docutils literal notranslate"><span class="pre">_root()</span></code> method.
 This method begins with an underscore to denote the fact that this function is
 part of the implementation, and not an interface to Tk functionality.</p>
@@ -1250,6 +1251,7 @@ The callback is called as follows:</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -1286,7 +1288,7 @@ The callback is called as follows:</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -1332,13 +1334,13 @@ The callback is called as follows:</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

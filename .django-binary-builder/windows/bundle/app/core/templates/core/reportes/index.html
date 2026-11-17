@@ -198,15 +198,49 @@
             status.textContent = message;
         }
 
+        function suggestedPdfName(url) {
+            const parsedUrl = new URL(url, window.location.origin);
+            const reportType = parsedUrl.pathname.split('/').filter(Boolean).pop();
+            const year = parsedUrl.searchParams.get('anio') || new Date().getFullYear();
+            const month = (parsedUrl.searchParams.get('mes') || new Date().getMonth() + 1)
+                .toString()
+                .padStart(2, '0');
+            const period = `${year}-${month}`;
+            const studentId = parsedUrl.searchParams.get('nino');
+            const studentSuffix = studentId ? `_alumno_${studentId}` : '';
+
+            const reportNames = {
+                pagos: `pagos_${period}.pdf`,
+                estudiantes: `reporte_estudiante_${studentId || 'estudiante'}_${period}.pdf`,
+                asistencia: `asistencia_${period}${studentSuffix}.pdf`,
+                incidencias: `incidencias_${period}${studentSuffix}.pdf`,
+                bitacora: `bitacora_${period}${studentSuffix}.pdf`,
+            };
+
+            return reportNames[reportType] || `reporte_${period}.pdf`;
+        }
+
         async function downloadPdf(url, trigger) {
             if (trigger.dataset.downloading) return;
             trigger.dataset.downloading = 'true';
             trigger.disabled = true;
             trigger.classList.add('disabled');
             trigger.setAttribute('aria-busy', 'true');
-            showStatus('Generando el reporte PDF…', 'info');
 
             try {
+                let fileHandle = null;
+                if (typeof window.showSaveFilePicker === 'function') {
+                    showStatus('Elige el nombre y la ubicación para guardar el PDF…', 'info');
+                    fileHandle = await window.showSaveFilePicker({
+                        suggestedName: suggestedPdfName(url),
+                        types: [{
+                            description: 'Documento PDF',
+                            accept: { 'application/pdf': ['.pdf'] },
+                        }],
+                    });
+                }
+
+                showStatus('Generando el reporte PDF…', 'info');
                 const response = await fetch(url, {
                     credentials: 'same-origin',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -227,16 +261,32 @@
                 const contentDisposition = response.headers.get('Content-Disposition') || '';
                 const filenameMatch = contentDisposition.match(/filename="?([^";]+)"?/i);
                 const filename = filenameMatch ? filenameMatch[1] : 'reporte.pdf';
-                const downloadUrl = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
-                showStatus('El reporte se generó correctamente y la descarga comenzó.', 'success');
+                if (fileHandle) {
+                    const writable = await fileHandle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
+                } else {
+                    const downloadUrl = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+                }
+
+                showStatus(
+                    fileHandle
+                        ? 'El PDF se guardó en la ubicación elegida y también en la carpeta de reportes indicada arriba.'
+                        : 'El PDF se descargó en la carpeta predeterminada del navegador y también se guardó en la carpeta de reportes indicada arriba.',
+                    'success',
+                );
             } catch (error) {
+                if (error.name === 'AbortError') {
+                    showStatus('Se canceló la selección; no se generó ni descargó el PDF.', 'warning');
+                    return;
+                }
                 const message = error instanceof TypeError
                     ? 'No se pudo conectar con el servidor para generar el reporte. Revisa tu conexión e inténtalo de nuevo.'
                     : error.message || 'No se pudo generar o descargar el reporte. Inténtalo de nuevo.';

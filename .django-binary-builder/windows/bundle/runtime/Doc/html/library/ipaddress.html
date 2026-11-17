@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>ipaddress — IPv4/IPv6 manipulation library &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ipaddress — IPv4/IPv6 manipulation library &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -155,6 +155,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -188,7 +189,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -304,7 +305,7 @@ write code that handles both IP versions correctly.  Address objects are
 <a class="reference internal" href="../glossary.html#term-hashable"><span class="xref std std-term">hashable</span></a>, so they can be used as keys in dictionaries.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ipaddress.IPv4Address">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv4Address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv4Address" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv4Address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv4Address" title="Link to this definition">¶</a></dt>
 <dd><p>Construct an IPv4 address.  An <a class="reference internal" href="#ipaddress.AddressValueError" title="ipaddress.AddressValueError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AddressValueError</span></code></a> is raised if
 <em>address</em> is not a valid IPv4 address.</p>
 <p>The following constitutes a valid IPv4 address:</p>
@@ -541,7 +542,7 @@ and f-strings.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ipaddress.IPv6Address">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv6Address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv6Address" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv6Address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv6Address" title="Link to this definition">¶</a></dt>
 <dd><p>Construct an IPv6 address.  An <a class="reference internal" href="#ipaddress.AddressValueError" title="ipaddress.AddressValueError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AddressValueError</span></code></a> is raised if
 <em>address</em> is not a valid IPv6 address.</p>
 <p>The following constitutes a valid IPv6 address:</p>
@@ -786,7 +787,7 @@ Network objects are <a class="reference internal" href="../glossary.html#term-ha
 dictionaries.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ipaddress.IPv4Network">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv4Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv4Network" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv4Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv4Network" title="Link to this definition">¶</a></dt>
 <dd><p>Construct an IPv4 network definition.  <em>address</em> can be one of the following:</p>
 <ol class="arabic">
 <li><p>A string consisting of an IP address and an optional mask, separated by
@@ -1084,7 +1085,7 @@ addresses are considered; host bits aren’t.  Returns either <code class="docut
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ipaddress.IPv6Network">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv6Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv6Network" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv6Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv6Network" title="Link to this definition">¶</a></dt>
 <dd><p>Construct an IPv6 network definition.  <em>address</em> can be one of the following:</p>
 <ol class="arabic">
 <li><p>A string consisting of an IP address and an optional prefix length,
@@ -1327,7 +1328,7 @@ example:</p>
 dictionaries.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ipaddress.IPv4Interface">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv4Interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv4Interface" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv4Interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv4Interface" title="Link to this definition">¶</a></dt>
 <dd><p>Construct an IPv4 interface.  The meaning of <em>address</em> is as in the
 constructor of <a class="reference internal" href="#ipaddress.IPv4Network" title="ipaddress.IPv4Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">IPv4Network</span></code></a>, except that arbitrary host addresses
 are always accepted.</p>
@@ -1393,7 +1394,7 @@ are available:</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ipaddress.IPv6Interface">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv6Interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv6Interface" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">IPv6Interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.IPv6Interface" title="Link to this definition">¶</a></dt>
 <dd><p>Construct an IPv6 interface.  The meaning of <em>address</em> is as in the
 constructor of <a class="reference internal" href="#ipaddress.IPv6Network" title="ipaddress.IPv6Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">IPv6Network</span></code></a>, except that arbitrary host addresses
 are always accepted.</p>
@@ -1530,13 +1531,13 @@ this function as the <em>key</em> argument to <a class="reference internal" href
 module defines the following exceptions:</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="ipaddress.AddressValueError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">AddressValueError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ValueError</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.AddressValueError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">AddressValueError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ValueError</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.AddressValueError" title="Link to this definition">¶</a></dt>
 <dd><p>Any value error related to the address.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="ipaddress.NetmaskValueError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">NetmaskValueError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ValueError</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.NetmaskValueError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipaddress.</span></span><span class="sig-name descname"><span class="pre">NetmaskValueError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ValueError</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ipaddress.NetmaskValueError" title="Link to this definition">¶</a></dt>
 <dd><p>Any value error related to the net mask.</p>
 </dd></dl>
 
@@ -1609,6 +1610,7 @@ module defines the following exceptions:</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -1645,7 +1647,7 @@ module defines the following exceptions:</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -1691,13 +1693,13 @@ module defines the following exceptions:</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

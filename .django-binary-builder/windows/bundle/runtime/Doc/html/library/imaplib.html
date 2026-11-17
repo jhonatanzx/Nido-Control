@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>imaplib — IMAP4 protocol client &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>imaplib — IMAP4 protocol client &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -126,6 +126,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -159,7 +160,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -212,7 +213,7 @@ note that the <code class="docutils literal notranslate"><span class="pre">STATU
 base class:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="imaplib.IMAP4">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">imaplib.</span></span><span class="sig-name descname"><span class="pre">IMAP4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">IMAP4_PORT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imaplib.IMAP4" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">imaplib.</span></span><span class="sig-name descname"><span class="pre">IMAP4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">IMAP4_PORT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imaplib.IMAP4" title="Link to this definition">¶</a></dt>
 <dd><p>This class implements the actual IMAP4 protocol.  The connection is created and
 protocol version (IMAP4 or IMAP4rev1) is determined when the instance is
 initialized. If <em>host</em> is not specified, <code class="docutils literal notranslate"><span class="pre">''</span></code> (the local host) is used. If
@@ -240,14 +241,14 @@ like this, the IMAP4 <code class="docutils literal notranslate"><span class="pre
 <p>Three exceptions are defined as attributes of the <a class="reference internal" href="#imaplib.IMAP4" title="imaplib.IMAP4"><code class="xref py py-class docutils literal notranslate"><span class="pre">IMAP4</span></code></a> class:</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="imaplib.IMAP4.error">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">IMAP4.</span></span><span class="sig-name descname"><span class="pre">error</span></span><a class="headerlink" href="#imaplib.IMAP4.error" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">IMAP4.</span></span><span class="sig-name descname"><span class="pre">error</span></span><a class="headerlink" href="#imaplib.IMAP4.error" title="Link to this definition">¶</a></dt>
 <dd><p>Exception raised on any errors.  The reason for the exception is passed to the
 constructor as a string.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="imaplib.IMAP4.abort">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">IMAP4.</span></span><span class="sig-name descname"><span class="pre">abort</span></span><a class="headerlink" href="#imaplib.IMAP4.abort" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">IMAP4.</span></span><span class="sig-name descname"><span class="pre">abort</span></span><a class="headerlink" href="#imaplib.IMAP4.abort" title="Link to this definition">¶</a></dt>
 <dd><p>IMAP4 server errors cause this exception to be raised.  This is a sub-class of
 <a class="reference internal" href="#imaplib.IMAP4.error" title="imaplib.IMAP4.error"><code class="xref py py-exc docutils literal notranslate"><span class="pre">IMAP4.error</span></code></a>.  Note that closing the instance and instantiating a new one
 will usually allow recovery from this exception.</p>
@@ -255,7 +256,7 @@ will usually allow recovery from this exception.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="imaplib.IMAP4.readonly">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">IMAP4.</span></span><span class="sig-name descname"><span class="pre">readonly</span></span><a class="headerlink" href="#imaplib.IMAP4.readonly" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">IMAP4.</span></span><span class="sig-name descname"><span class="pre">readonly</span></span><a class="headerlink" href="#imaplib.IMAP4.readonly" title="Link to this definition">¶</a></dt>
 <dd><p>This exception is raised when a writable mailbox has its status changed by the
 server.  This is a sub-class of <a class="reference internal" href="#imaplib.IMAP4.error" title="imaplib.IMAP4.error"><code class="xref py py-exc docutils literal notranslate"><span class="pre">IMAP4.error</span></code></a>.  Some other client now has
 write permission, and the mailbox will need to be re-opened to re-obtain write
@@ -265,7 +266,7 @@ permission.</p>
 <p>There’s also a subclass for secure connections:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="imaplib.IMAP4_SSL">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">imaplib.</span></span><span class="sig-name descname"><span class="pre">IMAP4_SSL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">IMAP4_SSL_PORT</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssl_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imaplib.IMAP4_SSL" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">imaplib.</span></span><span class="sig-name descname"><span class="pre">IMAP4_SSL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">IMAP4_SSL_PORT</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssl_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imaplib.IMAP4_SSL" title="Link to this definition">¶</a></dt>
 <dd><p>This is a subclass derived from <a class="reference internal" href="#imaplib.IMAP4" title="imaplib.IMAP4"><code class="xref py py-class docutils literal notranslate"><span class="pre">IMAP4</span></code></a> that connects over an SSL
 encrypted socket (to use this class you need a socket module that was compiled
 with SSL support).  If <em>host</em> is not specified, <code class="docutils literal notranslate"><span class="pre">''</span></code> (the local host) is used.
@@ -296,7 +297,7 @@ socket timeout is used.</p>
 <p>The second subclass allows for connections created by a child process:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="imaplib.IMAP4_stream">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">imaplib.</span></span><span class="sig-name descname"><span class="pre">IMAP4_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imaplib.IMAP4_stream" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">imaplib.</span></span><span class="sig-name descname"><span class="pre">IMAP4_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imaplib.IMAP4_stream" title="Link to this definition">¶</a></dt>
 <dd><p>This is a subclass derived from <a class="reference internal" href="#imaplib.IMAP4" title="imaplib.IMAP4"><code class="xref py py-class docutils literal notranslate"><span class="pre">IMAP4</span></code></a> that connects to the
 <code class="docutils literal notranslate"><span class="pre">stdin/stdout</span></code> file descriptors created by passing <em>command</em> to
 <code class="docutils literal notranslate"><span class="pre">subprocess.Popen()</span></code>.</p>
@@ -972,6 +973,7 @@ retrieves and prints all messages:</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -1008,7 +1010,7 @@ retrieves and prints all messages:</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -1054,13 +1056,13 @@ retrieves and prints all messages:</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

@@ -4,6 +4,7 @@ import calendar
 from datetime import date, datetime, time, timedelta
 from io import BytesIO
 from io import StringIO
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 from PIL import Image
@@ -29,6 +30,27 @@ class ReportHeaderTests(TestCase):
         image_bottoms = [call.args[2] for call in canvas.drawImage.call_args_list]
         self.assertEqual(len(image_bottoms), 2)
         self.assertTrue(all(image_bottom > A4[1] - 125 for image_bottom in image_bottoms))
+
+
+class MediaStoragePathTests(TestCase):
+    def test_packaged_data_root_matches_executable_data_folder(self):
+        from nidocontrol.settings import _resolve_data_root
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            app_dir = Path(temporary_directory) / 'bundle' / 'app'
+            app_dir.mkdir(parents=True)
+            (app_dir / 'launcher.py').touch()
+            local_app_data = Path(temporary_directory) / 'LocalAppData'
+
+            data_root = _resolve_data_root(
+                app_dir,
+                {'LOCALAPPDATA': str(local_app_data)},
+            )
+
+        self.assertEqual(
+            data_root,
+            local_app_data / 'Equipo-de-Desarrollo-NidoControl' / 'NidoControl',
+        )
 
 
 class CuidadoraScopeTests(TestCase):
@@ -113,6 +135,15 @@ class CuidadoraScopeTests(TestCase):
 
 class PagoStatusTests(TestCase):
     def setUp(self):
+        self.media_root = tempfile.TemporaryDirectory()
+        self.addCleanup(self.media_root.cleanup)
+        media_settings = override_settings(
+            MEDIA_ROOT=self.media_root.name,
+            REPORTS_ROOT=os.path.join(self.media_root.name, 'reportes'),
+        )
+        media_settings.enable()
+        self.addCleanup(media_settings.disable)
+
         self.admin = get_user_model().objects.create_superuser(
             username='admin_pagos',
             email='admin@example.com',
@@ -365,6 +396,7 @@ class PagoStatusTests(TestCase):
         self.assertContains(response, 'reporte-pagos-anio')
         self.assertNotContains(response, 'Día de corte')
         self.assertContains(response, 'Todas las aulas')
+        self.assertNotContains(response, response.context['ruta_reportes'])
 
     def test_reporte_pagos_genera_pdf_para_mes_y_aula(self):
         self.client.force_login(self.admin)
@@ -383,6 +415,24 @@ class PagoStatusTests(TestCase):
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertIn('pagos_', response['Content-Disposition'])
         self.assertTrue(response.content.startswith(b'%PDF-'))
+
+    def test_reporte_pagos_guarda_una_copia_en_carpeta_reportes(self):
+        self.client.force_login(self.admin)
+        hoy = timezone.localdate()
+
+        with tempfile.TemporaryDirectory() as reports_root:
+            with override_settings(REPORTS_ROOT=reports_root):
+                response = self.client.get(
+                    reverse('reporte_pagos'),
+                    {'mes': hoy.month, 'anio': hoy.year},
+                )
+
+            ruta_pdf = os.path.join(reports_root, f'pagos_{hoy:%Y-%m}.pdf')
+            self.assertTrue(os.path.isfile(ruta_pdf))
+            with open(ruta_pdf, 'rb') as pdf:
+                self.assertTrue(pdf.read().startswith(b'%PDF-'))
+
+        self.assertEqual(response.status_code, 200)
 
     def test_reporte_pagos_ajusta_celdas_con_texto_largo(self):
         aula_larga = Aula.objects.create(nombre='Aula' * 25, capacidad=12)
@@ -431,7 +481,10 @@ class NinoEditTests(TestCase):
     def setUp(self):
         self.media_root = tempfile.TemporaryDirectory()
         self.addCleanup(self.media_root.cleanup)
-        media_settings = override_settings(MEDIA_ROOT=self.media_root.name)
+        media_settings = override_settings(
+            MEDIA_ROOT=self.media_root.name,
+            REPORTS_ROOT=os.path.join(self.media_root.name, 'reportes'),
+        )
         media_settings.enable()
         self.addCleanup(media_settings.disable)
 
@@ -516,6 +569,8 @@ class NinoEditTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Registrar administrador')
         self.assertNotContains(response, 'Crea tu usuario')
+        self.assertContains(response, 'Privacidad protegida • Acceso seguro a tus datos')
+        self.assertContains(response, 'Versión 1.1.0')
 
     def test_get_editar_nino_renders_form(self):
         self.client.force_login(self.user)

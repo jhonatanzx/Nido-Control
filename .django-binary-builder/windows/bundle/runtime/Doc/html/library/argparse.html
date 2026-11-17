@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>argparse — Parser for command-line options, arguments and subcommands &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>argparse — Parser for command-line options, arguments and subcommands &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -144,7 +144,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#other-utilities">Other utilities</a><ul>
-<li><a class="reference internal" href="#sub-commands">Sub-commands</a></li>
+<li><a class="reference internal" href="#subcommands">Subcommands</a></li>
 <li><a class="reference internal" href="#filetype-objects">FileType objects</a></li>
 <li><a class="reference internal" href="#argument-groups">Argument groups</a></li>
 <li><a class="reference internal" href="#mutual-exclusion">Mutual exclusion</a></li>
@@ -182,6 +182,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -215,7 +216,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -313,7 +314,7 @@ to <code class="xref py py-mod docutils literal notranslate"><span class="pre">a
 <h2>ArgumentParser objects<a class="headerlink" href="#argumentparser-objects" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="argparse.ArgumentParser">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">ArgumentParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epilog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatter_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">argparse.HelpFormatter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_chars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromfile_prefix_chars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argument_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conflict_handler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_abbrev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit_on_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggest_on_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argparse.ArgumentParser" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">ArgumentParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epilog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatter_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">argparse.HelpFormatter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_chars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromfile_prefix_chars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argument_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conflict_handler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_abbrev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit_on_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">suggest_on_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argparse.ArgumentParser" title="Link to this definition">¶</a></dt>
 <dd><p>Create a new <a class="reference internal" href="#argparse.ArgumentParser" title="argparse.ArgumentParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></a> object. All parameters should be passed
 as keyword arguments. Each parameter has its own more detailed description
 below, but in short they are:</p>
@@ -503,13 +504,13 @@ specifying an alternate formatting class.  Currently, there are four such
 classes:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="argparse.RawDescriptionHelpFormatter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">RawDescriptionHelpFormatter</span></span><a class="headerlink" href="#argparse.RawDescriptionHelpFormatter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">RawDescriptionHelpFormatter</span></span><a class="headerlink" href="#argparse.RawDescriptionHelpFormatter" title="Link to this definition">¶</a></dt>
 <dt class="sig sig-object py" id="argparse.RawTextHelpFormatter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">RawTextHelpFormatter</span></span><a class="headerlink" href="#argparse.RawTextHelpFormatter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">RawTextHelpFormatter</span></span><a class="headerlink" href="#argparse.RawTextHelpFormatter" title="Link to this definition">¶</a></dt>
 <dt class="sig sig-object py" id="argparse.ArgumentDefaultsHelpFormatter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">ArgumentDefaultsHelpFormatter</span></span><a class="headerlink" href="#argparse.ArgumentDefaultsHelpFormatter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">ArgumentDefaultsHelpFormatter</span></span><a class="headerlink" href="#argparse.ArgumentDefaultsHelpFormatter" title="Link to this definition">¶</a></dt>
 <dt class="sig sig-object py" id="argparse.MetavarTypeHelpFormatter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">MetavarTypeHelpFormatter</span></span><a class="headerlink" href="#argparse.MetavarTypeHelpFormatter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">MetavarTypeHelpFormatter</span></span><a class="headerlink" href="#argparse.MetavarTypeHelpFormatter" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p><a class="reference internal" href="#argparse.RawDescriptionHelpFormatter" title="argparse.RawDescriptionHelpFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawDescriptionHelpFormatter</span></code></a> and <a class="reference internal" href="#argparse.RawTextHelpFormatter" title="argparse.RawTextHelpFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawTextHelpFormatter</span></code></a> give
@@ -836,6 +837,13 @@ by setting <code class="docutils literal notranslate"><span class="pre">color</s
 variables and terminal capabilities.  However, if <code class="docutils literal notranslate"><span class="pre">color=False</span></code>, colored
 output is always disabled, even if environment variables like <code class="docutils literal notranslate"><span class="pre">FORCE_COLOR</span></code>
 are set.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Error messages will include color codes when redirecting stderr to a
+file. To avoid this, set the <a class="reference external" href="https://no-color.org/"><code class="docutils literal notranslate"><span class="pre">NO_COLOR</span></code></a> or <span class="target" id="index-0"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHON_COLORS"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHON_COLORS</span></code></a>
+environment variable (for example,
+<code class="docutils literal notranslate"><span class="pre">NO_COLOR=1</span> <span class="pre">python</span> <span class="pre">script.py</span> <span class="pre">2&gt;</span> <span class="pre">errors.txt</span></code>).</p>
+</div>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.14.</span></p>
 </div>
@@ -909,7 +917,7 @@ replacing hyphens <code class="docutils literal notranslate"><span class="pre">-
 upper-cased name. For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;PROG&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--foo-bar&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">([</span><span class="s1">&#39;--foo-bar&#39;</span><span class="p">,</span> <span class="s1">&#39;FOO-BAR&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">([</span><span class="s1">&#39;--foo-bar&#39;</span><span class="p">,</span> <span class="s1">&#39;FOO-BAR&#39;</span><span class="p">])</span>
 <span class="go">Namespace(foo_bar=&#39;FOO-BAR&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
 <span class="go">usage:  [-h] [--foo-bar FOO-BAR]</span>
@@ -1073,7 +1081,7 @@ together into a list.  For example:</p>
 the default, in which the item is produced by itself.</p>
 </li>
 </ul>
-<ul id="index-0">
+<ul id="index-1">
 <li><p><code class="docutils literal notranslate"><span class="pre">'?'</span></code>. One argument will be consumed from the command line if possible, and
 produced as a single item.  If no command-line argument is present, the value from
 <a class="reference internal" href="#default">default</a> will be produced.  Note that for optional arguments, there is an
@@ -1106,7 +1114,7 @@ output files:</p>
 </div>
 </li>
 </ul>
-<ul id="index-1">
+<ul id="index-2">
 <li><p><code class="docutils literal notranslate"><span class="pre">'*'</span></code>.  All command-line arguments present are gathered into a list.  Note that
 it generally doesn’t make much sense to have more than one positional argument
 with <code class="docutils literal notranslate"><span class="pre">nargs='*'</span></code>, but multiple optional arguments with <code class="docutils literal notranslate"><span class="pre">nargs='*'</span></code> is
@@ -1121,7 +1129,7 @@ possible.  For example:</p>
 </div>
 </li>
 </ul>
-<ul id="index-2">
+<ul id="index-3">
 <li><p><code class="docutils literal notranslate"><span class="pre">'+'</span></code>. Just like <code class="docutils literal notranslate"><span class="pre">'*'</span></code>, all command-line arguments present are gathered into a
 list.  Additionally, an error message will be generated if there wasn’t at
 least one command-line argument present.  For example:</p>
@@ -1509,7 +1517,7 @@ this API may be passed as the <code class="docutils literal notranslate"><span c
 <a class="reference internal" href="#argparse.ArgumentParser.add_argument" title="argparse.ArgumentParser.add_argument"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_argument()</span></code></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="argparse.Action">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">Action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metavar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argparse.Action" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">Action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metavar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argparse.Action" title="Link to this definition">¶</a></dt>
 <dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code> objects are used by an <a class="reference internal" href="#argparse.ArgumentParser" title="argparse.ArgumentParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></a> to represent the information
 needed to parse a single argument from one or more strings from the
 command line. The <code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code> class must accept the two positional arguments
@@ -1553,7 +1561,7 @@ If such method is not provided, a sensible default will be used.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argparse.BooleanOptionalAction">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">BooleanOptionalAction</span></span><a class="headerlink" href="#argparse.BooleanOptionalAction" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">BooleanOptionalAction</span></span><a class="headerlink" href="#argparse.BooleanOptionalAction" title="Link to this definition">¶</a></dt>
 <dd><p>A subclass of <a class="reference internal" href="#argparse.Action" title="argparse.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></a> for handling boolean flags with positive
 and negative options. Adding a single argument such as <code class="docutils literal notranslate"><span class="pre">--foo</span></code> automatically
 creates both <code class="docutils literal notranslate"><span class="pre">--foo</span></code> and <code class="docutils literal notranslate"><span class="pre">--no-foo</span></code> options, storing <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">False</span></code>
@@ -1750,7 +1758,7 @@ interactive prompt:</p>
 <span id="namespace"></span><h3>The Namespace object<a class="headerlink" href="#the-namespace-object" title="Link to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="argparse.Namespace">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">Namespace</span></span><a class="headerlink" href="#argparse.Namespace" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">Namespace</span></span><a class="headerlink" href="#argparse.Namespace" title="Link to this definition">¶</a></dt>
 <dd><p>Simple class used by default by <a class="reference internal" href="#argparse.ArgumentParser.parse_args" title="argparse.ArgumentParser.parse_args"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_args()</span></code></a> to create
 an object holding attributes and return it.</p>
 <p>This class is deliberately simple, just an <a class="reference internal" href="functions.html#object" title="object"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a> subclass with a
@@ -1783,8 +1791,8 @@ be achieved by specifying the <code class="docutils literal notranslate"><span c
 </section>
 <section id="other-utilities">
 <h2>Other utilities<a class="headerlink" href="#other-utilities" title="Link to this heading">¶</a></h2>
-<section id="sub-commands">
-<h3>Sub-commands<a class="headerlink" href="#sub-commands" title="Link to this heading">¶</a></h3>
+<section id="subcommands">
+<h3>Subcommands<a class="headerlink" href="#subcommands" title="Link to this heading">¶</a></h3>
 <dl class="py method">
 <dt class="sig sig-object py" id="argparse.ArgumentParser.add_subparsers">
 <span class="sig-prename descclassname"><span class="pre">ArgumentParser.</span></span><span class="sig-name descname"><span class="pre">add_subparsers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">prog</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">parser_class</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">required</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">help</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">metavar</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#argparse.ArgumentParser.add_subparsers" title="Link to this definition">¶</a></dt>
@@ -1806,14 +1814,14 @@ returns an <code class="xref py py-class docutils literal notranslate"><span cla
 positional arguments</p></li>
 <li><p><em>description</em> - description for the sub-parser group in help output, by
 default <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
-<li><p><em>prog</em> - usage information that will be displayed with sub-command help,
+<li><p><em>prog</em> - usage information that will be displayed with subcommand help,
 by default the name of the program and any positional arguments before the
 subparser argument</p></li>
 <li><p><em>parser_class</em> - class which will be used to create sub-parser instances, by
 default the class of the current parser (e.g. <a class="reference internal" href="#argparse.ArgumentParser" title="argparse.ArgumentParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></a>)</p></li>
 <li><p><a class="reference internal" href="#action">action</a> - the basic type of action to be taken when this argument is
 encountered at the command line</p></li>
-<li><p><a class="reference internal" href="#dest">dest</a> - name of the attribute under which sub-command name will be
+<li><p><a class="reference internal" href="#dest">dest</a> - name of the attribute under which subcommand name will be
 stored; by default <code class="docutils literal notranslate"><span class="pre">None</span></code> and no value is stored</p></li>
 <li><p><a class="reference internal" href="#required">required</a> - Whether or not a subcommand must be provided, by default
 <code class="docutils literal notranslate"><span class="pre">False</span></code> (added in 3.7)</p></li>
@@ -1997,7 +2005,7 @@ the main parser.</p>
 <h3>FileType objects<a class="headerlink" href="#filetype-objects" title="Link to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="argparse.FileType">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">FileType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bufsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argparse.FileType" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">FileType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bufsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argparse.FileType" title="Link to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#argparse.FileType" title="argparse.FileType"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileType</span></code></a> factory creates objects that can be passed to the type
 argument of <a class="reference internal" href="#argparse.ArgumentParser.add_argument" title="argparse.ArgumentParser.add_argument"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ArgumentParser.add_argument()</span></code></a>.  Arguments that have
 <a class="reference internal" href="#argparse.FileType" title="argparse.FileType"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileType</span></code></a> objects as their type will open command-line arguments as
@@ -2040,7 +2048,7 @@ run and then use the <a class="reference internal" href="../reference/compound_s
 <h3>Argument groups<a class="headerlink" href="#argument-groups" title="Link to this heading">¶</a></h3>
 <dl class="py method">
 <dt class="sig sig-object py" id="argparse.ArgumentParser.add_argument_group">
-<span class="sig-prename descclassname"><span class="pre">ArgumentParser.</span></span><span class="sig-name descname"><span class="pre">add_argument_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">argument_default</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">conflict_handler</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#argparse.ArgumentParser.add_argument_group" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ArgumentParser.</span></span><span class="sig-name descname"><span class="pre">add_argument_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">argument_default</span></span></em><span class="optional">]</span><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">conflict_handler</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#argparse.ArgumentParser.add_argument_group" title="Link to this definition">¶</a></dt>
 <dd><p>By default, <a class="reference internal" href="#argparse.ArgumentParser" title="argparse.ArgumentParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></a> groups command-line arguments into
 “positional arguments” and “options” when displaying help
 messages. When there is a better conceptual grouping of arguments than this
@@ -2406,7 +2414,7 @@ be registered, and object, the callable to be registered.</p>
 <h2>Exceptions<a class="headerlink" href="#exceptions" title="Link to this heading">¶</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="argparse.ArgumentError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">ArgumentError</span></span><a class="headerlink" href="#argparse.ArgumentError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">ArgumentError</span></span><a class="headerlink" href="#argparse.ArgumentError" title="Link to this definition">¶</a></dt>
 <dd><p>An error from creating or using an argument (optional or positional).</p>
 <p>The string value of this exception is the message, augmented with
 information about the argument that caused it.</p>
@@ -2414,7 +2422,7 @@ information about the argument that caused it.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="argparse.ArgumentTypeError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">ArgumentTypeError</span></span><a class="headerlink" href="#argparse.ArgumentTypeError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argparse.</span></span><span class="sig-name descname"><span class="pre">ArgumentTypeError</span></span><a class="headerlink" href="#argparse.ArgumentTypeError" title="Link to this definition">¶</a></dt>
 <dd><p>Raised when something goes wrong converting a command line string to a type.</p>
 </dd></dl>
 
@@ -2483,7 +2491,7 @@ information about the argument that caused it.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#other-utilities">Other utilities</a><ul>
-<li><a class="reference internal" href="#sub-commands">Sub-commands</a></li>
+<li><a class="reference internal" href="#subcommands">Subcommands</a></li>
 <li><a class="reference internal" href="#filetype-objects">FileType objects</a></li>
 <li><a class="reference internal" href="#argument-groups">Argument groups</a></li>
 <li><a class="reference internal" href="#mutual-exclusion">Mutual exclusion</a></li>
@@ -2521,6 +2529,7 @@ information about the argument that caused it.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -2557,7 +2566,7 @@ information about the argument that caused it.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -2603,13 +2612,13 @@ information about the argument that caused it.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

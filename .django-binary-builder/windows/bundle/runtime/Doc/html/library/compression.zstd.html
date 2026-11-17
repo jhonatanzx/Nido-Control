@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>compression.zstd — Compression compatible with the Zstandard format &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>compression.zstd — Compression compatible with the Zstandard format &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -131,6 +131,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -164,7 +165,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -236,7 +237,7 @@ If you are the distributor, see <a class="reference internal" href="../using/con
 <h2>Exceptions<a class="headerlink" href="#exceptions" title="Link to this heading">¶</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="compression.zstd.ZstdError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdError</span></span><a class="headerlink" href="#compression.zstd.ZstdError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdError</span></span><a class="headerlink" href="#compression.zstd.ZstdError" title="Link to this definition">¶</a></dt>
 <dd><p>This exception is raised when an error occurs during compression or
 decompression, or while initializing the (de)compressor state.</p>
 </dd></dl>
@@ -265,7 +266,7 @@ parameters. The <em>zstd_dict</em> argument is a <a class="reference internal" h
 used during decompression. When reading, if the <em>level</em>
 argument is not None, a <code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> will be raised.</p>
 <p>When writing, the <em>options</em> argument can be a dictionary
-providing advanced decompression parameters; see
+providing advanced compression parameters; see
 <a class="reference internal" href="#compression.zstd.CompressionParameter" title="compression.zstd.CompressionParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionParameter</span></code></a> for detailed information about supported
 parameters. The <em>level</em> argument is the compression level to use when
 writing compressed data. Only one of <em>level</em> or <em>options</em> may be non-None.
@@ -281,7 +282,7 @@ handling behavior, and line endings.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="compression.zstd.ZstdFile">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rb'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zstd_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compression.zstd.ZstdFile" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rb'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zstd_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compression.zstd.ZstdFile" title="Link to this definition">¶</a></dt>
 <dd><p>Open a Zstandard-compressed file in binary mode.</p>
 <p>A <a class="reference internal" href="#compression.zstd.ZstdFile" title="compression.zstd.ZstdFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ZstdFile</span></code></a> can wrap an already-open <a class="reference internal" href="../glossary.html#term-file-object"><span class="xref std std-term">file object</span></a>, or operate
 directly on a named file. The <em>file</em> argument specifies either the file
@@ -302,7 +303,7 @@ parameters. The <em>zstd_dict</em> argument is a <a class="reference internal" h
 used during decompression. When reading, if the <em>level</em>
 argument is not None, a <code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> will be raised.</p>
 <p>When writing, the <em>options</em> argument can be a dictionary
-providing advanced decompression parameters; see
+providing advanced compression parameters; see
 <a class="reference internal" href="#compression.zstd.CompressionParameter" title="compression.zstd.CompressionParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionParameter</span></code></a> for detailed information about supported
 parameters. The <em>level</em> argument is the compression level to use when
 writing compressed data. Only one of <em>level</em> or <em>options</em> may be passed. The
@@ -385,7 +386,7 @@ decompress all of these frames, and return the concatenation of the results.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="compression.zstd.ZstdCompressor">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdCompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zstd_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compression.zstd.ZstdCompressor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdCompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zstd_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compression.zstd.ZstdCompressor" title="Link to this definition">¶</a></dt>
 <dd><p>Create a compressor object, which can be used to compress data
 incrementally.</p>
 <p>For a more convenient way of compressing a single chunk of data, see the
@@ -491,7 +492,7 @@ signifying that the compressor is at the start of a new frame.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="compression.zstd.ZstdDecompressor">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdDecompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zstd_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compression.zstd.ZstdDecompressor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdDecompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zstd_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compression.zstd.ZstdDecompressor" title="Link to this definition">¶</a></dt>
 <dd><p>Create a decompressor object, which can be used to decompress data
 incrementally.</p>
 <p>For a more convenient way of decompressing an entire compressed stream at
@@ -600,7 +601,7 @@ level can make compression more efficient.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="compression.zstd.ZstdDict">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_content</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compression.zstd.ZstdDict" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">ZstdDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_content</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compression.zstd.ZstdDict" title="Link to this definition">¶</a></dt>
 <dd><p>A wrapper around Zstandard dictionaries. Dictionaries can be used to improve
 the compression of many small chunks of data. Use <a class="reference internal" href="#compression.zstd.train_dict" title="compression.zstd.train_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">train_dict()</span></code></a> if you
 need to train a new dictionary from sample data.</p>
@@ -700,7 +701,7 @@ function.</p>
 <h2>Advanced parameter control<a class="headerlink" href="#advanced-parameter-control" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="compression.zstd.CompressionParameter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">CompressionParameter</span></span><a class="headerlink" href="#compression.zstd.CompressionParameter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">CompressionParameter</span></span><a class="headerlink" href="#compression.zstd.CompressionParameter" title="Link to this definition">¶</a></dt>
 <dd><p>An <a class="reference internal" href="enum.html#enum.IntEnum" title="enum.IntEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a> containing the advanced compression parameter
 keys that can be used when compressing data.</p>
 <p>The <a class="reference internal" href="#compression.zstd.CompressionParameter.bounds" title="compression.zstd.CompressionParameter.bounds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">bounds()</span></code></a> method can be used on any attribute to get the valid
@@ -954,7 +955,7 @@ values vary from 0 to 9.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="compression.zstd.DecompressionParameter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">DecompressionParameter</span></span><a class="headerlink" href="#compression.zstd.DecompressionParameter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">DecompressionParameter</span></span><a class="headerlink" href="#compression.zstd.DecompressionParameter" title="Link to this definition">¶</a></dt>
 <dd><p>An <a class="reference internal" href="enum.html#enum.IntEnum" title="enum.IntEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a> containing the advanced decompression parameter
 keys that can be used when decompressing data. Parameters are optional; any
 omitted parameter will have it’s value selected automatically.</p>
@@ -992,7 +993,7 @@ decompression.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="compression.zstd.Strategy">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">Strategy</span></span><a class="headerlink" href="#compression.zstd.Strategy" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">Strategy</span></span><a class="headerlink" href="#compression.zstd.Strategy" title="Link to this definition">¶</a></dt>
 <dd><p>An <a class="reference internal" href="enum.html#enum.IntEnum" title="enum.IntEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a> containing strategies for compression.
 Higher-numbered strategies correspond to more complex and slower
 compression.</p>
@@ -1062,7 +1063,7 @@ frame. Frames contain metadata related to the compressed data they hold.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="compression.zstd.FrameInfo">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">FrameInfo</span></span><a class="headerlink" href="#compression.zstd.FrameInfo" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compression.zstd.</span></span><span class="sig-name descname"><span class="pre">FrameInfo</span></span><a class="headerlink" href="#compression.zstd.FrameInfo" title="Link to this definition">¶</a></dt>
 <dd><p>Metadata related to a Zstandard frame.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="compression.zstd.FrameInfo.decompressed_size">
@@ -1196,6 +1197,7 @@ is not needed, or that the ID of a required dictionary was not recorded.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -1232,7 +1234,7 @@ is not needed, or that the ID of a required dictionary was not recorded.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -1278,13 +1280,13 @@ is not needed, or that the ID of a required dictionary was not recorded.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

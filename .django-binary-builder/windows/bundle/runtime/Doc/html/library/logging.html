@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>logging — Logging facility for Python &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>logging — Logging facility for Python &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -136,6 +136,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -169,7 +170,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -299,7 +300,7 @@ the recommended construction <code class="docutils literal notranslate"><span cl
 in a module, <code class="docutils literal notranslate"><span class="pre">__name__</span></code> is the module’s name in the Python package namespace.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="logging.Logger">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">Logger</span></span><a class="headerlink" href="#logging.Logger" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">Logger</span></span><a class="headerlink" href="#logging.Logger" title="Link to this definition">¶</a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="logging.Logger.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#logging.Logger.name" title="Link to this definition">¶</a></dt>
@@ -778,7 +779,7 @@ subclasses. However, the <code class="xref py py-meth docutils literal notransla
 <a class="reference internal" href="#logging.Handler.__init__" title="logging.Handler.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Handler.__init__()</span></code></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="logging.Handler">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">Handler</span></span><a class="headerlink" href="#logging.Handler" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">Handler</span></span><a class="headerlink" href="#logging.Handler" title="Link to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="logging.Handler.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NOTSET</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.Handler.__init__" title="Link to this definition">¶</a></dt>
@@ -930,7 +931,7 @@ tries to acquire the module-level lock <em>after</em> the handler-level lock
 <span id="id1"></span><h2>Formatter Objects<a class="headerlink" href="#formatter-objects" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="logging.Formatter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">Formatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datefmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.Formatter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">Formatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datefmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.Formatter" title="Link to this definition">¶</a></dt>
 <dd><p>Responsible for converting a <a class="reference internal" href="#logging.LogRecord" title="logging.LogRecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogRecord</span></code></a> to an output string
 to be interpreted by a human or external system.</p>
 <dl class="field-list simple">
@@ -955,7 +956,7 @@ to use <code class="docutils literal notranslate"><span class="pre">{</span></co
 <li><p><strong>validate</strong> (<a class="reference internal" href="functions.html#bool" title="bool"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> (the default), incorrect or mismatched
 <em>fmt</em> and <em>style</em> will raise a <a class="reference internal" href="exceptions.html#ValueError" title="ValueError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code></a>; for example,
 <code class="docutils literal notranslate"><span class="pre">logging.Formatter('%(asctime)s</span> <span class="pre">-</span> <span class="pre">%(message)s',</span> <span class="pre">style='{')</span></code>.</p></li>
-<li><p><strong>defaults</strong> (<a class="reference internal" href="stdtypes.html#dict" title="dict"><em>dict</em></a><em>[</em><a class="reference internal" href="stdtypes.html#str" title="str"><em>str</em></a><em>, </em><a class="reference internal" href="typing.html#typing.Any" title="typing.Any"><em>Any</em></a><em>]</em>) – A dictionary with default values to use in custom fields.
+<li><p><strong>defaults</strong> (<a class="reference internal" href="stdtypes.html#dict" title="dict"><em>dict</em></a><em>[</em><a class="reference internal" href="stdtypes.html#str" title="str"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – A dictionary with default values to use in custom fields.
 For example,
 <code class="docutils literal notranslate"><span class="pre">logging.Formatter('%(ip)s</span> <span class="pre">%(message)s',</span> <span class="pre">defaults={&quot;ip&quot;:</span> <span class="pre">None})</span></code></p></li>
 </ul>
@@ -1050,7 +1051,7 @@ string. This default implementation just returns the input value.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="logging.BufferingFormatter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">BufferingFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linefmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.BufferingFormatter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">BufferingFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linefmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.BufferingFormatter" title="Link to this definition">¶</a></dt>
 <dd><p>A base formatter class suitable for subclassing when you want to format a
 number of records. You can pass a <a class="reference internal" href="#logging.Formatter" title="logging.Formatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Formatter</span></code></a> instance which you want
 to use to format each line (that corresponds to a single record). If not
@@ -1096,7 +1097,7 @@ initialized with ‘A.B’ will allow events logged by loggers ‘A.B’, ‘A.B
 empty string, all events are passed.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="logging.Filter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">Filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.Filter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">Filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.Filter" title="Link to this definition">¶</a></dt>
 <dd><p>Returns an instance of the <a class="reference internal" href="#logging.Filter" title="logging.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a> class. If <em>name</em> is specified, it
 names a logger which, together with its children, will have its events allowed
 through the filter. If <em>name</em> is the empty string, allows every event.</p>
@@ -1152,7 +1153,7 @@ every time something is logged, and can be created manually via
 wire).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="logging.LogRecord">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">LogRecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sinfo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.LogRecord" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">LogRecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sinfo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.LogRecord" title="Link to this definition">¶</a></dt>
 <dd><p>Contains all the information pertinent to the event being logged.</p>
 <p>The primary information is passed in <em>msg</em> and <em>args</em>,
 which are combined using <code class="docutils literal notranslate"><span class="pre">msg</span> <span class="pre">%</span> <span class="pre">args</span></code> to create
@@ -1180,12 +1181,12 @@ which can be a %-format string with placeholders for variable data,
 or an arbitrary object (see <a class="reference internal" href="../howto/logging.html#arbitrary-object-messages"><span class="std std-ref">Using arbitrary objects as messages</span></a>).</p></li>
 <li><p><strong>args</strong> (<a class="reference internal" href="stdtypes.html#tuple" title="tuple"><em>tuple</em></a><em> | </em><a class="reference internal" href="stdtypes.html#dict" title="dict"><em>dict</em></a><em>[</em><a class="reference internal" href="stdtypes.html#str" title="str"><em>str</em></a><em>, </em><a class="reference internal" href="typing.html#typing.Any" title="typing.Any"><em>Any</em></a><em>]</em>) – Variable data to merge into the <em>msg</em> argument
 to obtain the event description.</p></li>
-<li><p><strong>exc_info</strong> (<a class="reference internal" href="stdtypes.html#tuple" title="tuple"><em>tuple</em></a><em>[</em><a class="reference internal" href="functions.html#type" title="type"><em>type</em></a><em>[</em><a class="reference internal" href="exceptions.html#BaseException" title="BaseException"><em>BaseException</em></a><em>]</em><em>, </em><a class="reference internal" href="exceptions.html#BaseException" title="BaseException"><em>BaseException</em></a><em>, </em><a class="reference internal" href="types.html#types.TracebackType" title="types.TracebackType"><em>types.TracebackType</em></a><em>] </em><em>| </em><a class="reference internal" href="constants.html#None" title="None"><em>None</em></a>) – An exception tuple with the current exception information,
+<li><p><strong>exc_info</strong> (<a class="reference internal" href="stdtypes.html#tuple" title="tuple"><em>tuple</em></a><em>[</em><a class="reference internal" href="functions.html#type" title="type"><em>type</em></a><em>[</em><a class="reference internal" href="exceptions.html#BaseException" title="BaseException"><em>BaseException</em></a><em>]</em><em>, </em><a class="reference internal" href="exceptions.html#BaseException" title="BaseException"><em>BaseException</em></a><em>, </em><a class="reference internal" href="types.html#types.TracebackType" title="types.TracebackType"><em>types.TracebackType</em></a><em>] </em><em>| </em><em>None</em>) – An exception tuple with the current exception information,
 as returned by <a class="reference internal" href="sys.html#sys.exc_info" title="sys.exc_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">sys.exc_info()</span></code></a>,
 or <code class="docutils literal notranslate"><span class="pre">None</span></code> if no exception information is available.</p></li>
-<li><p><strong>func</strong> (<a class="reference internal" href="stdtypes.html#str" title="str"><em>str</em></a><em> | </em><a class="reference internal" href="constants.html#None" title="None"><em>None</em></a>) – The name of the function or method
+<li><p><strong>func</strong> (<a class="reference internal" href="stdtypes.html#str" title="str"><em>str</em></a><em> | </em><em>None</em>) – The name of the function or method
 from which the logging call was invoked.</p></li>
-<li><p><strong>sinfo</strong> (<a class="reference internal" href="stdtypes.html#str" title="str"><em>str</em></a><em> | </em><a class="reference internal" href="constants.html#None" title="None"><em>None</em></a>) – A text string representing stack information
+<li><p><strong>sinfo</strong> (<a class="reference internal" href="stdtypes.html#str" title="str"><em>str</em></a><em> | </em><em>None</em>) – A text string representing stack information
 from the base of the stack in the current thread,
 up to the logging call.</p></li>
 </ul>
@@ -1281,48 +1282,56 @@ format this yourself.</p></td>
 <td><p>Exception tuple (à la <code class="docutils literal notranslate"><span class="pre">sys.exc_info</span></code>) or,
 if no exception has occurred, <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p>filename</p></td>
+<tr class="row-even"><td><p>exc_text</p></td>
+<td><p>You shouldn’t need to
+format this yourself.</p></td>
+<td><p>Exception information formatted as a string.
+This is set when <a class="reference internal" href="#logging.Formatter.format" title="logging.Formatter.format"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Formatter.format()</span></code></a> is
+invoked, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if no exception has
+occurred.</p></td>
+</tr>
+<tr class="row-odd"><td><p>filename</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(filename)s</span></code></p></td>
 <td><p>Filename portion of <code class="docutils literal notranslate"><span class="pre">pathname</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p>funcName</p></td>
+<tr class="row-even"><td><p>funcName</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(funcName)s</span></code></p></td>
 <td><p>Name of function containing the logging call.</p></td>
 </tr>
-<tr class="row-even"><td><p>levelname</p></td>
+<tr class="row-odd"><td><p>levelname</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(levelname)s</span></code></p></td>
 <td><p>Text logging level for the message
 (<code class="docutils literal notranslate"><span class="pre">'DEBUG'</span></code>, <code class="docutils literal notranslate"><span class="pre">'INFO'</span></code>, <code class="docutils literal notranslate"><span class="pre">'WARNING'</span></code>,
 <code class="docutils literal notranslate"><span class="pre">'ERROR'</span></code>, <code class="docutils literal notranslate"><span class="pre">'CRITICAL'</span></code>).</p></td>
 </tr>
-<tr class="row-odd"><td><p>levelno</p></td>
+<tr class="row-even"><td><p>levelno</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(levelno)s</span></code></p></td>
 <td><p>Numeric logging level for the message
 (<a class="reference internal" href="#logging.DEBUG" title="logging.DEBUG"><code class="xref py py-const docutils literal notranslate"><span class="pre">DEBUG</span></code></a>, <a class="reference internal" href="#logging.INFO" title="logging.INFO"><code class="xref py py-const docutils literal notranslate"><span class="pre">INFO</span></code></a>,
 <a class="reference internal" href="#logging.WARNING" title="logging.WARNING"><code class="xref py py-const docutils literal notranslate"><span class="pre">WARNING</span></code></a>, <a class="reference internal" href="#logging.ERROR" title="logging.ERROR"><code class="xref py py-const docutils literal notranslate"><span class="pre">ERROR</span></code></a>,
 <a class="reference internal" href="#logging.CRITICAL" title="logging.CRITICAL"><code class="xref py py-const docutils literal notranslate"><span class="pre">CRITICAL</span></code></a>).</p></td>
 </tr>
-<tr class="row-even"><td><p>lineno</p></td>
+<tr class="row-odd"><td><p>lineno</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(lineno)d</span></code></p></td>
 <td><p>Source line number where the logging call was
 issued (if available).</p></td>
 </tr>
-<tr class="row-odd"><td><p>message</p></td>
+<tr class="row-even"><td><p>message</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(message)s</span></code></p></td>
 <td><p>The logged message, computed as <code class="docutils literal notranslate"><span class="pre">msg</span> <span class="pre">%</span>
 <span class="pre">args</span></code>. This is set when
 <a class="reference internal" href="#logging.Formatter.format" title="logging.Formatter.format"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Formatter.format()</span></code></a> is invoked.</p></td>
 </tr>
-<tr class="row-even"><td><p>module</p></td>
+<tr class="row-odd"><td><p>module</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(module)s</span></code></p></td>
 <td><p>Module (name portion of <code class="docutils literal notranslate"><span class="pre">filename</span></code>).</p></td>
 </tr>
-<tr class="row-odd"><td><p>msecs</p></td>
+<tr class="row-even"><td><p>msecs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(msecs)d</span></code></p></td>
 <td><p>Millisecond portion of the time when the
 <a class="reference internal" href="#logging.LogRecord" title="logging.LogRecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogRecord</span></code></a> was created.</p></td>
 </tr>
-<tr class="row-even"><td><p>msg</p></td>
+<tr class="row-odd"><td><p>msg</p></td>
 <td><p>You shouldn’t need to
 format this yourself.</p></td>
 <td><p>The format string passed in the original
@@ -1330,30 +1339,30 @@ logging call. Merged with <code class="docutils literal notranslate"><span class
 produce <code class="docutils literal notranslate"><span class="pre">message</span></code>, or an arbitrary object
 (see <a class="reference internal" href="../howto/logging.html#arbitrary-object-messages"><span class="std std-ref">Using arbitrary objects as messages</span></a>).</p></td>
 </tr>
-<tr class="row-odd"><td><p>name</p></td>
+<tr class="row-even"><td><p>name</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(name)s</span></code></p></td>
 <td><p>Name of the logger used to log the call.</p></td>
 </tr>
-<tr class="row-even"><td><p>pathname</p></td>
+<tr class="row-odd"><td><p>pathname</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(pathname)s</span></code></p></td>
 <td><p>Full pathname of the source file where the
 logging call was issued (if available).</p></td>
 </tr>
-<tr class="row-odd"><td><p>process</p></td>
+<tr class="row-even"><td><p>process</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(process)d</span></code></p></td>
 <td><p>Process ID (if available).</p></td>
 </tr>
-<tr class="row-even"><td><p>processName</p></td>
+<tr class="row-odd"><td><p>processName</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(processName)s</span></code></p></td>
 <td><p>Process name (if available).</p></td>
 </tr>
-<tr class="row-odd"><td><p>relativeCreated</p></td>
+<tr class="row-even"><td><p>relativeCreated</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(relativeCreated)d</span></code></p></td>
 <td><p>Time in milliseconds when the LogRecord was
 created, relative to the time the logging
 module was loaded.</p></td>
 </tr>
-<tr class="row-even"><td><p>stack_info</p></td>
+<tr class="row-odd"><td><p>stack_info</p></td>
 <td><p>You shouldn’t need to
 format this yourself.</p></td>
 <td><p>Stack frame information (where available)
@@ -1362,15 +1371,15 @@ thread, up to and including the stack frame
 of the logging call which resulted in the
 creation of this record.</p></td>
 </tr>
-<tr class="row-odd"><td><p>thread</p></td>
+<tr class="row-even"><td><p>thread</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(thread)d</span></code></p></td>
 <td><p>Thread ID (if available).</p></td>
 </tr>
-<tr class="row-even"><td><p>threadName</p></td>
+<tr class="row-odd"><td><p>threadName</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(threadName)s</span></code></p></td>
 <td><p>Thread name (if available).</p></td>
 </tr>
-<tr class="row-odd"><td><p>taskName</p></td>
+<tr class="row-even"><td><p>taskName</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">%(taskName)s</span></code></p></td>
 <td><p><a class="reference internal" href="asyncio-task.html#asyncio.Task" title="asyncio.Task"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a> name (if available).</p></td>
 </tr>
@@ -1390,7 +1399,7 @@ information into logging calls. For a usage example, see the section on
 <a class="reference internal" href="../howto/logging-cookbook.html#context-info"><span class="std std-ref">adding contextual information to your logging output</span></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="logging.LoggerAdapter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">LoggerAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_extra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.LoggerAdapter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">logging.</span></span><span class="sig-name descname"><span class="pre">LoggerAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_extra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logging.LoggerAdapter" title="Link to this definition">¶</a></dt>
 <dd><p>Returns an instance of <a class="reference internal" href="#logging.LoggerAdapter" title="logging.LoggerAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoggerAdapter</span></code></a> initialized with an
 underlying <a class="reference internal" href="#logging.Logger" title="logging.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Logger</span></code></a> instance, an optional dict-like object (<em>extra</em>),
 and an optional boolean (<em>merge_extra</em>) indicating whether or not
@@ -1986,6 +1995,7 @@ library.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -2022,7 +2032,7 @@ library.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -2068,13 +2078,13 @@ library.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

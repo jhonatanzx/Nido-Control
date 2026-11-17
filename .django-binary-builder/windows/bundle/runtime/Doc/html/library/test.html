@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>test — Regression tests package for Python &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test — Regression tests package for Python &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -134,6 +134,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -167,7 +168,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -386,7 +387,7 @@ without backwards compatibility concerns between releases.</p>
 <p>This module defines the following exceptions:</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="test.support.TestFailed">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">TestFailed</span></span><a class="headerlink" href="#test.support.TestFailed" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">TestFailed</span></span><a class="headerlink" href="#test.support.TestFailed" title="Link to this definition">¶</a></dt>
 <dd><p>Exception to be raised when a test fails. This is deprecated in favor of
 <a class="reference internal" href="unittest.html#module-unittest" title="unittest: Unit testing framework for Python."><code class="xref py py-mod docutils literal notranslate"><span class="pre">unittest</span></code></a>-based tests and <a class="reference internal" href="unittest.html#unittest.TestCase" title="unittest.TestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.TestCase</span></code></a>’s assertion
 methods.</p>
@@ -394,7 +395,7 @@ methods.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="test.support.ResourceDenied">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">ResourceDenied</span></span><a class="headerlink" href="#test.support.ResourceDenied" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">ResourceDenied</span></span><a class="headerlink" href="#test.support.ResourceDenied" title="Link to this definition">¶</a></dt>
 <dd><p>Subclass of <a class="reference internal" href="unittest.html#unittest.SkipTest" title="unittest.SkipTest"><code class="xref py py-exc docutils literal notranslate"><span class="pre">unittest.SkipTest</span></code></a>. Raised when a resource (such as a
 network connection) is not available. Raised by the <a class="reference internal" href="#test.support.requires" title="test.support.requires"><code class="xref py py-func docutils literal notranslate"><span class="pre">requires()</span></code></a>
 function.</p>
@@ -674,6 +675,13 @@ each iteration (up to <em>max_delay</em> seconds).</p>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if <em>resource</em> is enabled and available. The list of
 available resources is only set when <a class="reference internal" href="#module-test.regrtest" title="test.regrtest: Drives the regression test suite."><code class="xref py py-mod docutils literal notranslate"><span class="pre">test.regrtest</span></code></a> is executing the
 tests.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test.support.get_resource_value">
+<span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">get_resource_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resource</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.get_resource_value" title="Link to this definition">¶</a></dt>
+<dd><p>Return the value specified for <em>resource</em> (as <code class="samp docutils literal notranslate"><span class="pre">-u</span> <em><span class="pre">resource</span></em><span class="pre">=</span><em><span class="pre">value</span></em></code>).
+Return <code class="docutils literal notranslate"><span class="pre">None</span></code> if <em>resource</em> is disabled or no value is specified.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1288,7 +1296,7 @@ on the number of digits when converting between an integer and string.</p>
 <p>The <a class="reference internal" href="#module-test.support" title="test.support: Support for Python's regression test suite."><code class="xref py py-mod docutils literal notranslate"><span class="pre">test.support</span></code></a> module defines the following classes:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.SuppressCrashReport">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">SuppressCrashReport</span></span><a class="headerlink" href="#test.support.SuppressCrashReport" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">SuppressCrashReport</span></span><a class="headerlink" href="#test.support.SuppressCrashReport" title="Link to this definition">¶</a></dt>
 <dd><p>A context manager used to try to prevent crash dialog popups on tests that
 are expected to crash a subprocess.</p>
 <p>On Windows, it disables Windows Error Reporting dialogs using
@@ -1301,7 +1309,7 @@ creation.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.SaveSignals">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">SaveSignals</span></span><a class="headerlink" href="#test.support.SaveSignals" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">SaveSignals</span></span><a class="headerlink" href="#test.support.SaveSignals" title="Link to this definition">¶</a></dt>
 <dd><p>Class to save and restore signal handlers registered by the Python signal
 handler.</p>
 <dl class="py method">
@@ -1322,7 +1330,7 @@ handler.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.Matcher">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">Matcher</span></span><a class="headerlink" href="#test.support.Matcher" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.</span></span><span class="sig-name descname"><span class="pre">Matcher</span></span><a class="headerlink" href="#test.support.Matcher" title="Link to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="test.support.Matcher.matches">
 <span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.Matcher.matches" title="Link to this definition">¶</a></dt>
@@ -1533,7 +1541,7 @@ and inspecting bytecode generation.</p>
 <p>The module defines the following class:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.bytecode_helper.BytecodeTestCase">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.bytecode_helper.</span></span><span class="sig-name descname"><span class="pre">BytecodeTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unittest.TestCase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.bytecode_helper.BytecodeTestCase" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.bytecode_helper.</span></span><span class="sig-name descname"><span class="pre">BytecodeTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unittest.TestCase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.bytecode_helper.BytecodeTestCase" title="Link to this definition">¶</a></dt>
 <dd><p>This class has custom assertion methods for inspecting bytecode.</p>
 </dd></dl>
 
@@ -1704,7 +1712,7 @@ possible to generate such a filename.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.os_helper.EnvironmentVarGuard">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.os_helper.</span></span><span class="sig-name descname"><span class="pre">EnvironmentVarGuard</span></span><a class="headerlink" href="#test.support.os_helper.EnvironmentVarGuard" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.os_helper.</span></span><span class="sig-name descname"><span class="pre">EnvironmentVarGuard</span></span><a class="headerlink" href="#test.support.os_helper.EnvironmentVarGuard" title="Link to this definition">¶</a></dt>
 <dd><p>Class used to temporarily set or unset environment variables.  Instances can
 be used as a context manager and have a complete dictionary interface for
 querying/modifying the underlying <code class="docutils literal notranslate"><span class="pre">os.environ</span></code>. After exit from the
@@ -1717,7 +1725,7 @@ instance will be rolled back.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.os_helper.FakePath">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.os_helper.</span></span><span class="sig-name descname"><span class="pre">FakePath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.os_helper.FakePath" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.os_helper.</span></span><span class="sig-name descname"><span class="pre">FakePath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.os_helper.FakePath" title="Link to this definition">¶</a></dt>
 <dd><p>Simple <a class="reference internal" href="../glossary.html#term-path-like-object"><span class="xref std std-term">path-like object</span></a>.  It implements the
 <a class="reference internal" href="os.html#os.PathLike.__fspath__" title="os.PathLike.__fspath__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__fspath__()</span></code></a>
 method which just returns the <em>path</em> argument.  If <em>path</em> is an exception,
@@ -1950,7 +1958,7 @@ path to the source file.  It does not need to exist, however the PEP
 
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.import_helper.CleanImport">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.import_helper.</span></span><span class="sig-name descname"><span class="pre">CleanImport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">module_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.import_helper.CleanImport" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.import_helper.</span></span><span class="sig-name descname"><span class="pre">CleanImport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">module_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.import_helper.CleanImport" title="Link to this definition">¶</a></dt>
 <dd><p>A context manager to force import to return a new module reference.  This
 is useful for testing module-level behaviors, such as the emission of a
 <a class="reference internal" href="exceptions.html#DeprecationWarning" title="DeprecationWarning"><code class="xref py py-exc docutils literal notranslate"><span class="pre">DeprecationWarning</span></code></a> on import.  Example usage:</p>
@@ -1962,7 +1970,7 @@ is useful for testing module-level behaviors, such as the emission of a
 
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.import_helper.DirsOnSysPath">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.import_helper.</span></span><span class="sig-name descname"><span class="pre">DirsOnSysPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.import_helper.DirsOnSysPath" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.import_helper.</span></span><span class="sig-name descname"><span class="pre">DirsOnSysPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test.support.import_helper.DirsOnSysPath" title="Link to this definition">¶</a></dt>
 <dd><p>A context manager to temporarily add directories to <a class="reference internal" href="sys.html#sys.path" title="sys.path"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.path</span></code></a>.</p>
 <p>This makes a copy of <a class="reference internal" href="sys.html#sys.path" title="sys.path"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.path</span></code></a>, appends any directories given
 as positional arguments, then reverts <a class="reference internal" href="sys.html#sys.path" title="sys.path"><code class="xref py py-data docutils literal notranslate"><span class="pre">sys.path</span></code></a> to the copied
@@ -2083,7 +2091,7 @@ warnings directly.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="test.support.warnings_helper.WarningsRecorder">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">test.support.warnings_helper.</span></span><span class="sig-name descname"><span class="pre">WarningsRecorder</span></span><a class="headerlink" href="#test.support.warnings_helper.WarningsRecorder" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test.support.warnings_helper.</span></span><span class="sig-name descname"><span class="pre">WarningsRecorder</span></span><a class="headerlink" href="#test.support.warnings_helper.WarningsRecorder" title="Link to this definition">¶</a></dt>
 <dd><p>Class used to record warnings for unit tests. See documentation of
 <a class="reference internal" href="#test.support.warnings_helper.check_warnings" title="test.support.warnings_helper.check_warnings"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_warnings()</span></code></a> above for more details.</p>
 </dd></dl>
@@ -2135,6 +2143,7 @@ warnings directly.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -2171,7 +2180,7 @@ warnings directly.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -2217,13 +2226,13 @@ warnings directly.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

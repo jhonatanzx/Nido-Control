@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['C:/Users/LAB-03/Documents/Nido-Control/.django-binary-builder/windows/generated/stub.py'],
+    ['C:/Users/hp/Documents/Nido-Control/.django-binary-builder/windows/generated/stub.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -21,7 +21,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='nido-control',
+    name='NidoControl',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -32,6 +32,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['C:/Users/hp/Documents/Nido-Control/static/icono.ico'],
 )
 coll = COLLECT(
     exe,
@@ -40,5 +41,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='nido-control',
+    name='NidoControl',
 )

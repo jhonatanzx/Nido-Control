@@ -14,21 +14,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>Object Protocol &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Protocol &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -113,6 +113,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -146,7 +147,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Python/C API Reference Manual</a> &#187;</li>
@@ -973,9 +974,9 @@ if the object’s reference count was successfully incremented. Otherwise,
 this function returns <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 <p><a class="reference internal" href="#c.PyUnstable_EnableTryIncRef" title="PyUnstable_EnableTryIncRef"><code class="xref c c-func docutils literal notranslate"><span class="pre">PyUnstable_EnableTryIncRef()</span></code></a> must have been called
 earlier on <em>obj</em> or this function may spuriously return <code class="docutils literal notranslate"><span class="pre">0</span></code> in the
-<a class="reference internal" href="../glossary.html#term-free-threading"><span class="xref std std-term">free threading</span></a> build.</p>
+<a class="reference internal" href="../glossary.html#term-free-threaded-build"><span class="xref std std-term">free-threaded build</span></a>.</p>
 <p>This function is logically equivalent to the following C code, except that
-it behaves atomically in the <a class="reference internal" href="../glossary.html#term-free-threading"><span class="xref std std-term">free threading</span></a> build:</p>
+it behaves atomically in the <a class="reference internal" href="../glossary.html#term-free-threaded-build"><span class="xref std std-term">free-threaded build</span></a>:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Py_REFCNT</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="n">Py_INCREF</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
 <span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
@@ -1058,10 +1059,10 @@ caller must hold a <a class="reference internal" href="../glossary.html#term-str
 <p>Determine if <em>op</em> only has one reference.</p>
 <p>On GIL-enabled builds, this function is equivalent to
 <span class="c-expr sig sig-inline c"><a class="reference internal" href="refcounting.html#c.Py_REFCNT" title="Py_REFCNT"><span class="n">Py_REFCNT</span></a><span class="p">(</span><a class="reference internal" href="#c.PyUnstable_Object_IsUniquelyReferenced" title="op"><span class="n">op</span></a><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span></span>.</p>
-<p>On a <a class="reference internal" href="../glossary.html#term-free-threading"><span class="xref std std-term">free threaded</span></a> build, this checks if <em>op</em>’s
+<p>On a <a class="reference internal" href="../glossary.html#term-free-threaded-build"><span class="xref std std-term">free-threaded build</span></a>, this checks if <em>op</em>’s
 <a class="reference internal" href="../glossary.html#term-reference-count"><span class="xref std std-term">reference count</span></a> is equal to one and additionally checks if <em>op</em>
 is only used by this thread. <span class="c-expr sig sig-inline c"><a class="reference internal" href="refcounting.html#c.Py_REFCNT" title="Py_REFCNT"><span class="n">Py_REFCNT</span></a><span class="p">(</span><a class="reference internal" href="#c.PyUnstable_Object_IsUniquelyReferenced" title="op"><span class="n">op</span></a><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span></span> is <strong>not</strong>
-thread-safe on free threaded builds; prefer this function.</p>
+thread-safe on free-threaded builds; prefer this function.</p>
 <p>The caller must hold an <a class="reference internal" href="../glossary.html#term-attached-thread-state"><span class="xref std std-term">attached thread state</span></a>, despite the fact
 that this function doesn’t call into the Python interpreter. This function
 cannot fail.</p>
@@ -1098,6 +1099,7 @@ cannot fail.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -1134,7 +1136,7 @@ cannot fail.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Python/C API Reference Manual</a> &#187;</li>
@@ -1180,13 +1182,13 @@ cannot fail.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

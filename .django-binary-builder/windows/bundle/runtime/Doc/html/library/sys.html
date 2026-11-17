@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>sys — System-specific parameters and functions &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sys — System-specific parameters and functions &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -115,6 +115,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -148,7 +149,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -2389,6 +2390,8 @@ it hasn’t been overwritten.</p>
 and minor version as the local process. If either the local or remote
 interpreter is pre-release (alpha, beta, or release candidate) then the
 local and remote interpreters must be the same exact version.</p>
+<p>See <a class="reference internal" href="../howto/remote_debugging.html#remote-debugging"><span class="std std-ref">Remote debugging attachment protocol</span></a> for more information about the remote debugging
+mechanism.</p>
 <p class="audit-hook"><p>When the code is executed in the remote process, an
 <a class="reference internal" href="#auditing"><span class="std std-ref">auditing event</span></a> <code class="docutils literal notranslate"><span class="pre">sys.remote_exec</span></code> is raised with
 the <em>pid</em> and the path to the script file.
@@ -2405,7 +2408,7 @@ that called <a class="reference internal" href="#sys.remote_exec" title="sys.rem
 <p><a class="reference internal" href="intro.html#availability"><span class="std std-ref">Availability</span></a>: Unix, Windows.</p>
 </div>
 <div class="versionadded">
-<p><span class="versionmodified added">Added in version 3.14.</span></p>
+<p><span class="versionmodified added">Added in version 3.14: </span>See <span class="target" id="index-39"></span><a class="pep reference external" href="https://peps.python.org/pep-0768/"><strong>PEP 768</strong></a> for more details.</p>
 </div>
 </dd></dl>
 
@@ -2415,7 +2418,7 @@ that called <a class="reference internal" href="#sys.remote_exec" title="sys.rem
 <dd><p>Changes the <a class="reference internal" href="../glossary.html#term-filesystem-encoding-and-error-handler"><span class="xref std std-term">filesystem encoding and error handler</span></a> to ‘mbcs’ and
 ‘replace’ respectively, for consistency with versions of Python prior to
 3.6.</p>
-<p>This is equivalent to defining the <span class="target" id="index-39"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONLEGACYWINDOWSFSENCODING"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONLEGACYWINDOWSFSENCODING</span></code></a>
+<p>This is equivalent to defining the <span class="target" id="index-40"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONLEGACYWINDOWSFSENCODING"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONLEGACYWINDOWSFSENCODING</span></code></a>
 environment variable before launching Python.</p>
 <p>See also <a class="reference internal" href="#sys.getfilesystemencoding" title="sys.getfilesystemencoding"><code class="xref py py-func docutils literal notranslate"><span class="pre">sys.getfilesystemencoding()</span></code></a> and
 <a class="reference internal" href="#sys.getfilesystemencodeerrors" title="sys.getfilesystemencodeerrors"><code class="xref py py-func docutils literal notranslate"><span class="pre">sys.getfilesystemencodeerrors()</span></code></a>.</p>
@@ -2426,13 +2429,13 @@ environment variable before launching Python.</p>
 <p class="admonition-title">Note</p>
 <p>Changing the filesystem encoding after Python startup is risky because
 the old fsencoding or paths encoded by the old fsencoding may be cached
-somewhere. Use <span class="target" id="index-40"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONLEGACYWINDOWSFSENCODING"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONLEGACYWINDOWSFSENCODING</span></code></a> instead.</p>
+somewhere. Use <span class="target" id="index-41"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONLEGACYWINDOWSFSENCODING"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONLEGACYWINDOWSFSENCODING</span></code></a> instead.</p>
 </div>
 <div class="versionadded">
-<p><span class="versionmodified added">Added in version 3.6: </span>See <span class="target" id="index-41"></span><a class="pep reference external" href="https://peps.python.org/pep-0529/"><strong>PEP 529</strong></a> for more details.</p>
+<p><span class="versionmodified added">Added in version 3.6: </span>See <span class="target" id="index-42"></span><a class="pep reference external" href="https://peps.python.org/pep-0529/"><strong>PEP 529</strong></a> for more details.</p>
 </div>
 <div class="deprecated-removed">
-<p><span class="versionmodified deprecated">Deprecated since version 3.13, will be removed in version 3.16: </span>Use <span class="target" id="index-42"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONLEGACYWINDOWSFSENCODING"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONLEGACYWINDOWSFSENCODING</span></code></a> instead.</p>
+<p><span class="versionmodified deprecated">Deprecated since version 3.13, will be removed in version 3.16: </span>Use <span class="target" id="index-43"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONLEGACYWINDOWSFSENCODING"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONLEGACYWINDOWSFSENCODING</span></code></a> instead.</p>
 </div>
 </dd></dl>
 
@@ -2471,17 +2474,17 @@ by setting the environment variable PYTHONLEGACYWINDOWSSTDIO
 before starting Python. In that case, the console codepages are
 used as for any other character device.</p>
 <p>Under all platforms, you can override the character encoding by
-setting the <span class="target" id="index-43"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONIOENCODING"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONIOENCODING</span></code></a> environment variable before
+setting the <span class="target" id="index-44"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONIOENCODING"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONIOENCODING</span></code></a> environment variable before
 starting Python or by using the new <a class="reference internal" href="../using/cmdline.html#cmdoption-X"><code class="xref std std-option docutils literal notranslate"><span class="pre">-X</span></code></a> <code class="docutils literal notranslate"><span class="pre">utf8</span></code> command
-line option and <span class="target" id="index-44"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONUTF8"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONUTF8</span></code></a> environment variable.  However,
+line option and <span class="target" id="index-45"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONUTF8"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONUTF8</span></code></a> environment variable.  However,
 for the Windows console, this only applies when
-<span class="target" id="index-45"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONLEGACYWINDOWSSTDIO"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONLEGACYWINDOWSSTDIO</span></code></a> is also set.</p>
+<span class="target" id="index-46"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONLEGACYWINDOWSSTDIO"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONLEGACYWINDOWSSTDIO</span></code></a> is also set.</p>
 </li>
 <li><p>When interactive, the <code class="docutils literal notranslate"><span class="pre">stdout</span></code> stream is line-buffered. Otherwise,
 it is block-buffered like regular text files.  The <code class="docutils literal notranslate"><span class="pre">stderr</span></code> stream
 is line-buffered in both cases.  You can make both streams unbuffered
 by passing the <a class="reference internal" href="../using/cmdline.html#cmdoption-u"><code class="xref std std-option docutils literal notranslate"><span class="pre">-u</span></code></a> command-line option or setting the
-<span class="target" id="index-46"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONUNBUFFERED"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONUNBUFFERED</span></code></a> environment variable.</p></li>
+<span class="target" id="index-47"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONUNBUFFERED"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHONUNBUFFERED</span></code></a> environment variable.</p></li>
 </ul>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.9: </span>Non-interactive <code class="docutils literal notranslate"><span class="pre">stderr</span></code> is now line-buffered instead of fully
@@ -2757,6 +2760,7 @@ means, or not at all.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -2793,7 +2797,7 @@ means, or not at all.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -2839,13 +2843,13 @@ means, or not at all.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

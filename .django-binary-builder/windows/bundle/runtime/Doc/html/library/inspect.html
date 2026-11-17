@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>inspect — Inspect live objects &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inspect — Inspect live objects &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -134,6 +134,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -167,7 +168,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -596,29 +597,39 @@ or <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <td><p>is the generator running?</p></td>
 </tr>
 <tr class="row-even"><td></td>
+<td><p>ag_suspended</p></td>
+<td><p>is the generator
+suspended?</p></td>
+</tr>
+<tr class="row-odd"><td></td>
 <td><p>ag_code</p></td>
 <td><p>code</p></td>
 </tr>
-<tr class="row-odd"><td><p>coroutine</p></td>
+<tr class="row-even"><td><p>coroutine</p></td>
 <td><p>__name__</p></td>
 <td><p>name</p></td>
 </tr>
-<tr class="row-even"><td></td>
+<tr class="row-odd"><td></td>
 <td><p>__qualname__</p></td>
 <td><p>qualified name</p></td>
 </tr>
-<tr class="row-odd"><td></td>
+<tr class="row-even"><td></td>
 <td><p>cr_await</p></td>
 <td><p>object being awaited on,
 or <code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
 </tr>
-<tr class="row-even"><td></td>
+<tr class="row-odd"><td></td>
 <td><p>cr_frame</p></td>
 <td><p>frame</p></td>
 </tr>
-<tr class="row-odd"><td></td>
+<tr class="row-even"><td></td>
 <td><p>cr_running</p></td>
 <td><p>is the coroutine running?</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>cr_suspended</p></td>
+<td><p>is the coroutine
+suspended?</p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p>cr_code</p></td>
@@ -661,6 +672,15 @@ name, instead of the code name, and it can now be modified.</p>
 </div>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.10: </span>Add <code class="docutils literal notranslate"><span class="pre">__builtins__</span></code> attribute to functions.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.11: </span>Add <code class="docutils literal notranslate"><span class="pre">gi_suspended</span></code> attribute to generators.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.11: </span>Add <code class="docutils literal notranslate"><span class="pre">cr_suspended</span></code> attribute to coroutines.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.12: </span>Add <code class="docutils literal notranslate"><span class="pre">ag_suspended</span></code> attribute to async generators.</p>
 </div>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.14: </span>Add <code class="docutils literal notranslate"><span class="pre">f_generator</span></code> attribute to frames.</p>
@@ -864,7 +884,7 @@ wrapped function is an <a class="reference internal" href="../glossary.html#term
 </div>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.13: </span>Functions wrapped in <a class="reference internal" href="functools.html#functools.partialmethod" title="functools.partialmethod"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.partialmethod()</span></code></a> now return <code class="docutils literal notranslate"><span class="pre">True</span></code>
-if the wrapped function is a <a class="reference internal" href="../glossary.html#term-coroutine-function"><span class="xref std std-term">coroutine function</span></a>.</p>
+if the wrapped function is a <a class="reference internal" href="../glossary.html#term-asynchronous-generator"><span class="xref std std-term">asynchronous generator</span></a> function.</p>
 </div>
 </dd></dl>
 
@@ -1157,7 +1177,7 @@ unannounced changes. Consult the source code for current semantics.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="inspect.Signature">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">Signature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Signature.empty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspect.Signature" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">Signature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Signature.empty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspect.Signature" title="Link to this definition">¶</a></dt>
 <dd><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">Signature</span></code> object represents the call signature of a function
 and its return
 annotation.  For each parameter accepted by the function it stores a
@@ -1263,7 +1283,7 @@ marks if they are strings. This is useful if the signature was created with the
 
 <dl class="py method">
 <dt class="sig sig-object py" id="inspect.Signature.from_callable">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_callable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">follow_wrapped</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">globals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspect.Signature.from_callable" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_callable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">follow_wrapped</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">globals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspect.Signature.from_callable" title="Link to this definition">¶</a></dt>
 <dd><p>Return a <a class="reference internal" href="#inspect.Signature" title="inspect.Signature"><code class="xref py py-class docutils literal notranslate"><span class="pre">Signature</span></code></a> (or its subclass) object for a given callable
 <em>obj</em>.</p>
 <p>This method simplifies subclassing of <a class="reference internal" href="#inspect.Signature" title="inspect.Signature"><code class="xref py py-class docutils literal notranslate"><span class="pre">Signature</span></code></a>:</p>
@@ -1286,7 +1306,7 @@ marks if they are strings. This is useful if the signature was created with the
 
 <dl class="py class">
 <dt class="sig sig-object py" id="inspect.Parameter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">Parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Parameter.empty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Parameter.empty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspect.Parameter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">Parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Parameter.empty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Parameter.empty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inspect.Parameter" title="Link to this definition">¶</a></dt>
 <dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code> objects are <em>immutable</em>.
 Instead of modifying a <code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code> object,
 you can use <a class="reference internal" href="#inspect.Parameter.replace" title="inspect.Parameter.replace"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Parameter.replace()</span></code></a> or <a class="reference internal" href="copy.html#copy.replace" title="copy.replace"><code class="xref py py-func docutils literal notranslate"><span class="pre">copy.replace()</span></code></a> to create a modified copy.</p>
@@ -1443,7 +1463,7 @@ This is no longer permitted.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="inspect.BoundArguments">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">BoundArguments</span></span><a class="headerlink" href="#inspect.BoundArguments" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">BoundArguments</span></span><a class="headerlink" href="#inspect.BoundArguments" title="Link to this definition">¶</a></dt>
 <dd><p>Result of a <a class="reference internal" href="#inspect.Signature.bind" title="inspect.Signature.bind"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Signature.bind()</span></code></a> or <a class="reference internal" href="#inspect.Signature.bind_partial" title="inspect.Signature.bind_partial"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Signature.bind_partial()</span></code></a> call.
 Holds the mapping of arguments to the function’s parameters.</p>
 <dl class="py attribute">
@@ -1719,7 +1739,7 @@ tuple-like operations on all attributes except <code class="docutils literal not
 is considered deprecated and may be removed in the future.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="inspect.FrameInfo">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">FrameInfo</span></span><a class="headerlink" href="#inspect.FrameInfo" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">FrameInfo</span></span><a class="headerlink" href="#inspect.FrameInfo" title="Link to this definition">¶</a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="inspect.FrameInfo.frame">
 <span class="sig-name descname"><span class="pre">frame</span></span><a class="headerlink" href="#inspect.FrameInfo.frame" title="Link to this definition">¶</a></dt>
@@ -1778,7 +1798,7 @@ instruction being executed by the frame this record corresponds to.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="inspect.Traceback">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">Traceback</span></span><a class="headerlink" href="#inspect.Traceback" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">Traceback</span></span><a class="headerlink" href="#inspect.Traceback" title="Link to this definition">¶</a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="inspect.Traceback.filename">
 <span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#inspect.Traceback.filename" title="Link to this definition">¶</a></dt>
@@ -2220,7 +2240,7 @@ for any introspection needs.</p>
 <h2>Buffer flags<a class="headerlink" href="#buffer-flags" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="inspect.BufferFlags">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">BufferFlags</span></span><a class="headerlink" href="#inspect.BufferFlags" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inspect.</span></span><span class="sig-name descname"><span class="pre">BufferFlags</span></span><a class="headerlink" href="#inspect.BufferFlags" title="Link to this definition">¶</a></dt>
 <dd><p>This is an <a class="reference internal" href="enum.html#enum.IntFlag" title="enum.IntFlag"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.IntFlag</span></code></a> that represents the flags that
 can be passed to the <a class="reference internal" href="../reference/datamodel.html#object.__buffer__" title="object.__buffer__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__buffer__()</span></code></a> method of objects
 implementing the <a class="reference internal" href="../c-api/buffer.html#bufferobjects"><span class="std std-ref">buffer protocol</span></a>.</p>
@@ -2387,6 +2407,7 @@ appended a colon and the qualified name of the target object.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -2423,7 +2444,7 @@ appended a colon and the qualified name of the target object.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -2469,13 +2490,13 @@ appended a colon and the qualified name of the target object.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

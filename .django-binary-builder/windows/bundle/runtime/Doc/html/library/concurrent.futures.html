@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>concurrent.futures — Launching parallel tasks &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>concurrent.futures — Launching parallel tasks &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -137,6 +137,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -170,7 +171,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -221,6 +222,10 @@ asynchronously executing callables.</p>
 or separate processes, using <a class="reference internal" href="#concurrent.futures.ProcessPoolExecutor" title="concurrent.futures.ProcessPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a>.
 Each implements the same interface, which is defined
 by the abstract <a class="reference internal" href="#concurrent.futures.Executor" title="concurrent.futures.Executor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Executor</span></code></a> class.</p>
+<p><a class="reference internal" href="#concurrent.futures.Future" title="concurrent.futures.Future"><code class="xref py py-class docutils literal notranslate"><span class="pre">concurrent.futures.Future</span></code></a> must not be confused with
+<a class="reference internal" href="asyncio-future.html#asyncio.Future" title="asyncio.Future"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a>, which is designed for use with <a class="reference internal" href="asyncio.html#module-asyncio" title="asyncio: Asynchronous I/O."><code class="xref py py-mod docutils literal notranslate"><span class="pre">asyncio</span></code></a>
+tasks and coroutines. See the <a class="reference internal" href="asyncio-future.html"><span class="doc">asyncio’s Future</span></a>
+documentation for a detailed comparison of the two.</p>
 <div class="availability docutils container">
 <p><a class="reference internal" href="intro.html#availability"><span class="std std-ref">Availability</span></a>: not WASI.</p>
 <p>This module does not work or is not available on WebAssembly. See
@@ -230,7 +235,7 @@ by the abstract <a class="reference internal" href="#concurrent.futures.Executor
 <h2>Executor Objects<a class="headerlink" href="#executor-objects" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="concurrent.futures.Executor">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">Executor</span></span><a class="headerlink" href="#concurrent.futures.Executor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">Executor</span></span><a class="headerlink" href="#concurrent.futures.Executor" title="Link to this definition">¶</a></dt>
 <dd><p>An abstract class that provides methods to execute calls asynchronously.  It
 should not be used directly, but through its concrete subclasses.</p>
 <dl class="py method">
@@ -358,7 +363,7 @@ the results of another <a class="reference internal" href="#concurrent.futures.F
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="concurrent.futures.ThreadPoolExecutor">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">ThreadPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#concurrent.futures.ThreadPoolExecutor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">ThreadPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#concurrent.futures.ThreadPoolExecutor" title="Link to this definition">¶</a></dt>
 <dd><p>An <a class="reference internal" href="#concurrent.futures.Executor" title="concurrent.futures.Executor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Executor</span></code></a> subclass that uses a pool of at most <em>max_workers</em>
 threads to execute calls asynchronously.</p>
 <p>All threads enqueued to <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code> will be joined before the
@@ -483,7 +488,7 @@ the bytes over a shared <a class="reference internal" href="socket.html#module-s
 <a class="reference internal" href="os.html#os.pipe" title="os.pipe"><code class="xref py py-func docutils literal notranslate"><span class="pre">pipe</span></code></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="concurrent.futures.InterpreterPoolExecutor">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">InterpreterPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#concurrent.futures.InterpreterPoolExecutor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">InterpreterPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#concurrent.futures.InterpreterPoolExecutor" title="Link to this definition">¶</a></dt>
 <dd><p>A <a class="reference internal" href="#concurrent.futures.ThreadPoolExecutor" title="concurrent.futures.ThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a> subclass that executes calls asynchronously
 using a pool of at most <em>max_workers</em> threads.  Each thread runs
 tasks in its own interpreter.  The worker interpreters are isolated
@@ -500,7 +505,7 @@ interpreter.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The executor may replace uncaught exceptions from <em>initializer</em>
-with <a class="reference internal" href="#concurrent.futures.interpreter.ExecutionFailed" title="concurrent.futures.interpreter.ExecutionFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecutionFailed</span></code></a>.</p>
+with <a class="reference internal" href="concurrent.interpreters.html#concurrent.interpreters.ExecutionFailed" title="concurrent.interpreters.ExecutionFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecutionFailed</span></code></a>.</p>
 </div>
 <p>Other caveats from parent <a class="reference internal" href="#concurrent.futures.ThreadPoolExecutor" title="concurrent.futures.ThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a> apply here.</p>
 </dd></dl>
@@ -512,11 +517,11 @@ likewise serializes the return value when sending it back.</p>
 <p>When a worker’s current task raises an uncaught exception, the worker
 always tries to preserve the exception as-is.  If that is successful
 then it also sets the <code class="docutils literal notranslate"><span class="pre">__cause__</span></code> to a corresponding
-<a class="reference internal" href="#concurrent.futures.interpreter.ExecutionFailed" title="concurrent.futures.interpreter.ExecutionFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecutionFailed</span></code></a>
+<a class="reference internal" href="concurrent.interpreters.html#concurrent.interpreters.ExecutionFailed" title="concurrent.interpreters.ExecutionFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecutionFailed</span></code></a>
 instance, which contains a summary of the original exception.
 In the uncommon case that the worker is not able to preserve the
 original as-is then it directly preserves the corresponding
-<a class="reference internal" href="#concurrent.futures.interpreter.ExecutionFailed" title="concurrent.futures.interpreter.ExecutionFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecutionFailed</span></code></a>
+<a class="reference internal" href="concurrent.interpreters.html#concurrent.interpreters.ExecutionFailed" title="concurrent.interpreters.ExecutionFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecutionFailed</span></code></a>
 instance instead.</p>
 </section>
 <section id="processpoolexecutor">
@@ -536,7 +541,7 @@ and <a class="reference internal" href="#concurrent.futures.Executor.map" title=
 in a REPL or a lambda should not be expected to work.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="concurrent.futures.ProcessPoolExecutor">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">ProcessPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mp_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tasks_per_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#concurrent.futures.ProcessPoolExecutor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">ProcessPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mp_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tasks_per_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#concurrent.futures.ProcessPoolExecutor" title="Link to this definition">¶</a></dt>
 <dd><p>An <a class="reference internal" href="#concurrent.futures.Executor" title="concurrent.futures.Executor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Executor</span></code></a> subclass that executes calls asynchronously using a pool
 of at most <em>max_workers</em> processes.  If <em>max_workers</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code> or not
 given, it will default to <a class="reference internal" href="os.html#os.process_cpu_count" title="os.process_cpu_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">os.process_cpu_count()</span></code></a>.
@@ -562,6 +567,12 @@ replaced with a fresh worker process. By default <em>max_tasks_per_child</em> is
 a max is specified, the “spawn” multiprocessing start method will be used by
 default in absence of a <em>mp_context</em> parameter. This feature is incompatible
 with the “fork” start method.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Bugs have been reported when using the <em>max_tasks_per_child</em> feature that
+can result in the <a class="reference internal" href="#concurrent.futures.ProcessPoolExecutor" title="concurrent.futures.ProcessPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a> hanging in some
+circumstances. Follow its eventual resolution in <a class="reference external" href="https://github.com/python/cpython/issues/115634">gh-115634</a>.</p>
+</div>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.3: </span>When one of the worker processes terminates abruptly, a
 <a class="reference internal" href="#concurrent.futures.process.BrokenProcessPool" title="concurrent.futures.process.BrokenProcessPool"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BrokenProcessPool</span></code></a> error is now raised.
@@ -670,7 +681,7 @@ executor.</p>
 <a class="reference internal" href="#concurrent.futures.Future" title="concurrent.futures.Future"><code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code></a> instances are created by <a class="reference internal" href="#concurrent.futures.Executor.submit" title="concurrent.futures.Executor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Executor.submit()</span></code></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="concurrent.futures.Future">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">Future</span></span><a class="headerlink" href="#concurrent.futures.Future" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">Future</span></span><a class="headerlink" href="#concurrent.futures.Future" title="Link to this definition">¶</a></dt>
 <dd><p>Encapsulates the asynchronous execution of a callable.  <a class="reference internal" href="#concurrent.futures.Future" title="concurrent.futures.Future"><code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code></a>
 instances are created by <a class="reference internal" href="#concurrent.futures.Executor.submit" title="concurrent.futures.Executor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Executor.submit()</span></code></a> and should not be created
 directly except for testing.</p>
@@ -878,13 +889,13 @@ standard library.</p>
 <h2>Exception classes<a class="headerlink" href="#exception-classes" title="Link to this heading">¶</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="concurrent.futures.CancelledError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">CancelledError</span></span><a class="headerlink" href="#concurrent.futures.CancelledError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">CancelledError</span></span><a class="headerlink" href="#concurrent.futures.CancelledError" title="Link to this definition">¶</a></dt>
 <dd><p>Raised when a future is cancelled.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="concurrent.futures.TimeoutError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">TimeoutError</span></span><a class="headerlink" href="#concurrent.futures.TimeoutError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">TimeoutError</span></span><a class="headerlink" href="#concurrent.futures.TimeoutError" title="Link to this definition">¶</a></dt>
 <dd><p>A deprecated alias of <a class="reference internal" href="exceptions.html#TimeoutError" title="TimeoutError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TimeoutError</span></code></a>,
 raised when a future operation exceeds the given timeout.</p>
 <div class="versionchanged">
@@ -894,7 +905,7 @@ raised when a future operation exceeds the given timeout.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="concurrent.futures.BrokenExecutor">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">BrokenExecutor</span></span><a class="headerlink" href="#concurrent.futures.BrokenExecutor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">BrokenExecutor</span></span><a class="headerlink" href="#concurrent.futures.BrokenExecutor" title="Link to this definition">¶</a></dt>
 <dd><p>Derived from <a class="reference internal" href="exceptions.html#RuntimeError" title="RuntimeError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code></a>, this exception class is raised
 when an executor is broken for some reason, and cannot be used
 to submit or execute new tasks.</p>
@@ -905,7 +916,7 @@ to submit or execute new tasks.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="concurrent.futures.InvalidStateError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">InvalidStateError</span></span><a class="headerlink" href="#concurrent.futures.InvalidStateError" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.</span></span><span class="sig-name descname"><span class="pre">InvalidStateError</span></span><a class="headerlink" href="#concurrent.futures.InvalidStateError" title="Link to this definition">¶</a></dt>
 <dd><p>Raised when an operation is performed on a future that is not allowed
 in the current state.</p>
 <div class="versionadded">
@@ -915,7 +926,7 @@ in the current state.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="concurrent.futures.thread.BrokenThreadPool">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.thread.</span></span><span class="sig-name descname"><span class="pre">BrokenThreadPool</span></span><a class="headerlink" href="#concurrent.futures.thread.BrokenThreadPool" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.thread.</span></span><span class="sig-name descname"><span class="pre">BrokenThreadPool</span></span><a class="headerlink" href="#concurrent.futures.thread.BrokenThreadPool" title="Link to this definition">¶</a></dt>
 <dd><p>Derived from <a class="reference internal" href="#concurrent.futures.BrokenExecutor" title="concurrent.futures.BrokenExecutor"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BrokenExecutor</span></code></a>, this exception
 class is raised when one of the workers
 of a <a class="reference internal" href="#concurrent.futures.ThreadPoolExecutor" title="concurrent.futures.ThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a>
@@ -927,7 +938,7 @@ has failed initializing.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="concurrent.futures.interpreter.BrokenInterpreterPool">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.interpreter.</span></span><span class="sig-name descname"><span class="pre">BrokenInterpreterPool</span></span><a class="headerlink" href="#concurrent.futures.interpreter.BrokenInterpreterPool" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.interpreter.</span></span><span class="sig-name descname"><span class="pre">BrokenInterpreterPool</span></span><a class="headerlink" href="#concurrent.futures.interpreter.BrokenInterpreterPool" title="Link to this definition">¶</a></dt>
 <dd><p>Derived from <a class="reference internal" href="#concurrent.futures.thread.BrokenThreadPool" title="concurrent.futures.thread.BrokenThreadPool"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BrokenThreadPool</span></code></a>,
 this exception class is raised when one of the workers
 of a <a class="reference internal" href="#concurrent.futures.InterpreterPoolExecutor" title="concurrent.futures.InterpreterPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">InterpreterPoolExecutor</span></code></a>
@@ -938,20 +949,8 @@ has failed initializing.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="concurrent.futures.interpreter.ExecutionFailed">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.interpreter.</span></span><span class="sig-name descname"><span class="pre">ExecutionFailed</span></span><a class="headerlink" href="#concurrent.futures.interpreter.ExecutionFailed" title="Link to this definition">¶</a></dt>
-<dd><p>Raised from <a class="reference internal" href="#concurrent.futures.InterpreterPoolExecutor" title="concurrent.futures.InterpreterPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">InterpreterPoolExecutor</span></code></a> when
-the given initializer fails or from
-<a class="reference internal" href="#concurrent.futures.Executor.submit" title="concurrent.futures.Executor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">submit()</span></code></a> when there’s an uncaught
-exception from the submitted task.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">Added in version 3.14.</span></p>
-</div>
-</dd></dl>
-
-<dl class="py exception">
 <dt class="sig sig-object py" id="concurrent.futures.process.BrokenProcessPool">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">concurrent.futures.process.</span></span><span class="sig-name descname"><span class="pre">BrokenProcessPool</span></span><a class="headerlink" href="#concurrent.futures.process.BrokenProcessPool" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">concurrent.futures.process.</span></span><span class="sig-name descname"><span class="pre">BrokenProcessPool</span></span><a class="headerlink" href="#concurrent.futures.process.BrokenProcessPool" title="Link to this definition">¶</a></dt>
 <dd><p>Derived from <a class="reference internal" href="#concurrent.futures.BrokenExecutor" title="concurrent.futures.BrokenExecutor"><code class="xref py py-exc docutils literal notranslate"><span class="pre">BrokenExecutor</span></code></a> (formerly
 <a class="reference internal" href="exceptions.html#RuntimeError" title="RuntimeError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">RuntimeError</span></code></a>), this exception class is raised when one of the
 workers of a <a class="reference internal" href="#concurrent.futures.ProcessPoolExecutor" title="concurrent.futures.ProcessPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a>
@@ -1013,6 +1012,7 @@ fashion (for example, if it was killed from the outside).</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -1049,7 +1049,7 @@ fashion (for example, if it was killed from the outside).</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -1095,13 +1095,13 @@ fashion (for example, if it was killed from the outside).</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

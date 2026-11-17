@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>Type Object Structures &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Type Object Structures &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -143,6 +143,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -176,7 +177,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Python/C API Reference Manual</a> &#187;</li>
@@ -2052,7 +2053,7 @@ type structure.</p>
 </div>
 </dd></dl>
 
-<dl class="c macro">
+<dl class="c macro" id="c._Py_TPFLAGS_HAVE_VECTORCALL">
 <dt class="sig sig-object c" id="c.Py_TPFLAGS_HAVE_VECTORCALL">
 <span class="sig-name descname"><span class="n"><span class="pre">Py_TPFLAGS_HAVE_VECTORCALL</span></span></span><a class="headerlink" href="#c.Py_TPFLAGS_HAVE_VECTORCALL" title="Link to this definition">¶</a><br /></dt>
 <dd><em class="stableabi"> Part of the <a class="reference internal" href="stable.html#stable"><span class="std std-ref">Stable ABI</span></a> since version 3.12.</em><p>This bit is set when the class implements
@@ -2062,8 +2063,13 @@ See <a class="reference internal" href="#c.PyTypeObject.tp_vectorcall_offset" ti
 <p>This bit is inherited if <a class="reference internal" href="#c.PyTypeObject.tp_call" title="PyTypeObject.tp_call"><code class="xref c c-member docutils literal notranslate"><span class="pre">tp_call</span></code></a> is also
 inherited.</p>
 <div class="versionadded">
-<p><span class="versionmodified added">Added in version 3.9.</span></p>
+<p><span class="versionmodified added">Added in version 3.8: </span>as <code class="docutils literal notranslate"><span class="pre">_Py_TPFLAGS_HAVE_VECTORCALL</span></code></p>
 </div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.9.</span></p>
+</div>
+<p>Renamed to the current name, without the leading underscore.
+The old provisional name is <a class="reference internal" href="../glossary.html#term-soft-deprecated"><span class="xref std std-term">soft deprecated</span></a>.</p>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.12: </span>This flag is now removed from a class when the class’s
 <a class="reference internal" href="../reference/datamodel.html#object.__call__" title="object.__call__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__call__()</span></code></a> method is reassigned.</p>
@@ -2247,6 +2253,12 @@ visited as the instance does not directly own the weak references to itself
 (the weakreference list is there to support the weak reference machinery,
 but the instance has no strong reference to the elements inside it, as they
 are allowed to be removed even if the instance is still alive).</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The traversal function must not have any side effects.  It must not
+modify the reference counts of any Python objects nor create or destroy
+any Python objects.</p>
 </div>
 <p>Note that <a class="reference internal" href="gcsupport.html#c.Py_VISIT" title="Py_VISIT"><code class="xref c c-func docutils literal notranslate"><span class="pre">Py_VISIT()</span></code></a> requires the <em>visit</em> and <em>arg</em> parameters to
 <code class="xref c c-func docutils literal notranslate"><span class="pre">local_traverse()</span></code> to have these specific names; don’t name them just
@@ -4141,6 +4153,7 @@ to create instances (e.g. uses a separate factory func) using
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -4177,7 +4190,7 @@ to create instances (e.g. uses a separate factory func) using
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Python/C API Reference Manual</a> &#187;</li>
@@ -4223,13 +4236,13 @@ to create instances (e.g. uses a separate factory func) using
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

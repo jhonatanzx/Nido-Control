@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>typing — Support for type hints &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>typing — Support for type hints &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -161,6 +161,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -194,7 +195,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -1246,7 +1247,7 @@ are encouraged to migrate to <a class="reference internal" href="../reference/si
 <code class="docutils literal notranslate"><span class="pre">[]</span></code>, but each has a unique syntax.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Union">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Union</span></span><a class="headerlink" href="#typing.Union" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Union</span></span><a class="headerlink" href="#typing.Union" title="Link to this definition">¶</a></dt>
 <dd><p>Union type; <code class="docutils literal notranslate"><span class="pre">Union[X,</span> <span class="pre">Y]</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">|</span> <span class="pre">Y</span></code> and means either X or Y.</p>
 <p>To define a union, use e.g. <code class="docutils literal notranslate"><span class="pre">Union[int,</span> <span class="pre">str]</span></code> or the shorthand <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">str</span></code>. Using that shorthand is recommended. Details:</p>
 <ul>
@@ -1879,7 +1880,7 @@ For compatibility with Python 3.11 and earlier, they can also be created
 without the dedicated syntax, as documented below.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Generic">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Generic</span></span><a class="headerlink" href="#typing.Generic" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Generic</span></span><a class="headerlink" href="#typing.Generic" title="Link to this definition">¶</a></dt>
 <dd><p>Abstract base class for generic types.</p>
 <p>A generic type is typically declared by adding a list of type parameters
 after the class name:</p>
@@ -1919,7 +1920,7 @@ separately:</p>
 
 <dl class="py class" id="typevar">
 <dt class="sig sig-object py" id="typing.TypeVar">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TypeVar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contravariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_variance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.NoDefault</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.TypeVar" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TypeVar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">constraints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contravariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_variance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.NoDefault</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.TypeVar" title="Link to this definition">¶</a></dt>
 <dd><p>Type variable.</p>
 <p>The preferred way to construct a type variable is via the dedicated syntax
 for <a class="reference internal" href="../reference/compound_stmts.html#generic-functions"><span class="std std-ref">generic functions</span></a>,
@@ -2134,7 +2135,7 @@ The <code class="docutils literal notranslate"><span class="pre">infer_variance<
 
 <dl class="py class" id="typevartuple">
 <dt class="sig sig-object py" id="typing.TypeVarTuple">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TypeVarTuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.NoDefault</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.TypeVarTuple" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TypeVarTuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.NoDefault</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.TypeVarTuple" title="Link to this definition">¶</a></dt>
 <dd><p>Type variable tuple. A specialized form of <a class="reference internal" href="#typevar"><span class="std std-ref">type variable</span></a>
 that enables <em>variadic</em> generics.</p>
 <p>Type variable tuples can be declared in <a class="reference internal" href="../reference/compound_stmts.html#type-params"><span class="std std-ref">type parameter lists</span></a>
@@ -2288,7 +2289,7 @@ singleton, except that it does not force evaluation of the
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.ParamSpec">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ParamSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contravariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.NoDefault</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ParamSpec" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ParamSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contravariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.NoDefault</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ParamSpec" title="Link to this definition">¶</a></dt>
 <dd><p>Parameter specification variable.  A specialized version of
 <a class="reference internal" href="#typevar"><span class="std std-ref">type variables</span></a>.</p>
 <p>In <a class="reference internal" href="../reference/compound_stmts.html#type-params"><span class="std std-ref">type parameter lists</span></a>, parameter specifications
@@ -2454,7 +2455,7 @@ original <code class="docutils literal notranslate"><span class="pre">ParamSpec<
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.TypeAliasType">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TypeAliasType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.TypeAliasType" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TypeAliasType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.TypeAliasType" title="Link to this definition">¶</a></dt>
 <dd><p>The type of type aliases created through the <a class="reference internal" href="../reference/simple_stmts.html#type"><code class="xref std std-keyword docutils literal notranslate"><span class="pre">type</span></code></a> statement.</p>
 <p>Example:</p>
 <div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span> <span class="n">Alias</span> <span class="o">=</span> <span class="nb">int</span>
@@ -2571,7 +2572,7 @@ Their intended purpose is to be building blocks for creating and declaring
 types.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.NamedTuple">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">NamedTuple</span></span><a class="headerlink" href="#typing.NamedTuple" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">NamedTuple</span></span><a class="headerlink" href="#typing.NamedTuple" title="Link to this definition">¶</a></dt>
 <dd><p>Typed version of <a class="reference internal" href="collections.html#collections.namedtuple" title="collections.namedtuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">collections.namedtuple()</span></code></a>.</p>
 <p>Usage:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Employee</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
@@ -2641,6 +2642,10 @@ now regular dictionaries instead of instances of <code class="docutils literal n
 standard <code class="docutils literal notranslate"><span class="pre">__annotations__</span></code> attribute which has the same information.</p>
 </div>
 <div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.9: </span><code class="docutils literal notranslate"><span class="pre">NamedTuple</span></code> is now a function rather than a class.
+It can still be used as a class base, as described above.</p>
+</div>
+<div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.11: </span>Added support for generic namedtuples.</p>
 </div>
 <div class="versionchanged">
@@ -2664,7 +2669,7 @@ use <code class="docutils literal notranslate"><span class="pre">class</span> <s
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.NewType">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">NewType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.NewType" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">NewType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.NewType" title="Link to this definition">¶</a></dt>
 <dd><p>Helper class to create low-overhead <a class="reference internal" href="#distinct"><span class="std std-ref">distinct types</span></a>.</p>
 <p>A <code class="docutils literal notranslate"><span class="pre">NewType</span></code> is considered a distinct type by a typechecker. At runtime,
 however, calling a <code class="docutils literal notranslate"><span class="pre">NewType</span></code> returns its argument unchanged.</p>
@@ -2701,7 +2706,7 @@ however, calling a <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Protocol">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Protocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Generic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Protocol" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Protocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Generic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Protocol" title="Link to this definition">¶</a></dt>
 <dd><p>Base class for protocol classes.</p>
 <p>Protocol classes are defined like this:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Proto</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
@@ -2811,9 +2816,9 @@ for more details.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.TypedDict">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TypedDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.TypedDict" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TypedDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.TypedDict" title="Link to this definition">¶</a></dt>
 <dd><p>Special construct to add type hints to a dictionary.
-At runtime it is a plain <a class="reference internal" href="stdtypes.html#dict" title="dict"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>.</p>
+At runtime “<code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code> instances” are simply <a class="reference internal" href="stdtypes.html#dict" title="dict"><code class="xref py py-class docutils literal notranslate"><span class="pre">dicts</span></code></a>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> declares a dictionary type that expects all of its
 instances to have a certain set of keys, where each key is
 associated with a value of a consistent type. This expectation
@@ -3040,6 +3045,10 @@ are mutable if they do not carry the <a class="reference internal" href="#typing
 <p><span class="versionmodified added">Added in version 3.8.</span></p>
 </div>
 <div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.9: </span><code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> is now a function rather than a class.
+It can still be used as a class base, as described above.</p>
+</div>
+<div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.11: </span>Added support for marking individual keys as <a class="reference internal" href="#typing.Required" title="typing.Required"><code class="xref py py-data docutils literal notranslate"><span class="pre">Required</span></code></a> or <a class="reference internal" href="#typing.NotRequired" title="typing.NotRequired"><code class="xref py py-data docutils literal notranslate"><span class="pre">NotRequired</span></code></a>.
 See <span class="target" id="index-33"></span><a class="pep reference external" href="https://peps.python.org/pep-0655/"><strong>PEP 655</strong></a>.</p>
 </div>
@@ -3070,32 +3079,32 @@ use <code class="docutils literal notranslate"><span class="pre">class</span> <s
 with <a class="reference internal" href="#typing.runtime_checkable" title="typing.runtime_checkable"><code class="xref py py-deco docutils literal notranslate"><span class="pre">&#64;runtime_checkable</span></code></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.SupportsAbs">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsAbs</span></span><a class="headerlink" href="#typing.SupportsAbs" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsAbs</span></span><a class="headerlink" href="#typing.SupportsAbs" title="Link to this definition">¶</a></dt>
 <dd><p>An ABC with one abstract method <code class="docutils literal notranslate"><span class="pre">__abs__</span></code> that is covariant
 in its return type.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.SupportsBytes">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsBytes</span></span><a class="headerlink" href="#typing.SupportsBytes" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsBytes</span></span><a class="headerlink" href="#typing.SupportsBytes" title="Link to this definition">¶</a></dt>
 <dd><p>An ABC with one abstract method <code class="docutils literal notranslate"><span class="pre">__bytes__</span></code>.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.SupportsComplex">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsComplex</span></span><a class="headerlink" href="#typing.SupportsComplex" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsComplex</span></span><a class="headerlink" href="#typing.SupportsComplex" title="Link to this definition">¶</a></dt>
 <dd><p>An ABC with one abstract method <code class="docutils literal notranslate"><span class="pre">__complex__</span></code>.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.SupportsFloat">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsFloat</span></span><a class="headerlink" href="#typing.SupportsFloat" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsFloat</span></span><a class="headerlink" href="#typing.SupportsFloat" title="Link to this definition">¶</a></dt>
 <dd><p>An ABC with one abstract method <code class="docutils literal notranslate"><span class="pre">__float__</span></code>.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.SupportsIndex">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsIndex</span></span><a class="headerlink" href="#typing.SupportsIndex" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsIndex</span></span><a class="headerlink" href="#typing.SupportsIndex" title="Link to this definition">¶</a></dt>
 <dd><p>An ABC with one abstract method <code class="docutils literal notranslate"><span class="pre">__index__</span></code>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.8.</span></p>
@@ -3104,13 +3113,13 @@ in its return type.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.SupportsInt">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsInt</span></span><a class="headerlink" href="#typing.SupportsInt" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsInt</span></span><a class="headerlink" href="#typing.SupportsInt" title="Link to this definition">¶</a></dt>
 <dd><p>An ABC with one abstract method <code class="docutils literal notranslate"><span class="pre">__int__</span></code>.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.SupportsRound">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsRound</span></span><a class="headerlink" href="#typing.SupportsRound" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">SupportsRound</span></span><a class="headerlink" href="#typing.SupportsRound" title="Link to this definition">¶</a></dt>
 <dd><p>An ABC with one abstract method <code class="docutils literal notranslate"><span class="pre">__round__</span></code>
 that is covariant in its return type.</p>
 </dd></dl>
@@ -3120,11 +3129,11 @@ that is covariant in its return type.</p>
 <span id="typing-io"></span><h3>ABCs and Protocols for working with I/O<a class="headerlink" href="#abcs-and-protocols-for-working-with-i-o" title="Link to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.IO">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">IO</span></span><span class="sig-paren">[</span><em class="sig-param"><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">]</span><a class="headerlink" href="#typing.IO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">IO</span></span><span class="sig-paren">[</span><em class="sig-param"><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">]</span><a class="headerlink" href="#typing.IO" title="Link to this definition">¶</a></dt>
 <dt class="sig sig-object py" id="typing.TextIO">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TextIO</span></span><span class="sig-paren">[</span><em class="sig-param"><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">]</span><a class="headerlink" href="#typing.TextIO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">TextIO</span></span><a class="headerlink" href="#typing.TextIO" title="Link to this definition">¶</a></dt>
 <dt class="sig sig-object py" id="typing.BinaryIO">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">BinaryIO</span></span><span class="sig-paren">[</span><em class="sig-param"><span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">]</span><a class="headerlink" href="#typing.BinaryIO" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">BinaryIO</span></span><a class="headerlink" href="#typing.BinaryIO" title="Link to this definition">¶</a></dt>
 <dd><p>Generic class <code class="docutils literal notranslate"><span class="pre">IO[AnyStr]</span></code> and its subclasses <code class="docutils literal notranslate"><span class="pre">TextIO(IO[str])</span></code>
 and <code class="docutils literal notranslate"><span class="pre">BinaryIO(IO[bytes])</span></code>
 represent the types of I/O streams such as returned by
@@ -3332,10 +3341,10 @@ Defaults to <code class="docutils literal notranslate"><span class="pre">False</
 <p><span class="versionmodified added">Added in version 3.12.</span></p>
 </div>
 </p></li>
-<li><p><strong>field_specifiers</strong> (<a class="reference internal" href="stdtypes.html#tuple" title="tuple"><em>tuple</em></a><em>[</em><a class="reference internal" href="collections.abc.html#collections.abc.Callable" title="collections.abc.Callable"><em>Callable</em></a><em>[</em><em>...</em><em>, </em><a class="reference internal" href="#typing.Any" title="typing.Any"><em>Any</em></a><em>]</em><em>, </em><em>...</em><em>]</em>) – Specifies a static list of supported classes
+<li><p><strong>field_specifiers</strong> (<a class="reference internal" href="stdtypes.html#tuple" title="tuple"><em>tuple</em></a><em>[</em><a class="reference internal" href="collections.abc.html#collections.abc.Callable" title="collections.abc.Callable"><em>Callable</em></a><em>[</em><em>...</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>...</em><em>]</em>) – Specifies a static list of supported classes
 or functions that describe fields, similar to <a class="reference internal" href="dataclasses.html#dataclasses.field" title="dataclasses.field"><code class="xref py py-func docutils literal notranslate"><span class="pre">dataclasses.field()</span></code></a>.
 Defaults to <code class="docutils literal notranslate"><span class="pre">()</span></code>.</p></li>
-<li><p><strong>**kwargs</strong> (<a class="reference internal" href="#typing.Any" title="typing.Any"><em>Any</em></a>) – Arbitrary other keyword arguments are accepted in order to allow for
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Arbitrary other keyword arguments are accepted in order to allow for
 possible future extensions.</p></li>
 </ul>
 </dd>
@@ -3740,7 +3749,7 @@ Return <code class="docutils literal notranslate"><span class="pre">()</span></c
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.ForwardRef">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ForwardRef</span></span><a class="headerlink" href="#typing.ForwardRef" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ForwardRef</span></span><a class="headerlink" href="#typing.ForwardRef" title="Link to this definition">¶</a></dt>
 <dd><p>Class used for internal typing representation of string forward references.</p>
 <p>For example, <code class="docutils literal notranslate"><span class="pre">List[&quot;SomeClass&quot;]</span></code> is implicitly transformed into
 <code class="docutils literal notranslate"><span class="pre">List[ForwardRef(&quot;SomeClass&quot;)]</span></code>.  <code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardRef</span></code> should not be instantiated by
@@ -3857,7 +3866,7 @@ program they are checking targets a minimum Python version of 3.9 or newer.</p>
 <span id="corresponding-to-built-in-types"></span><h4>Aliases to built-in types<a class="headerlink" href="#aliases-to-built-in-types" title="Link to this heading">¶</a></h4>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Dict">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">dict,</span> <span class="pre">MutableMapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Dict" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">dict,</span> <span class="pre">MutableMapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Dict" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="stdtypes.html#dict" title="dict"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>.</p>
 <p>Note that to annotate arguments, it is preferred
 to use an abstract collection type such as <a class="reference internal" href="collections.abc.html#collections.abc.Mapping" title="collections.abc.Mapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>
@@ -3870,7 +3879,7 @@ See <span class="target" id="index-42"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.List">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">List</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">list,</span> <span class="pre">MutableSequence[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.List" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">List</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">list,</span> <span class="pre">MutableSequence[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.List" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="stdtypes.html#list" title="list"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>.</p>
 <p>Note that to annotate arguments, it is preferred
 to use an abstract collection type such as
@@ -3884,7 +3893,7 @@ See <span class="target" id="index-43"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Set">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">set,</span> <span class="pre">MutableSet[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Set" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">set,</span> <span class="pre">MutableSet[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Set" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="stdtypes.html#set" title="set"><code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.set</span></code></a>.</p>
 <p>Note that to annotate arguments, it is preferred
 to use an abstract collection type such as <a class="reference internal" href="collections.abc.html#collections.abc.Set" title="collections.abc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Set</span></code></a>
@@ -3897,7 +3906,7 @@ See <span class="target" id="index-44"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.FrozenSet">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">FrozenSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">frozenset,</span> <span class="pre">AbstractSet[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.FrozenSet" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">FrozenSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">frozenset,</span> <span class="pre">AbstractSet[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.FrozenSet" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="stdtypes.html#frozenset" title="frozenset"><code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.frozenset</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="stdtypes.html#frozenset" title="frozenset"><code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.frozenset</span></code></a>
@@ -3920,7 +3929,7 @@ See <span class="target" id="index-46"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Type">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[CT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Type" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[CT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Type" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="functions.html#type" title="type"><code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></a>.</p>
 <p>See <a class="reference internal" href="#type-of-class-objects"><span class="std std-ref">The type of class objects</span></a> for details on using <a class="reference internal" href="functions.html#type" title="type"><code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></a> or
 <code class="docutils literal notranslate"><span class="pre">typing.Type</span></code> in type annotations.</p>
@@ -3938,7 +3947,7 @@ See <span class="target" id="index-47"></span><a class="pep reference external" 
 <span id="corresponding-to-types-in-collections"></span><h4>Aliases to types in <a class="reference internal" href="collections.html#module-collections" title="collections: Container datatypes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">collections</span></code></a><a class="headerlink" href="#aliases-to-types-in-collections" title="Link to this heading">¶</a></h4>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.DefaultDict">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">DefaultDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">collections.defaultdict,</span> <span class="pre">MutableMapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.DefaultDict" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">DefaultDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">collections.defaultdict,</span> <span class="pre">MutableMapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.DefaultDict" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.html#collections.defaultdict" title="collections.defaultdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.defaultdict</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.5.2.</span></p>
@@ -3951,7 +3960,7 @@ See <span class="target" id="index-48"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.OrderedDict">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">OrderedDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">collections.OrderedDict,</span> <span class="pre">MutableMapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.OrderedDict" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">OrderedDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">collections.OrderedDict,</span> <span class="pre">MutableMapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.OrderedDict" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.html#collections.OrderedDict" title="collections.OrderedDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.OrderedDict</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.7.2.</span></p>
@@ -3964,7 +3973,7 @@ See <span class="target" id="index-49"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.ChainMap">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ChainMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">collections.ChainMap,</span> <span class="pre">MutableMapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ChainMap" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ChainMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">collections.ChainMap,</span> <span class="pre">MutableMapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ChainMap" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.html#collections.ChainMap" title="collections.ChainMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.ChainMap</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.6.1.</span></p>
@@ -3977,7 +3986,7 @@ See <span class="target" id="index-50"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Counter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Counter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">collections.Counter,</span> <span class="pre">Dict[T,</span> <span class="pre">int]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Counter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Counter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">collections.Counter,</span> <span class="pre">Dict[T,</span> <span class="pre">int]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Counter" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.html#collections.Counter" title="collections.Counter"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.Counter</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.6.1.</span></p>
@@ -3990,7 +3999,7 @@ See <span class="target" id="index-51"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Deque">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Deque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">deque,</span> <span class="pre">MutableSequence[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Deque" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Deque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">deque,</span> <span class="pre">MutableSequence[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Deque" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.html#collections.deque" title="collections.deque"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.deque</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.6.1.</span></p>
@@ -4006,9 +4015,9 @@ See <span class="target" id="index-52"></span><a class="pep reference external" 
 <span id="other-concrete-types"></span><h4>Aliases to other concrete types<a class="headerlink" href="#aliases-to-other-concrete-types" title="Link to this heading">¶</a></h4>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Pattern">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Pattern</span></span><a class="headerlink" href="#typing.Pattern" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Pattern</span></span><a class="headerlink" href="#typing.Pattern" title="Link to this definition">¶</a></dt>
 <dt class="sig sig-object py" id="typing.Match">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Match</span></span><a class="headerlink" href="#typing.Match" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Match</span></span><a class="headerlink" href="#typing.Match" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated aliases corresponding to the return types from
 <a class="reference internal" href="re.html#re.compile" title="re.compile"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.compile()</span></code></a> and <a class="reference internal" href="re.html#re.match" title="re.match"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.match()</span></code></a>.</p>
 <p>These types (and the corresponding functions) are generic over
@@ -4023,7 +4032,7 @@ See <span class="target" id="index-53"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Text">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Text</span></span><a class="headerlink" href="#typing.Text" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Text</span></span><a class="headerlink" href="#typing.Text" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias for <a class="reference internal" href="stdtypes.html#str" title="str"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Text</span></code> is provided to supply a forward
 compatible path for Python 2 code: in Python 2, <code class="docutils literal notranslate"><span class="pre">Text</span></code> is an alias for
@@ -4050,7 +4059,7 @@ currently planned, but users are encouraged to use
 <span id="corresponding-to-collections-in-collections-abc"></span><span id="abstract-base-classes"></span><h4>Aliases to container ABCs in <a class="reference internal" href="collections.abc.html#module-collections.abc" title="collections.abc: Abstract base classes for containers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">collections.abc</span></code></a><a class="headerlink" href="#aliases-to-container-abcs-in-collections-abc" title="Link to this heading">¶</a></h4>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.AbstractSet">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AbstractSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Collection[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AbstractSet" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AbstractSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Collection[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AbstractSet" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Set" title="collections.abc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Set</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.Set" title="collections.abc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Set</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4060,7 +4069,7 @@ See <span class="target" id="index-54"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.ByteString">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ByteString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Sequence[int]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ByteString" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ByteString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Sequence[int]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ByteString" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.ByteString" title="collections.abc.ByteString"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.ByteString</span></code></a>.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">isinstance(obj,</span> <span class="pre">collections.abc.Buffer)</span></code> to test if <code class="docutils literal notranslate"><span class="pre">obj</span></code>
 implements the <a class="reference internal" href="../c-api/buffer.html#bufferobjects"><span class="std std-ref">buffer protocol</span></a> at runtime. For use in
@@ -4082,7 +4091,7 @@ or by static type checkers).</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Collection">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Sized,</span> <span class="pre">Iterable[T_co],</span> <span class="pre">Container[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Collection" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Sized,</span> <span class="pre">Iterable[T_co],</span> <span class="pre">Container[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Collection" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Collection" title="collections.abc.Collection"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Collection</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.6.</span></p>
@@ -4095,7 +4104,7 @@ See <span class="target" id="index-56"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Container">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Container</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Container" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Container</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Container" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Container" title="collections.abc.Container"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Container</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.Container" title="collections.abc.Container"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Container</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4105,7 +4114,7 @@ See <span class="target" id="index-57"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.ItemsView">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ItemsView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">MappingView,</span> <span class="pre">AbstractSet[tuple[KT_co,</span> <span class="pre">VT_co]]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ItemsView" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ItemsView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">MappingView,</span> <span class="pre">AbstractSet[tuple[KT_co,</span> <span class="pre">VT_co]]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ItemsView" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.ItemsView" title="collections.abc.ItemsView"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.ItemsView</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.ItemsView" title="collections.abc.ItemsView"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.ItemsView</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4115,7 +4124,7 @@ See <span class="target" id="index-58"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.KeysView">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">KeysView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">MappingView,</span> <span class="pre">AbstractSet[KT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.KeysView" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">KeysView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">MappingView,</span> <span class="pre">AbstractSet[KT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.KeysView" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.KeysView" title="collections.abc.KeysView"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.KeysView</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.KeysView" title="collections.abc.KeysView"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.KeysView</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4125,7 +4134,7 @@ See <span class="target" id="index-59"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Mapping">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Collection[KT],</span> <span class="pre">Generic[KT,</span> <span class="pre">VT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Mapping" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Collection[KT],</span> <span class="pre">Generic[KT,</span> <span class="pre">VT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Mapping" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Mapping" title="collections.abc.Mapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Mapping</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.Mapping" title="collections.abc.Mapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Mapping</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4135,7 +4144,7 @@ See <span class="target" id="index-60"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.MappingView">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">MappingView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Sized</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.MappingView" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">MappingView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Sized</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.MappingView" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.MappingView" title="collections.abc.MappingView"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MappingView</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.MappingView" title="collections.abc.MappingView"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MappingView</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4145,7 +4154,7 @@ See <span class="target" id="index-61"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.MutableMapping">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">MutableMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Mapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.MutableMapping" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">MutableMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Mapping[KT,</span> <span class="pre">VT]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.MutableMapping" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.MutableMapping" title="collections.abc.MutableMapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MutableMapping</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.MutableMapping" title="collections.abc.MutableMapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MutableMapping</span></code></a>
@@ -4156,7 +4165,7 @@ See <span class="target" id="index-62"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.MutableSequence">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">MutableSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Sequence[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.MutableSequence" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">MutableSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Sequence[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.MutableSequence" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.MutableSequence" title="collections.abc.MutableSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MutableSequence</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.MutableSequence" title="collections.abc.MutableSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MutableSequence</span></code></a>
@@ -4167,7 +4176,7 @@ See <span class="target" id="index-63"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.MutableSet">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">MutableSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">AbstractSet[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.MutableSet" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">MutableSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">AbstractSet[T]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.MutableSet" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.MutableSet" title="collections.abc.MutableSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MutableSet</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.MutableSet" title="collections.abc.MutableSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MutableSet</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4177,7 +4186,7 @@ See <span class="target" id="index-64"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Sequence">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Reversible[T_co],</span> <span class="pre">Collection[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Sequence" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Reversible[T_co],</span> <span class="pre">Collection[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Sequence" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Sequence" title="collections.abc.Sequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.Sequence" title="collections.abc.Sequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4187,7 +4196,7 @@ See <span class="target" id="index-65"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.ValuesView">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ValuesView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">MappingView,</span> <span class="pre">Collection[_VT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ValuesView" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ValuesView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">MappingView,</span> <span class="pre">Collection[_VT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ValuesView" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.ValuesView" title="collections.abc.ValuesView"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.ValuesView</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.ValuesView" title="collections.abc.ValuesView"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.ValuesView</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4200,7 +4209,7 @@ See <span class="target" id="index-66"></span><a class="pep reference external" 
 <span id="asynchronous-programming"></span><h4>Aliases to asynchronous ABCs in <a class="reference internal" href="collections.abc.html#module-collections.abc" title="collections.abc: Abstract base classes for containers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">collections.abc</span></code></a><a class="headerlink" href="#aliases-to-asynchronous-abcs-in-collections-abc" title="Link to this heading">¶</a></h4>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Coroutine">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Coroutine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Awaitable[ReturnType],</span> <span class="pre">Generic[YieldType,</span> <span class="pre">SendType,</span> <span class="pre">ReturnType]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Coroutine" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Coroutine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Awaitable[ReturnType],</span> <span class="pre">Generic[YieldType,</span> <span class="pre">SendType,</span> <span class="pre">ReturnType]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Coroutine" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Coroutine" title="collections.abc.Coroutine"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Coroutine</span></code></a>.</p>
 <p>See <a class="reference internal" href="#annotating-generators-and-coroutines"><span class="std std-ref">Annotating generators and coroutines</span></a>
 for details on using <a class="reference internal" href="collections.abc.html#collections.abc.Coroutine" title="collections.abc.Coroutine"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Coroutine</span></code></a>
@@ -4216,7 +4225,7 @@ See <span class="target" id="index-67"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.AsyncGenerator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AsyncGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">AsyncIterator[YieldType],</span> <span class="pre">Generic[YieldType,</span> <span class="pre">SendType]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AsyncGenerator" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AsyncGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">AsyncIterator[YieldType],</span> <span class="pre">Generic[YieldType,</span> <span class="pre">SendType]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AsyncGenerator" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.AsyncGenerator" title="collections.abc.AsyncGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.AsyncGenerator</span></code></a>.</p>
 <p>See <a class="reference internal" href="#annotating-generators-and-coroutines"><span class="std std-ref">Annotating generators and coroutines</span></a>
 for details on using <a class="reference internal" href="collections.abc.html#collections.abc.AsyncGenerator" title="collections.abc.AsyncGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.AsyncGenerator</span></code></a>
@@ -4236,7 +4245,7 @@ See <span class="target" id="index-68"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.AsyncIterable">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AsyncIterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AsyncIterable" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AsyncIterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AsyncIterable" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.AsyncIterable" title="collections.abc.AsyncIterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.AsyncIterable</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.5.2.</span></p>
@@ -4249,7 +4258,7 @@ See <span class="target" id="index-69"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.AsyncIterator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AsyncIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">AsyncIterable[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AsyncIterator" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AsyncIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">AsyncIterable[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AsyncIterator" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.AsyncIterator" title="collections.abc.AsyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.AsyncIterator</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.5.2.</span></p>
@@ -4262,7 +4271,7 @@ See <span class="target" id="index-70"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Awaitable">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Awaitable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Awaitable" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Awaitable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Awaitable" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Awaitable" title="collections.abc.Awaitable"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Awaitable</span></code></a>.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.5.2.</span></p>
@@ -4278,7 +4287,7 @@ See <span class="target" id="index-71"></span><a class="pep reference external" 
 <span id="corresponding-to-other-types-in-collections-abc"></span><h4>Aliases to other ABCs in <a class="reference internal" href="collections.abc.html#module-collections.abc" title="collections.abc: Abstract base classes for containers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">collections.abc</span></code></a><a class="headerlink" href="#aliases-to-other-abcs-in-collections-abc" title="Link to this heading">¶</a></h4>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Iterable">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Iterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Iterable" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Iterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Iterable" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Iterable" title="collections.abc.Iterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterable</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.Iterable" title="collections.abc.Iterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterable</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4288,7 +4297,7 @@ See <span class="target" id="index-72"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Iterator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Iterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Iterable[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Iterator" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Iterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Iterable[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Iterator" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Iterator" title="collections.abc.Iterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterator</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.Iterator" title="collections.abc.Iterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterator</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4314,7 +4323,7 @@ See <span class="target" id="index-75"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Generator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Iterator[YieldType],</span> <span class="pre">Generic[YieldType,</span> <span class="pre">SendType,</span> <span class="pre">ReturnType]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Generator" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Iterator[YieldType],</span> <span class="pre">Generic[YieldType,</span> <span class="pre">SendType,</span> <span class="pre">ReturnType]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Generator" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Generator" title="collections.abc.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Generator</span></code></a>.</p>
 <p>See <a class="reference internal" href="#annotating-generators-and-coroutines"><span class="std std-ref">Annotating generators and coroutines</span></a>
 for details on using <a class="reference internal" href="collections.abc.html#collections.abc.Generator" title="collections.abc.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Generator</span></code></a>
@@ -4330,7 +4339,7 @@ See <span class="target" id="index-76"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Hashable">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Hashable</span></span><a class="headerlink" href="#typing.Hashable" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Hashable</span></span><a class="headerlink" href="#typing.Hashable" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Hashable" title="collections.abc.Hashable"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Hashable</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.12: </span>Use <a class="reference internal" href="collections.abc.html#collections.abc.Hashable" title="collections.abc.Hashable"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Hashable</span></code></a> directly instead.</p>
@@ -4339,7 +4348,7 @@ See <span class="target" id="index-76"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Reversible">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Reversible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Iterable[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Reversible" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Reversible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Iterable[T_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.Reversible" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Reversible" title="collections.abc.Reversible"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Reversible</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.9: </span><a class="reference internal" href="collections.abc.html#collections.abc.Reversible" title="collections.abc.Reversible"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Reversible</span></code></a> now supports subscripting (<code class="docutils literal notranslate"><span class="pre">[]</span></code>).
@@ -4349,7 +4358,7 @@ See <span class="target" id="index-77"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.Sized">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Sized</span></span><a class="headerlink" href="#typing.Sized" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">Sized</span></span><a class="headerlink" href="#typing.Sized" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="collections.abc.html#collections.abc.Sized" title="collections.abc.Sized"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Sized</span></code></a>.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.12: </span>Use <a class="reference internal" href="collections.abc.html#collections.abc.Sized" title="collections.abc.Sized"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Sized</span></code></a> directly instead.</p>
@@ -4361,7 +4370,7 @@ See <span class="target" id="index-77"></span><a class="pep reference external" 
 <span id="context-manager-types"></span><h4>Aliases to <a class="reference internal" href="contextlib.html#module-contextlib" title="contextlib: Utilities for with-statement contexts."><code class="xref py py-mod docutils literal notranslate"><span class="pre">contextlib</span></code></a> ABCs<a class="headerlink" href="#aliases-to-contextlib-abcs" title="Link to this heading">¶</a></h4>
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.ContextManager">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ContextManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co,</span> <span class="pre">ExitT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ContextManager" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">ContextManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co,</span> <span class="pre">ExitT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.ContextManager" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="contextlib.html#contextlib.AbstractContextManager" title="contextlib.AbstractContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">contextlib.AbstractContextManager</span></code></a>.</p>
 <p>The first type parameter, <code class="docutils literal notranslate"><span class="pre">T_co</span></code>, represents the type returned by
 the <a class="reference internal" href="../reference/datamodel.html#object.__enter__" title="object.__enter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__enter__()</span></code></a> method. The optional second type parameter, <code class="docutils literal notranslate"><span class="pre">ExitT_co</span></code>,
@@ -4382,7 +4391,7 @@ See <span class="target" id="index-78"></span><a class="pep reference external" 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="typing.AsyncContextManager">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AsyncContextManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co,</span> <span class="pre">AExitT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AsyncContextManager" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">typing.</span></span><span class="sig-name descname"><span class="pre">AsyncContextManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Generic[T_co,</span> <span class="pre">AExitT_co]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#typing.AsyncContextManager" title="Link to this definition">¶</a></dt>
 <dd><p>Deprecated alias to <a class="reference internal" href="contextlib.html#contextlib.AbstractAsyncContextManager" title="contextlib.AbstractAsyncContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">contextlib.AbstractAsyncContextManager</span></code></a>.</p>
 <p>The first type parameter, <code class="docutils literal notranslate"><span class="pre">T_co</span></code>, represents the type returned by
 the <a class="reference internal" href="../reference/datamodel.html#object.__aenter__" title="object.__aenter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aenter__()</span></code></a> method. The optional second type parameter, <code class="docutils literal notranslate"><span class="pre">AExitT_co</span></code>,
@@ -4530,6 +4539,7 @@ convenience. This is subject to change, and not all deprecations are listed.</p>
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -4566,7 +4576,7 @@ convenience. This is subject to change, and not all deprecations are listed.</p>
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -4612,13 +4622,13 @@ convenience. This is subject to change, and not all deprecations are listed.</p>
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

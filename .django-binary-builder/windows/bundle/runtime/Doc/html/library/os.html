@@ -16,21 +16,21 @@
 <meta property="og:image:width" content="200">
 <meta property="og:image:height" content="200">
 
-    <title>os — Miscellaneous operating system interfaces &#8212; Python 3.14.2 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>os — Miscellaneous operating system interfaces &#8212; Python 3.14.3 documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=234b1a7c" />
-    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=8cd84f99" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=4eb63a40" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
     
-    <script src="../_static/documentation_options.js?v=7774bffa"></script>
-    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/documentation_options.js?v=d30c3be3"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <script src="../_static/sidebar.js"></script>
     
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Python 3.14.2 documentation"
+          title="Search within Python 3.14.3 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -142,6 +142,7 @@
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </nav>
@@ -175,7 +176,7 @@
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -250,7 +251,7 @@ that have the correct type, but are not accepted by the operating system.</p>
 </div>
 <dl class="py exception">
 <dt class="sig sig-object py" id="os.error">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">error</span></span><a class="headerlink" href="#os.error" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">error</span></span><a class="headerlink" href="#os.error" title="Link to this definition">¶</a></dt>
 <dd><p>An alias for the built-in <a class="reference internal" href="exceptions.html#OSError" title="OSError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">OSError</span></code></a> exception.</p>
 </dd></dl>
 
@@ -502,7 +503,7 @@ In all other cases, <a class="reference internal" href="exceptions.html#TypeErro
 
 <dl class="py class">
 <dt class="sig sig-object py" id="os.PathLike">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">PathLike</span></span><a class="headerlink" href="#os.PathLike" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">PathLike</span></span><a class="headerlink" href="#os.PathLike" title="Link to this definition">¶</a></dt>
 <dd><p>An <a class="reference internal" href="../glossary.html#term-abstract-base-class"><span class="xref std std-term">abstract base class</span></a> for objects representing a file system path,
 e.g. <a class="reference internal" href="pathlib.html#pathlib.PurePath" title="pathlib.PurePath"><code class="xref py py-class docutils literal notranslate"><span class="pre">pathlib.PurePath</span></code></a>.</p>
 <div class="versionadded">
@@ -510,7 +511,7 @@ e.g. <a class="reference internal" href="pathlib.html#pathlib.PurePath" title="p
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="os.PathLike.__fspath__">
-<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">__fspath__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#os.PathLike.__fspath__" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__fspath__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#os.PathLike.__fspath__" title="Link to this definition">¶</a></dt>
 <dd><p>Return the file system path representation of the object.</p>
 <p>The method should only return a <a class="reference internal" href="stdtypes.html#str" title="str"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference internal" href="stdtypes.html#bytes" title="bytes"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> object,
 with the preference being for <a class="reference internal" href="stdtypes.html#str" title="str"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>.</p>
@@ -2312,7 +2313,7 @@ implementation.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="os.terminal_size">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">terminal_size</span></span><a class="headerlink" href="#os.terminal_size" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">terminal_size</span></span><a class="headerlink" href="#os.terminal_size" title="Link to this definition">¶</a></dt>
 <dd><p>A subclass of tuple, holding <code class="docutils literal notranslate"><span class="pre">(columns,</span> <span class="pre">lines)</span></code> of the terminal window size.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="os.terminal_size.columns">
@@ -2338,7 +2339,8 @@ implementation.</p>
 can be inherited by child processes.  Since Python 3.4, file descriptors
 created by Python are non-inheritable by default.</p>
 <p>On UNIX, non-inheritable file descriptors are closed in child processes at the
-execution of a new program, other file descriptors are inherited.</p>
+execution of a new program, other file descriptors are inherited. Note that
+non-inheritable file descriptors are still <em>inherited</em> by child processes on <a class="reference internal" href="#os.fork" title="os.fork"><code class="xref py py-func docutils literal notranslate"><span class="pre">os.fork()</span></code></a>.</p>
 <p>On Windows, non-inheritable handles and file descriptors are closed in child
 processes, except for standard streams (file descriptors 0, 1 and 2: stdin, stdout
 and stderr), which are always inherited.  Using <a class="reference internal" href="#os.spawnl" title="os.spawnl"><code class="xref py py-func docutils literal notranslate"><span class="pre">spawn*</span></code></a> functions,
@@ -3261,7 +3263,7 @@ in its destructor.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="os.DirEntry">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">DirEntry</span></span><a class="headerlink" href="#os.DirEntry" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">DirEntry</span></span><a class="headerlink" href="#os.DirEntry" title="Link to this definition">¶</a></dt>
 <dd><p>Object yielded by <a class="reference internal" href="#os.scandir" title="os.scandir"><code class="xref py py-func docutils literal notranslate"><span class="pre">scandir()</span></code></a> to expose the file path and other file
 attributes of a directory entry.</p>
 <p><a class="reference internal" href="#os.scandir" title="os.scandir"><code class="xref py py-func docutils literal notranslate"><span class="pre">scandir()</span></code></a> will provide as much of this information as possible without
@@ -3471,7 +3473,7 @@ returns the information for the original path as if
 
 <dl class="py class">
 <dt class="sig sig-object py" id="os.stat_result">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">stat_result</span></span><a class="headerlink" href="#os.stat_result" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">stat_result</span></span><a class="headerlink" href="#os.stat_result" title="Link to this definition">¶</a></dt>
 <dd><p>Object whose attributes correspond roughly to the members of the
 <code class="xref c c-struct docutils literal notranslate"><span class="pre">stat</span></code> structure. It is used for the result of <a class="reference internal" href="#os.stat" title="os.stat"><code class="xref py py-func docutils literal notranslate"><span class="pre">os.stat()</span></code></a>,
 <a class="reference internal" href="#os.fstat" title="os.fstat"><code class="xref py py-func docutils literal notranslate"><span class="pre">os.fstat()</span></code></a> and <a class="reference internal" href="#os.lstat" title="os.lstat"><code class="xref py py-func docutils literal notranslate"><span class="pre">os.lstat()</span></code></a>.</p>
@@ -3981,7 +3983,7 @@ traditional Unix name.  Please see the documentation for
 
 <dl class="py function">
 <dt class="sig sig-object py" id="os.utime">
-<span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">utime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">ns</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">dir_fd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">follow_symlinks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#os.utime" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">utime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">ns</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">dir_fd=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">follow_symlinks=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#os.utime" title="Link to this definition">¶</a></dt>
 <dd><p>Set the access and modified times of the file specified by <em>path</em>.</p>
 <p><a class="reference internal" href="#os.utime" title="os.utime"><code class="xref py py-func docutils literal notranslate"><span class="pre">utime()</span></code></a> takes two optional parameters, <em>times</em> and <em>ns</em>.
 These specify the times set on <em>path</em> and are used as follows:</p>
@@ -4168,7 +4170,7 @@ empty:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="os.memfd_create">
-<span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">memfd_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">os.MFD_CLOEXEC</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#os.memfd_create" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">memfd_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">flags=os.MFD_CLOEXEC</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#os.memfd_create" title="Link to this definition">¶</a></dt>
 <dd><p>Create an anonymous file and return a file descriptor that refers to it.
 <em>flags</em> must be one of the <code class="docutils literal notranslate"><span class="pre">os.MFD_*</span></code> constants available on the system
 (or a bitwise ORed combination of them).  By default, the new file
@@ -4234,7 +4236,7 @@ without any side effects.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="os.eventfd">
-<span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">eventfd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initval</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">os.EFD_CLOEXEC</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#os.eventfd" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">eventfd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initval</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">flags=os.EFD_CLOEXEC</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#os.eventfd" title="Link to this definition">¶</a></dt>
 <dd><p>Create and return an event file descriptor. The file descriptors supports
 raw <a class="reference internal" href="#os.read" title="os.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> and <a class="reference internal" href="#os.write" title="os.write"><code class="xref py py-func docutils literal notranslate"><span class="pre">write()</span></code></a> with a buffer size of 8,
 <a class="reference internal" href="select.html#select.select" title="select.select"><code class="xref py py-func docutils literal notranslate"><span class="pre">select()</span></code></a>, <a class="reference internal" href="select.html#select.poll" title="select.poll"><code class="xref py py-func docutils literal notranslate"><span class="pre">poll()</span></code></a> and similar. See man page
@@ -4260,7 +4262,7 @@ write operation would increment the counter to a value larger than
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="c1"># semaphore with start value &#39;1&#39;</span>
-<span class="n">fd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">eventfd</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">EFD_SEMAPHORE</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">EFC_CLOEXEC</span><span class="p">)</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">eventfd</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">EFD_SEMAPHORE</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">EFD_CLOEXEC</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="c1"># acquire semaphore</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">eventfd_read</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
@@ -5984,7 +5986,7 @@ the default.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="os.sched_param">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">sched_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sched_priority</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#os.sched_param" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">os.</span></span><span class="sig-name descname"><span class="pre">sched_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sched_priority</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#os.sched_param" title="Link to this definition">¶</a></dt>
 <dd><p>This class represents tunable scheduling parameters used in
 <a class="reference internal" href="#os.sched_setparam" title="os.sched_setparam"><code class="xref py py-func docutils literal notranslate"><span class="pre">sched_setparam()</span></code></a>, <a class="reference internal" href="#os.sched_setscheduler" title="os.sched_setscheduler"><code class="xref py py-func docutils literal notranslate"><span class="pre">sched_setscheduler()</span></code></a>, and
 <a class="reference internal" href="#os.sched_getparam" title="os.sched_getparam"><code class="xref py py-func docutils literal notranslate"><span class="pre">sched_getparam()</span></code></a>. It is immutable.</p>
@@ -6118,7 +6120,7 @@ logical CPUs usable by the calling thread of the <strong>current process</strong
 </div>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 3.13: </span>If <a class="reference internal" href="../using/cmdline.html#cmdoption-X"><code class="xref std std-option docutils literal notranslate"><span class="pre">-X</span> <span class="pre">cpu_count</span></code></a> is given or <span class="target" id="index-45"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHON_CPU_COUNT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHON_CPU_COUNT</span></code></a> is set,
-<a class="reference internal" href="#os.cpu_count" title="os.cpu_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">cpu_count()</span></code></a> returns the overridden value <em>n</em>.</p>
+<a class="reference internal" href="#os.cpu_count" title="os.cpu_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">cpu_count()</span></code></a> returns the override value <em>n</em>.</p>
 </div>
 </dd></dl>
 
@@ -6142,7 +6144,7 @@ process</strong>. Returns <code class="docutils literal notranslate"><span class
 <p>The <a class="reference internal" href="#os.cpu_count" title="os.cpu_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">cpu_count()</span></code></a> function can be used to get the number of logical CPUs
 in the <strong>system</strong>.</p>
 <p>If <a class="reference internal" href="../using/cmdline.html#cmdoption-X"><code class="xref std std-option docutils literal notranslate"><span class="pre">-X</span> <span class="pre">cpu_count</span></code></a> is given or <span class="target" id="index-46"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHON_CPU_COUNT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PYTHON_CPU_COUNT</span></code></a> is set,
-<a class="reference internal" href="#os.process_cpu_count" title="os.process_cpu_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">process_cpu_count()</span></code></a> returns the overridden value <em>n</em>.</p>
+<a class="reference internal" href="#os.process_cpu_count" title="os.process_cpu_count"><code class="xref py py-func docutils literal notranslate"><span class="pre">process_cpu_count()</span></code></a> returns the override value <em>n</em>.</p>
 <p>See also the <a class="reference internal" href="#os.sched_getaffinity" title="os.sched_getaffinity"><code class="xref py py-func docutils literal notranslate"><span class="pre">sched_getaffinity()</span></code></a> function.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 3.13.</span></p>
@@ -6424,6 +6426,7 @@ block in these cases, but instead immediately raises <a class="reference interna
             rel="nofollow">Show source
         </a>
       </li>
+      
     </ul>
   </div>
         </div>
@@ -6460,7 +6463,7 @@ block in these cases, but instead immediately raises <a class="reference interna
               
           </li>
     <li id="cpython-language-and-version">
-      <a href="../index.html">3.14.2 Documentation</a> &#187;
+      <a href="../index.html">3.14.3 Documentation</a> &#187;
     </li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >The Python Standard Library</a> &#187;</li>
@@ -6506,13 +6509,13 @@ block in these cases, but instead immediately raises <a class="reference interna
 <a href="https://www.python.org/psf/donations/">Please donate.</a>
 <br>
     <br>
-      Last updated on Dec 05, 2025 (16:55 UTC).
+      Last updated on Feb 03, 2026 (15:48 UTC).
     
       <a href="/bugs.html">Found a bug</a>?
     
     <br>
 
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
   </body>

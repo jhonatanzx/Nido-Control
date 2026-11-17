@@ -3,6 +3,48 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DJANGO_BINARY_BUILDER = {
+    "NAME": "NidoControl",
+    "VERSION": "1.1.0",
+    "PUBLISHER": "Equipo de Desarrollo NidoControl",
+    "EXECUTABLE_NAME": "NidoControl",
+    "ICON": BASE_DIR / "static" / "icono.ico",
+}
+
+
+def _safe_binary_directory_name(value):
+    characters = [
+        character if character.isalnum() or character in {"-", "_"} else "-"
+        for character in str(value).strip()
+    ]
+    normalized = "".join(characters).strip("-")
+    while "--" in normalized:
+        normalized = normalized.replace("--", "-")
+    return normalized or "DjangoBinaryBuilder"
+
+
+def _resolve_data_root(base_dir, environ=None):
+    base_dir = Path(base_dir)
+    if not (base_dir / "launcher.py").is_file():
+        return base_dir
+
+    environ = os.environ if environ is None else environ
+    data_root = environ.get("DJANGO_BINARY_DATA_DIR")
+    if data_root:
+        data_root = Path(data_root).expanduser().resolve()
+    else:
+        local_app_data = environ.get("LOCALAPPDATA")
+        data_root = (
+            Path(local_app_data)
+            if local_app_data
+            else Path.home() / ".local" / "share"
+        )
+        data_root /= _safe_binary_directory_name(DJANGO_BINARY_BUILDER["PUBLISHER"])
+        data_root /= _safe_binary_directory_name(DJANGO_BINARY_BUILDER["NAME"])
+
+    return data_root.resolve()
+
+
 SECRET_KEY = 'django-insecure-cambia-esta-clave-por-una-segura'
 
 DEBUG = True
@@ -76,7 +118,9 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+DATA_ROOT = _resolve_data_root(BASE_DIR)
+MEDIA_ROOT = DATA_ROOT / 'media'
+REPORTS_ROOT = DATA_ROOT / 'reportes'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -96,11 +140,4 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
-}
-
-DJANGO_BINARY_BUILDER = {
-    "NAME": "Nido-Control",
-    "VERSION": "1.0.0",
-    "PUBLISHER": "Tu Nombre",
-    "EXECUTABLE_NAME": "nido-control",
 }

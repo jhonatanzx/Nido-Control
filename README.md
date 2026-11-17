@@ -145,6 +145,14 @@ Para ejecutarlo automáticamente en Windows, crea una tarea en el **Programador 
 5. En **Iniciar en**, indica la carpeta del proyecto, por ejemplo `%USERPROFILE%\Documents\Nido-control`.
 6. Guarda la tarea y usa **Ejecutar** para verificar que finalice correctamente.
 
+### Datos guardados por el ejecutable de Windows
+
+El ejecutable guarda las fotos y los PDF fuera de la carpeta de instalación, para que sigan disponibles aunque se actualice la aplicación. La ubicación predeterminada es:
+
+`%LOCALAPPDATA%\Equipo-de-Desarrollo-NidoControl\NidoControl`
+
+Las fotos se guardan en `media` y las copias de los reportes PDF en `reportes`. La pantalla **Reportes** muestra la ruta completa de esa carpeta.
+
 ### Solución de Problemas en Windows
 
 | Error | Solución |

@@ -4,6 +4,8 @@ import re
 import calendar
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
+from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
@@ -35,6 +37,17 @@ OPCIONES_DESAYUNO = [
     'Comió 50 % de la porción',
     'Comió al 100 %',
 ]
+
+
+def respuesta_pdf(buffer, filename):
+    contenido = buffer.getvalue()
+    FileSystemStorage(location=settings.REPORTS_ROOT).save(
+        filename,
+        ContentFile(contenido),
+    )
+    response = HttpResponse(contenido, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
 
 
 def dibujar_encabezado_reporte(canvas, _document, image_y=None):
@@ -1485,6 +1498,7 @@ def generar_reportes(request):
         ],
         'aulas_reporte': Aula.objects.order_by('nombre'),
         'hoy_reporte': hoy,
+        'ruta_reportes': str(settings.REPORTS_ROOT),
     })
 
 
@@ -1674,10 +1688,7 @@ def reporte_pagos(request):
         elements.append(Paragraph('No hay niños matriculados para el aula seleccionada.', styles['Normal']))
 
     doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
-    buffer.seek(0)
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="pagos_{periodo}.pdf"'
-    return response
+    return respuesta_pdf(buffer, f'pagos_{periodo}.pdf')
 
 
 @login_required
@@ -1867,12 +1878,7 @@ def reporte_estudiantes(request):
         onFirstPage=dibujar_encabezado_reporte_detallado,
         onLaterPages=dibujar_encabezado_reporte_detallado,
     )
-    buffer.seek(0)
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = (
-        f'attachment; filename="reporte_estudiante_{nino_id}_{periodo}.pdf"'
-    )
-    return response
+    return respuesta_pdf(buffer, f'reporte_estudiante_{nino_id}_{periodo}.pdf')
 
 
 @login_required
@@ -1938,14 +1944,8 @@ def reporte_asistencia(request):
         elements.append(Paragraph("No hay registros de asistencia para este mes.", styles['Normal']))
     
     doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
-    buffer.seek(0)
-    
-    response = HttpResponse(buffer, content_type='application/pdf')
     sufijo_alumno = f'_alumno_{alumno_id}' if alumno_id else ''
-    response['Content-Disposition'] = (
-        f'attachment; filename="asistencia_{periodo}{sufijo_alumno}.pdf"'
-    )
-    return response
+    return respuesta_pdf(buffer, f'asistencia_{periodo}{sufijo_alumno}.pdf')
 
 
 @login_required
@@ -2010,14 +2010,8 @@ def reporte_incidencias(request):
         elements.append(Paragraph("No hay incidencias registradas para este mes.", styles['Normal']))
     
     doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
-    buffer.seek(0)
-    
-    response = HttpResponse(buffer, content_type='application/pdf')
     sufijo_alumno = f'_alumno_{alumno_id}' if alumno_id else ''
-    response['Content-Disposition'] = (
-        f'attachment; filename="incidencias_{periodo}{sufijo_alumno}.pdf"'
-    )
-    return response
+    return respuesta_pdf(buffer, f'incidencias_{periodo}{sufijo_alumno}.pdf')
 
 
 @login_required
@@ -2080,14 +2074,8 @@ def reporte_bitacora(request):
         elements.append(Paragraph("No hay registros de bitácora para este mes.", styles['Normal']))
     
     doc.build(elements, onFirstPage=dibujar_encabezado_reporte, onLaterPages=dibujar_encabezado_reporte)
-    buffer.seek(0)
-    
-    response = HttpResponse(buffer, content_type='application/pdf')
     sufijo_alumno = f'_alumno_{alumno_id}' if alumno_id else ''
-    response['Content-Disposition'] = (
-        f'attachment; filename="bitacora_{periodo}{sufijo_alumno}.pdf"'
-    )
-    return response
+    return respuesta_pdf(buffer, f'bitacora_{periodo}{sufijo_alumno}.pdf')
 
 
 # ============================================
